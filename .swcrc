@@ -1,0 +1,18 @@
+{
+  "env": {
+    "target": {
+      "node": 18
+    }
+  },
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "dynamicImport": true,
+      "jsx": true
+    }
+  },
+  "module": {
+    "type": "commonjs"
+  },
+  "sourceMaps": "inline"
+}

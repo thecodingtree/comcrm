@@ -1,7 +1,7 @@
-import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
+import { ApolloServer } from 'apollo-server-express';
 import { readFileSync } from 'fs';
-import { gql } from 'graphql-tag';
+import express from 'express';
+import morgan from 'morgan';
 
 import resolvers from './graphql/resolvers';
 
@@ -12,12 +12,23 @@ const server = new ApolloServer({
   resolvers,
 });
 
-const startServer = async () => {
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
-  });
+const app = express();
+app.use(morgan('dev'));
 
-  console.log(`🚀  Server ready at: ${url}`);
+const startServer = async () => {
+  // const { url } = await startStandaloneServer(server, {
+  //   listen: { port: 4000 },
+  // });
+  await server.start();
+  server.applyMiddleware({ app });
+
+  const port = Number(process.env.PORT || 4000);
+
+  app.listen(port, '0.0.0.0', () =>
+    console.log(
+      `🚀  Server ready at: http://localhost:${port}${server.graphqlPath}`
+    )
+  );
 };
 
 startServer();

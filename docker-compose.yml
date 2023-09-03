@@ -1,0 +1,13 @@
+services:
+  backend:
+    build: .
+    ports:
+      - 4000:4000
+      - 9229:9229 # for debugging
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+    command: npm run start:build
