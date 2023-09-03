@@ -1,0 +1,16 @@
+name: comcrm
+proxy:
+  backend:
+    - comcrm.lndo.site:4000
+
+services:
+  backend:
+    type: node:18
+    build:
+      - npm install
+    scanner: false
+
+tooling:
+  npm:
+    service: backend
+    cmd: npm
