@@ -2,12 +2,30 @@ scalar DateTime
 
 type Query {
   allUsers: [User]
+  contacts: [Contact]
 }
 
 type User {
   id: ID!
   name: String
   email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Contact {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  companies: [Company]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Company {
+  id: ID!
+  name: String!
+  contacts: [Contact]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
