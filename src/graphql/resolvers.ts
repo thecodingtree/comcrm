@@ -1,9 +1,10 @@
+import prisma from '../db';
 import { Resolvers } from '../generated/resolvers-types';
 
 const resolvers: Resolvers = {
   Query: {
-    hello: () => {
-      return 'world!!';
+    allUsers: async () => {
+      return await prisma.user.findMany();
     },
   },
 };
