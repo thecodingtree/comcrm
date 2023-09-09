@@ -2,6 +2,7 @@ name: comcrm
 proxy:
   backend:
     - comcrm.lndo.site:4000
+    - comcrm-prisma.lndo.site:5555
   database:
     - comcrm-db.lndo.site:5432
 
@@ -10,6 +11,7 @@ services:
     type: node:18
     build:
       - npm install
+    ssl: true
     scanner: false
 
   database:
@@ -25,3 +27,9 @@ tooling:
   npm:
     service: backend
     cmd: npm
+  npx:
+    service: backend
+    cmd: npx
+  prisma:
+    service: backend
+    cmd: npx prisma
