@@ -29,10 +29,22 @@ export type Address = {
   zip: Scalars['String']['output'];
 };
 
+export type AddressInput = {
+  city: Scalars['String']['input'];
+  state: Scalars['String']['input'];
+  street: Scalars['String']['input'];
+  zip: Scalars['String']['input'];
+};
+
 export type Attribute = {
   __typename?: 'Attribute';
   name: Scalars['String']['output'];
   value: Scalars['String']['output'];
+};
+
+export type AttributeInput = {
+  name: Scalars['String']['input'];
+  value: Scalars['String']['input'];
 };
 
 export type Company = {
@@ -61,6 +73,92 @@ export type Contact = {
 export type CoreEntityFilter = {
   entity?: InputMaybe<Scalars['ID']['input']>;
   user?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CoreEntityInput = {
+  address?: InputMaybe<AddressInput>;
+  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  name: Scalars['String']['input'];
+  surName?: InputMaybe<Scalars['String']['input']>;
+  user?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createCompany?: Maybe<Company>;
+  createContact?: Maybe<Contact>;
+  createProperty?: Maybe<Property>;
+  deleteCompany?: Maybe<Company>;
+  deleteContact?: Maybe<Contact>;
+  deleteProperty?: Maybe<Property>;
+  updateCompany?: Maybe<Company>;
+  updateContact?: Maybe<Contact>;
+  updateProperty?: Maybe<Property>;
+};
+
+
+export type MutationCreateCompanyArgs = {
+  address?: InputMaybe<AddressInput>;
+  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  name: Scalars['String']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
+export type MutationCreateContactArgs = {
+  address?: InputMaybe<AddressInput>;
+  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  name: Scalars['String']['input'];
+  surName?: InputMaybe<Scalars['String']['input']>;
+  user: Scalars['ID']['input'];
+};
+
+
+export type MutationCreatePropertyArgs = {
+  address?: InputMaybe<AddressInput>;
+  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  name: Scalars['String']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteCompanyArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteContactArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeletePropertyArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateCompanyArgs = {
+  address?: InputMaybe<AddressInput>;
+  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateContactArgs = {
+  address?: InputMaybe<AddressInput>;
+  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  surName?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdatePropertyArgs = {
+  address?: InputMaybe<AddressInput>;
+  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Property = {
@@ -197,14 +295,18 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Address: ResolverTypeWrapper<Address>;
+  AddressInput: AddressInput;
   Attribute: ResolverTypeWrapper<Attribute>;
+  AttributeInput: AttributeInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Company: ResolverTypeWrapper<Company>;
   Contact: ResolverTypeWrapper<Contact>;
   CoreEntityFilter: CoreEntityFilter;
+  CoreEntityInput: CoreEntityInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Property: ResolverTypeWrapper<Property>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -214,14 +316,18 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Address: Address;
+  AddressInput: AddressInput;
   Attribute: Attribute;
+  AttributeInput: AttributeInput;
   Boolean: Scalars['Boolean']['output'];
   Company: Company;
   Contact: Contact;
   CoreEntityFilter: CoreEntityFilter;
+  CoreEntityInput: CoreEntityInput;
   DateTime: Scalars['DateTime']['output'];
   ID: Scalars['ID']['output'];
   JSON: Scalars['JSON']['output'];
+  Mutation: {};
   Property: Property;
   Query: {};
   String: Scalars['String']['output'];
@@ -276,6 +382,18 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createCompany?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<MutationCreateCompanyArgs, 'name' | 'user'>>;
+  createContact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<MutationCreateContactArgs, 'name' | 'user'>>;
+  createProperty?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, RequireFields<MutationCreatePropertyArgs, 'name' | 'user'>>;
+  deleteCompany?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<MutationDeleteCompanyArgs, 'id'>>;
+  deleteContact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<MutationDeleteContactArgs, 'id'>>;
+  deleteProperty?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, RequireFields<MutationDeletePropertyArgs, 'id'>>;
+  updateCompany?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<MutationUpdateCompanyArgs, 'id'>>;
+  updateContact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<MutationUpdateContactArgs, 'id'>>;
+  updateProperty?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, RequireFields<MutationUpdatePropertyArgs, 'id'>>;
+}>;
+
 export type PropertyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Property'] = ResolversParentTypes['Property']> = ResolversObject<{
   address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
   attributes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, ParentType, ContextType>;
@@ -313,6 +431,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Contact?: ContactResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Property?: PropertyResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

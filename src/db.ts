@@ -48,4 +48,33 @@ export const getCoreEntities = async ({
   return results;
 };
 
+export const getCoreEntity = async (id: string): Promise<CoreEntityResult> => {
+  const result = await prisma.coreEntity.findUnique({
+    include: coreEntityInclude,
+    where: { id },
+  });
+
+  if (!result) {
+    throw new Error(`CoreEntity with ID ${id} not found`);
+  }
+
+  return result;
+};
+
+// CRUD operations
+export const createCoreEntity = (data: Prisma.CoreEntityCreateInput) =>
+  prisma.coreEntity.create({
+    data,
+    include: coreEntityInclude,
+  });
+
+export const updateCoreEntity = (
+  id: string,
+  data: Prisma.CoreEntityUpdateInput
+) =>
+  prisma.coreEntity.update({ include: coreEntityInclude, where: { id }, data });
+
+export const deleteCoreEntity = (id: string) =>
+  prisma.coreEntity.delete({ include: coreEntityInclude, where: { id } });
+
 export default prisma;

@@ -1,5 +1,12 @@
-import { CoreEntityType } from '@prisma/client';
-import prisma, { getCoreEntities, CoreEntityResult } from '../db';
+import { Prisma, CoreEntityType } from '@prisma/client';
+import prisma, {
+  getCoreEntities,
+  getCoreEntity,
+  createCoreEntity,
+  updateCoreEntity,
+  deleteCoreEntity,
+  CoreEntityResult,
+} from '../db';
 import {
   Resolvers,
   Contact,
@@ -7,7 +14,17 @@ import {
   Property,
   InputMaybe,
   CoreEntityFilter,
+  MutationCreateContactArgs,
+  MutationCreateCompanyArgs,
+  MutationCreatePropertyArgs,
+  MutationUpdateContactArgs,
 } from '../generated/resolvers-types';
+
+import {
+  contactDataMapper,
+  companyDataMapper,
+  propertyDataMapper,
+} from './mappers';
 
 interface CoreEntityResolverArgs {
   entityType: CoreEntityType;
@@ -15,45 +32,24 @@ interface CoreEntityResolverArgs {
   dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
 }
 
-const contactDataMapper = (entity: CoreEntityResult): Contact => {
-  const { id, meta, attributes, user, createdAt, updatedAt } = entity;
-  return {
-    id,
-    name: meta?.name,
-    surName: meta?.surName,
-    address: meta?.address,
-    attributes,
-    user,
-    createdAt,
-    updatedAt,
-  } as Contact;
-};
+interface CoreEntityCreatorArgs {
+  entityType: CoreEntityType;
+  data: MutationCreateContactArgs &
+    MutationCreateCompanyArgs &
+    MutationCreatePropertyArgs;
+  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+}
 
-const companyDataMapper = (entity: CoreEntityResult): Company => {
-  const { id, meta, attributes, user, createdAt, updatedAt } = entity;
-  return {
-    id,
-    name: meta?.name,
-    address: meta?.address,
-    attributes,
-    user,
-    createdAt,
-    updatedAt,
-  } as Company;
-};
+interface CoreEntityUpdaterArgs {
+  id: string;
+  data: MutationUpdateContactArgs;
+  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+}
 
-const propertyDataMapper = (entity: CoreEntityResult): Property => {
-  const { id, meta, attributes, user, createdAt, updatedAt } = entity;
-  return {
-    id,
-    name: meta?.name,
-    address: meta?.address,
-    attributes,
-    user,
-    createdAt,
-    updatedAt,
-  } as Property;
-};
+interface CoreEntityDeleterArgs {
+  id: string;
+  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+}
 
 const coreEntityResolver = async ({
   entityType,
@@ -69,6 +65,76 @@ const coreEntityResolver = async ({
   return results;
 };
 
+const coreEntityCreator = async ({
+  entityType,
+  data,
+  dataMapper,
+}: CoreEntityCreatorArgs) => {
+  const { user, name, surName, address, attributes } = data;
+
+  const coreEntityCreateInput = {
+    type: entityType,
+    meta: {
+      create: {
+        name,
+        surName,
+        address: address
+          ? {
+              create: address,
+            }
+          : undefined,
+      },
+    },
+    attributes: {
+      create: attributes,
+    },
+    user: {
+      connect: {
+        id: user,
+      },
+    },
+  } as Prisma.CoreEntityCreateInput;
+
+  const result = await createCoreEntity(coreEntityCreateInput);
+
+  return dataMapper(result);
+};
+
+const coreEntityUpdater = async ({
+  id,
+  data,
+  dataMapper,
+}: CoreEntityUpdaterArgs) => {
+  const { name, surName, address, attributes } = data;
+
+  const coreEntityUpdateInput = {
+    meta: {
+      update: {
+        name,
+        surName: surName ? surName : '',
+        address: address
+          ? {
+              create: address,
+            }
+          : undefined,
+      },
+    },
+    attributes: {
+      create: attributes,
+    },
+  } as Prisma.CoreEntityUpdateInput;
+
+  const result = await updateCoreEntity(id, coreEntityUpdateInput);
+
+  return dataMapper(result);
+};
+
+const coreEntityDeleter = async ({ id, dataMapper }: CoreEntityDeleterArgs) => {
+  const result = await deleteCoreEntity(id);
+
+  return dataMapper(result);
+};
+
 const resolvers: Resolvers = {
   Query: {
     allUsers: async () => {
@@ -81,20 +147,7 @@ const resolvers: Resolvers = {
         dataMapper: contactDataMapper,
       }) as Promise<Contact[]>,
     contact: async (_, { id }) => {
-      const entity = await prisma.coreEntity.findUnique({
-        where: { id },
-        include: {
-          meta: { include: { address: true } },
-          attributes: true,
-          user: true,
-        },
-      });
-
-      // TODO: Error handling?
-      if (!entity) {
-        throw new Error('Contact not found');
-      }
-
+      const entity = await getCoreEntity(id);
       return contactDataMapper(entity);
     },
     companies: async (_, { filter }) =>
@@ -104,20 +157,7 @@ const resolvers: Resolvers = {
         dataMapper: companyDataMapper,
       }) as Promise<Company[]>,
     company: async (_, { id }) => {
-      const entity = await prisma.coreEntity.findUnique({
-        where: { id },
-        include: {
-          meta: { include: { address: true } },
-          attributes: true,
-          user: true,
-        },
-      });
-
-      // TODO: Error handling?
-      if (!entity) {
-        throw new Error('Company not found');
-      }
-
+      const entity = await getCoreEntity(id);
       return companyDataMapper(entity);
     },
     properties: async (_, { filter }) =>
@@ -127,22 +167,62 @@ const resolvers: Resolvers = {
         dataMapper: propertyDataMapper,
       }) as Promise<Property[]>,
     property: async (_, { id }) => {
-      const entity = await prisma.coreEntity.findUnique({
-        where: { id },
-        include: {
-          meta: { include: { address: true } },
-          attributes: true,
-          user: true,
-        },
-      });
-
-      // TODO: Error handling?
-      if (!entity) {
-        throw new Error('Property not found');
-      }
-
+      const entity = await getCoreEntity(id);
       return propertyDataMapper(entity);
     },
+  },
+  Mutation: {
+    createContact: async (_, data) =>
+      coreEntityCreator({
+        entityType: CoreEntityType.CONTACT,
+        data,
+        dataMapper: contactDataMapper,
+      }) as Promise<Contact>,
+    createCompany: async (_, data) =>
+      coreEntityCreator({
+        entityType: CoreEntityType.COMPANY,
+        data,
+        dataMapper: companyDataMapper,
+      }) as Promise<Company>,
+    createProperty: async (_, data) =>
+      coreEntityCreator({
+        entityType: CoreEntityType.PROPERTY,
+        data,
+        dataMapper: propertyDataMapper,
+      }) as Promise<Property>,
+    updateContact: async (_, data) =>
+      coreEntityUpdater({
+        id: data.id,
+        data,
+        dataMapper: contactDataMapper,
+      }) as Promise<Contact>,
+    updateCompany: async (_, data) =>
+      coreEntityUpdater({
+        id: data.id,
+        data,
+        dataMapper: companyDataMapper,
+      }) as Promise<Company>,
+    updateProperty: async (_, data) =>
+      coreEntityUpdater({
+        id: data.id,
+        data,
+        dataMapper: propertyDataMapper,
+      }) as Promise<Property>,
+    deleteContact: async (_, { id }) =>
+      coreEntityDeleter({
+        id,
+        dataMapper: contactDataMapper,
+      }) as Promise<Contact>,
+    deleteCompany: async (_, { id }) =>
+      coreEntityDeleter({
+        id,
+        dataMapper: companyDataMapper,
+      }) as Promise<Company>,
+    deleteProperty: async (_, { id }) =>
+      coreEntityDeleter({
+        id,
+        dataMapper: propertyDataMapper,
+      }) as Promise<Property>,
   },
 };
 

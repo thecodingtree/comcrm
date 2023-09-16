@@ -6,6 +6,26 @@ input CoreEntityFilter {
   entity: ID
 }
 
+input AddressInput {
+  street: String!
+  city: String!
+  state: String!
+  zip: String!
+}
+
+input AttributeInput {
+  name: String!
+  value: String!
+}
+
+input CoreEntityInput {
+  name: String!
+  surName: String
+  address: AddressInput
+  attributes: [AttributeInput]
+  user: ID
+}
+
 type Query {
   allUsers: [User]
 
@@ -17,6 +37,54 @@ type Query {
 
   properties(filter: CoreEntityFilter): [Property]
   property(id: ID!): Property
+}
+
+type Mutation {
+  #createUser(name: String, email: String!): User
+
+  createContact(
+    user: ID!
+    name: String!
+    surName: String
+    address: AddressInput
+    attributes: [AttributeInput]
+  ): Contact
+  updateContact(
+    id: ID!
+    name: String
+    surName: String
+    address: AddressInput
+    attributes: [AttributeInput]
+  ): Contact
+  deleteContact(id: ID!): Contact
+
+  createCompany(
+    user: ID!
+    name: String!
+    address: AddressInput
+    attributes: [AttributeInput]
+  ): Company
+  updateCompany(
+    id: ID!
+    name: String
+    address: AddressInput
+    attributes: [AttributeInput]
+  ): Company
+  deleteCompany(id: ID!): Company
+
+  createProperty(
+    user: ID!
+    name: String!
+    address: AddressInput
+    attributes: [AttributeInput]
+  ): Property
+  updateProperty(
+    id: ID!
+    name: String
+    address: AddressInput
+    attributes: [AttributeInput]
+  ): Property
+  deleteProperty(id: ID!): Property
 }
 
 type User {
