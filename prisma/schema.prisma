@@ -40,7 +40,7 @@ model Attributes {
   id        String     @id @default(uuid()) @map("_id")
   name      String
   value     String
-  entity    CoreEntity @relation(fields: [entityId], references: [id])
+  entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
   entityId  String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -50,7 +50,7 @@ model MetaData {
   id         String       @id @default(uuid()) @map("_id")
   name       String
   surName    String
-  address    Address      @relation(fields: [addressId], references: [id])
+  address    Address      @relation(fields: [addressId], references: [id], onDelete: Cascade)
   addressId  String
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
