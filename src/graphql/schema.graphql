@@ -1,8 +1,22 @@
 scalar DateTime
+scalar JSON
+
+input CoreEntityFilter {
+  user: ID
+  entity: ID
+}
 
 type Query {
   allUsers: [User]
-  contacts: [Contact]
+
+  contacts(filter: CoreEntityFilter): [Contact]
+  contact(id: ID!): Contact
+
+  companies(filter: CoreEntityFilter): [Company]
+  company(id: ID!): Company
+
+  properties(filter: CoreEntityFilter): [Property]
+  property(id: ID!): Property
 }
 
 type User {
@@ -13,11 +27,14 @@ type User {
   updatedAt: DateTime!
 }
 
+# Core Entities
 type Contact {
   id: ID!
-  firstName: String!
-  lastName: String!
-  companies: [Company]
+  name: String!
+  surName: String
+  address: Address
+  attributes: [Attribute]
+  user: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -25,7 +42,35 @@ type Contact {
 type Company {
   id: ID!
   name: String!
-  contacts: [Contact]
+  address: Address
+  attributes: [Attribute]
+  user: User
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+type Property {
+  id: ID!
+  name: String!
+  address: Address
+  attributes: [Attribute]
+  user: User
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Metadata
+type Address {
+  id: ID!
+  street: String!
+  city: String!
+  state: String!
+  zip: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Attribute {
+  name: String!
+  value: String!
 }
