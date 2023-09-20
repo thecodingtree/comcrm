@@ -1,4 +1,5 @@
 import { Prisma, CoreEntityType } from '@prisma/client';
+
 import prisma, {
   getCoreEntities,
   getCoreEntity,
@@ -137,6 +138,9 @@ const coreEntityDeleter = async ({ id, dataMapper }: CoreEntityDeleterArgs) => {
 
 const resolvers: Resolvers = {
   Query: {
+    me: async (_, __, contextValue) => {
+      return contextValue.user;
+    },
     allUsers: async () => {
       return await prisma.user.findMany();
     },

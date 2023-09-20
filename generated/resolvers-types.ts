@@ -179,6 +179,7 @@ export type Query = {
   company?: Maybe<Company>;
   contact?: Maybe<Contact>;
   contacts?: Maybe<Array<Maybe<Contact>>>;
+  me?: Maybe<User>;
   properties?: Maybe<Array<Maybe<Property>>>;
   property?: Maybe<Property>;
 };
@@ -411,6 +412,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   company?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<QueryCompanyArgs, 'id'>>;
   contact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<QueryContactArgs, 'id'>>;
   contacts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Contact']>>>, ParentType, ContextType, Partial<QueryContactsArgs>>;
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   properties?: Resolver<Maybe<Array<Maybe<ResolversTypes['Property']>>>, ParentType, ContextType, Partial<QueryPropertiesArgs>>;
   property?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, RequireFields<QueryPropertyArgs, 'id'>>;
 }>;
