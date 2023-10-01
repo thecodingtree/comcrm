@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "index.old"
+    "index.old",
+    "postcss.config.js"
   ],
   "exclude": ["node_modules"]
 }
