@@ -11,6 +11,18 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
+  callbacks: {
+    session: async ({ session, token, user }) => {
+      session = {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub,
+        },
+      };
+      return session;
+    },
+  },
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
