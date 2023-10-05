@@ -3,6 +3,7 @@ import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 
 import '@mantine/core/styles.css';
+
 import { theme } from '../theme';
 
 import DashboardLayout from '@/components/layouts/DashboardLayout';
