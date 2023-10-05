@@ -1,27 +1,18 @@
 import { useState } from 'react';
 import { Group, Code } from '@mantine/core';
 import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
+  IconAddressBook,
+  IconTopologyStar3,
+  IconBuilding,
 } from '@tabler/icons-react';
-import { MantineLogo } from '@mantine/ds';
 import classes from './Navbar.module.css';
 
 import { AccountMenu } from '@/components/account/AccountMenu';
 
 const data = [
-  { link: '', label: 'Notifications', icon: IconBellRinging },
-  { link: '', label: 'Billing', icon: IconReceipt2 },
-  { link: '', label: 'Security', icon: IconFingerprint },
-  { link: '', label: 'SSH Keys', icon: IconKey },
-  { link: '', label: 'Databases', icon: IconDatabaseImport },
-  { link: '', label: 'Authentication', icon: Icon2fa },
-  { link: '', label: 'Other Settings', icon: IconSettings },
+  { link: 'contacts', label: 'Contacts', icon: IconAddressBook },
+  { link: 'companies', label: 'Companies', icon: IconTopologyStar3 },
+  { link: 'properties', label: 'Properties', icon: IconBuilding },
 ];
 
 export default function Navbar() {
@@ -34,7 +25,6 @@ export default function Navbar() {
       href={item.link}
       key={item.label}
       onClick={(event) => {
-        event.preventDefault();
         setActive(item.label);
       }}
     >
