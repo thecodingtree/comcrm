@@ -2,6 +2,8 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 
+import { ApolloWrapper } from '@/lib/apollo-provider';
+
 import '@mantine/core/styles.css';
 
 import { theme } from '../theme';
@@ -26,7 +28,9 @@ export default function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <MantineProvider theme={theme}>
-          <DashboardLayout>{children}</DashboardLayout>
+          <ApolloWrapper>
+            <DashboardLayout>{children}</DashboardLayout>
+          </ApolloWrapper>
         </MantineProvider>
       </body>
     </html>
