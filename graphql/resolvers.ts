@@ -78,7 +78,7 @@ const coreEntityCreator = async ({
     meta: {
       create: {
         name,
-        surName,
+        surName: surName ? surName : '',
         address: address
           ? {
               create: address,

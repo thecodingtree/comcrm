@@ -10,9 +10,9 @@ import classes from './Navbar.module.css';
 import { AccountMenu } from '@/components/account/AccountMenu';
 
 const data = [
-  { link: 'contacts', label: 'Contacts', icon: IconAddressBook },
-  { link: 'companies', label: 'Companies', icon: IconTopologyStar3 },
-  { link: 'properties', label: 'Properties', icon: IconBuilding },
+  { link: '/dashboard/contacts', label: 'Contacts', icon: IconAddressBook },
+  { link: '/dashboard/companies', label: 'Companies', icon: IconTopologyStar3 },
+  { link: '/dashboard/properties', label: 'Properties', icon: IconBuilding },
 ];
 
 export default function Navbar() {

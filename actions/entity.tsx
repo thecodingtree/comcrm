@@ -13,6 +13,9 @@ import prisma, {
 } from '../db';
 
 import {
+  Company,
+  Contact,
+  Property,
   CoreEntityFilter,
   AddressInput,
   AttributeInput,
