@@ -19,6 +19,8 @@ import {
   IconSearch,
 } from '@tabler/icons-react';
 
+import { Company, Contact, Property } from '@/generated/resolvers-types';
+
 import classes from './EntitiesTable.module.css';
 
 type RowData = Company | Contact | Property;
