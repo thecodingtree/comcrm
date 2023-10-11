@@ -4,22 +4,22 @@ import { Table } from '@mantine/core';
 
 import { useMutation } from '@apollo/client';
 
-import { Company } from '@/generated/resolvers-types';
+import { Company, Property, Contact } from '@/generated/resolvers-types';
 
 import { DELETE_COMPANY } from '@/graphql/mutations';
 
 import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
-import { redirect, RedirectType } from 'next/navigation';
+
 import Link from 'next/link';
 
-export default function CompaniesTable({
-  companies,
+export default function LinkedEntitiesTable({
+  linkedEntities,
 }: {
-  companies: Company[];
+  linkedEntities: Contact[] | Company[] | Property[];
 }) {
   const [deleteCompany, { data, loading, error }] = useMutation(DELETE_COMPANY);
 
-  if (companies.length === 0) return <div>No companies</div>;
+  if (linkedEntities.length === 0) return <div>Nothing to display</div>;
 
   const columns = [
     {
@@ -39,35 +39,35 @@ export default function CompaniesTable({
     },
   ] as ETColumn[];
 
-  const deleteBtn = (id: string) => {
-    return (
-      <button
-        onClick={() => {
-          console.log('delete', id);
+  // const deleteBtn = (id: string) => {
+  //   return (
+  //     <button
+  //       onClick={() => {
+  //         console.log('delete', id);
 
-          const answerYes = confirm('Are you sure?');
+  //         const answerYes = confirm('Are you sure?');
 
-          if (answerYes) {
-            deleteCompany({
-              variables: {
-                id,
-              },
-            });
-          }
-        }}
-      >
-        Delete
-      </button>
-    );
-  };
+  //         if (answerYes) {
+  //           deleteCompany({
+  //             variables: {
+  //               id,
+  //             },
+  //           });
+  //         }
+  //       }}
+  //     >
+  //       Delete
+  //     </button>
+  //   );
+  // };
 
-  const goToCompany = (id: string) => {
-    return (
-      <Link href={`/dashboard/companies/${id}`}>
-        <button>Go to</button>
-      </Link>
-    );
-  };
+  // const goTo = (id: string) => {
+  //   return (
+  //     <Link href={`/dashboard/companies/${id}`}>
+  //       <button>Go to</button>
+  //     </Link>
+  //   );
+  // };
 
   const rowRenderer = (row: Company) => {
     const addressStr = `${row?.address?.street} ${row?.address?.city} ${row?.address?.state} ${row?.address?.zip}`;
@@ -76,8 +76,9 @@ export default function CompaniesTable({
         <Table.Td>{row.name}</Table.Td>
         <Table.Td>{addressStr}</Table.Td>
         <Table.Td>
-          <div>{deleteBtn(row.id)}</div>
-          <div>{goToCompany(row.id)}</div>
+          Actions
+          {/* <div>{deleteBtn(row.id)}</div>
+          <div>{goToCompany(row.id)}</div> */}
         </Table.Td>
       </Table.Tr>
     );
@@ -85,9 +86,10 @@ export default function CompaniesTable({
 
   return (
     <EntitiesTable
-      entities={companies}
+      entities={linkedEntities}
       columns={columns}
       rowRenderer={rowRenderer}
+      showSearch={false}
     />
   );
 }
