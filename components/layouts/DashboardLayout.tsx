@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }: { children: any }) {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Container mx={'xl'}>{children}</Container>
+          <Container fluid>{children}</Container>
         </AppShell.Main>
       </AppShell>
     </SessionProvider>

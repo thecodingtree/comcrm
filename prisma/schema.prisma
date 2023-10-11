@@ -89,8 +89,11 @@ model MetaData {
   id         String       @id @default(uuid()) @map("_id")
   name       String
   surName    String
-  address    Address      @relation(fields: [addressId], references: [id], onDelete: Cascade)
-  addressId  String
+  image      String?
+  email      String?
+  phone      String?
+  address    Address?      @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  addressId  String?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   CoreEntity CoreEntity[]

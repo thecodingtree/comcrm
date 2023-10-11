@@ -1,5 +1,9 @@
 .th {
   padding: 0;
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
 }
 
 .control {

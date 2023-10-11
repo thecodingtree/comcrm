@@ -1,7 +1,11 @@
+import { Space } from '@mantine/core';
+import BackButton from '@/components/controls/BackButton';
+
 export default function MainLayout({ children }: { children: any }) {
   return (
     <div>
-      <h1>Main Layout</h1>
+      <Space h="lg" />
+      <BackButton />
       {children}
     </div>
   );

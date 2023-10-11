@@ -104,6 +104,9 @@ export const GraphQLSchema = gql`
     id: ID!
     name: String!
     surName: String
+    image: String
+    email: String
+    phone: String
     address: Address
     attributes: [Attribute]
     user: User
