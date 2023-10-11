@@ -26,16 +26,22 @@ import classes from './EntitiesTable.module.css';
 type RowData = Company | Contact | Property;
 
 interface ThSortableProps {
-  key: string;
+  thKey?: string;
   children: React.ReactNode;
   reversed: boolean;
   sorted: boolean;
   onSort(): void;
 }
 
-function Th({ key, children }: { key: string; children: React.ReactNode }) {
+function Th({
+  thKey,
+  children,
+}: {
+  thKey?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <Table.Th key={key} className={classes.th}>
+    <Table.Th key={thKey} className={classes.th}>
       <Text fw={500} fz="sm">
         {children}
       </Text>
@@ -44,7 +50,7 @@ function Th({ key, children }: { key: string; children: React.ReactNode }) {
 }
 
 function ThSortable({
-  key,
+  thKey,
   children,
   reversed,
   sorted,
@@ -56,7 +62,7 @@ function ThSortable({
       : IconChevronDown
     : IconSelector;
   return (
-    <Th key={key}>
+    <Th key={thKey}>
       <UnstyledButton onClick={onSort} className={classes.control}>
         <Group justify="space-between">
           <Text fw={500} fz="sm">
@@ -118,12 +124,14 @@ export type ETColumn = {
 export interface EntitiesTableProps {
   entities: any[];
   columns: ETColumn[];
+  showSearch?: boolean;
   rowRenderer?(row: any): React.ReactNode;
 }
 
 export function EntitiesTable({
   entities,
   columns,
+  showSearch = true,
   rowRenderer,
 }: EntitiesTableProps) {
   const [search, setSearch] = useState('');
@@ -160,25 +168,27 @@ export function EntitiesTable({
 
   return (
     <ScrollArea>
-      <TextInput
-        placeholder="Search by any field"
-        mb="md"
-        leftSection={
-          <IconSearch
-            style={{ width: rem(16), height: rem(16) }}
-            stroke={1.5}
-          />
-        }
-        value={search}
-        onChange={handleSearchChange}
-      />
+      {showSearch && (
+        <TextInput
+          placeholder="Search by any field"
+          mb="md"
+          leftSection={
+            <IconSearch
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
+          }
+          value={search}
+          onChange={handleSearchChange}
+        />
+      )}
       <Table
         horizontalSpacing="md"
         verticalSpacing="xs"
         miw={700}
         layout="fixed"
       >
-        <Table.Tbody>
+        <Table.Thead>
           <Table.Tr>
             {columns.map((column) => {
               return column.sortable ? (
@@ -195,7 +205,7 @@ export function EntitiesTable({
               );
             })}
           </Table.Tr>
-        </Table.Tbody>
+        </Table.Thead>
         <Table.Tbody>
           {rows.length > 0 ? (
             rows
