@@ -1,18 +1,38 @@
 name: comcrm
 proxy:
-  backend:
-    - comcrm.lndo.site:4000
+  app:
+    - comcrm.lndo.site:3000
+    - comcrm-prisma.lndo.site:5555
+  database:
+    - comcrm-db.lndo.site:5432
 
 services:
-  backend:
+  app:
     type: node:18
-    run:
-      - cd /app && npm i
-    command: npm run dev
-    scanner: false
+    build:
+      - npm install
     ssl: true
+    scanner: false
+
+  database:
+    type: postgres
+    portforward: 5432
+    scanner: false
+    creds:
+      user: postgres
+      password: postgres
+      database: main
 
 tooling:
+  startapp:
+    service: app
+    cmd: npm run dev
   npm:
-    service: backend
+    service: app
     cmd: npm
+  npx:
+    service: app
+    cmd: npx
+  prisma:
+    service: app
+    cmd: npx prisma
