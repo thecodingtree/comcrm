@@ -16,9 +16,6 @@ const app = express();
 app.use(morgan('dev'));
 
 const startServer = async () => {
-  // const { url } = await startStandaloneServer(server, {
-  //   listen: { port: 4000 },
-  // });
   await server.start();
   server.applyMiddleware({ app });
 
