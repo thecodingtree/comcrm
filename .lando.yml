@@ -24,6 +24,9 @@ services:
       database: main
 
 tooling:
+  startapp:
+    service: app
+    cmd: npm run dev
   npm:
     service: app
     cmd: npm
