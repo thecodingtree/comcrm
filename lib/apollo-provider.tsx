@@ -10,7 +10,7 @@ import {
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: 'https://comcrm.lndo.site/api/graphql',
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   });
 
   return new NextSSRApolloClient({

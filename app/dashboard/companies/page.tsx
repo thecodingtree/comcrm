@@ -19,7 +19,7 @@ export default async function Companies() {
     <div>
       <h1>{'Companies!'}</h1>
       <Link href="/dashboard/companies/new">{'Add New'}</Link>
-      <CompaniesTable companies={data.companies} />
+      <CompaniesTable companies={data?.companies} />
     </div>
   );
 }
