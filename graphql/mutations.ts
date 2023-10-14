@@ -73,17 +73,20 @@ export const ADD_CONTACT = gql`
   mutation AddContact(
     $user: ID!
     $name: String!
+    $surName: String!
     $address: AddressInput
     $attributes: [AttributeInput]
   ) {
     createContact(
       user: $user
       name: $name
+      surName: $surName
       address: $address
       attributes: $attributes
     ) {
       id
       name
+      surName
       address {
         street
         city
