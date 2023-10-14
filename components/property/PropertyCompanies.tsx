@@ -9,7 +9,7 @@ import { Title } from '@mantine/core';
 import LinkedEntitiesTable from '@/components/tables/LinkedEntitiesTable';
 import { GET_PROPERTIES } from '@/graphql/queries';
 
-export default function CompanyProperties() {
+export default function PropertyCompanies() {
   const params = useParams();
   const session = useSession();
   const { data, loading, error } = useQuery(GET_PROPERTIES, {
