@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   ScrollArea,
@@ -122,20 +122,20 @@ export type ETColumn = {
 };
 
 export interface EntitiesTableProps {
-  entities: any[];
+  entities?: RowData[];
   columns: ETColumn[];
   showSearch?: boolean;
-  rowRenderer?(row: any): React.ReactNode;
+  rowRenderer(row?: RowData): React.ReactNode;
 }
 
 export function EntitiesTable({
-  entities,
+  entities = [],
   columns,
-  showSearch = true,
+  showSearch = false,
   rowRenderer,
 }: EntitiesTableProps) {
   const [search, setSearch] = useState('');
-  const [sortedData, setSortedData] = useState(entities);
+  const [sortedData, setSortedData] = useState(entities || []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
@@ -143,28 +143,12 @@ export function EntitiesTable({
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    setSortedData(sortData(entities, { sortBy: field, reversed, search }));
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearch(value);
-    setSortedData(
-      sortData(entities, {
-        sortBy,
-        reversed: reverseSortDirection,
-        search: value,
-      })
-    );
   };
-
-  const rows = sortedData.map((row) => {
-    return rowRenderer ? (
-      rowRenderer(row)
-    ) : (
-      <div>Row Renderer not Defined!</div>
-    );
-  });
 
   return (
     <ScrollArea>
@@ -206,19 +190,7 @@ export function EntitiesTable({
             })}
           </Table.Tr>
         </Table.Thead>
-        <Table.Tbody>
-          {rows.length > 0 ? (
-            rows
-          ) : (
-            <Table.Tr>
-              <Table.Td colSpan={Object.keys(entities[0] ?? {}).length}>
-                <Text fw={500} ta="center">
-                  Nothing found
-                </Text>
-              </Table.Td>
-            </Table.Tr>
-          )}
-        </Table.Tbody>
+        <Table.Tbody>{entities.map((row) => rowRenderer(row))}</Table.Tbody>
       </Table>
     </ScrollArea>
   );
