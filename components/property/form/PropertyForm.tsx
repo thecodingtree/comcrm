@@ -1,46 +1,26 @@
 'use client';
-import {
-  Text,
-  Title,
-  Grid,
-  TextInput,
-  Textarea,
-  Button,
-  Group,
-  ActionIcon,
-} from '@mantine/core';
 
-import { useMutation } from '@apollo/client';
-import { useSession } from 'next-auth/react';
+import { Grid, TextInput, Button, Group } from '@mantine/core';
 
 import { Formik } from 'formik';
 
-import classes from './CompaniesForm.module.css';
-import { ADD_COMPANY } from '@/graphql/mutations';
+import classes from './PropertyForm.module.css';
 
-export default function CompaniesForm() {
-  const [addCompany, { data, loading, error }] = useMutation(ADD_COMPANY);
+export interface PropertyFormProps {
+  onSubmit?(values: any): void;
+  submitting?: boolean;
+}
 
-  const { data: session, status } = useSession();
-
+export default function PropertyForm({
+  onSubmit,
+  submitting,
+}: PropertyFormProps) {
   const handleSubmit = (values: any) => {
-    addCompany({
-      variables: {
-        name: values.name,
-        address: {
-          street: values.street,
-          city: values.city,
-          state: values.state,
-          zip: values.zip,
-        },
-        user: session?.user?.id ?? '',
-      },
-    });
+    onSubmit && onSubmit(values);
   };
 
   return (
     <div className={classes.wrapper}>
-      <Title>Add new company</Title>
       <Formik
         initialValues={{
           name: '',
@@ -57,7 +37,7 @@ export default function CompaniesForm() {
               id="name"
               name="name"
               label="Name"
-              placeholder="Company"
+              placeholder="Property"
               mt="lg"
               classNames={{ input: classes.input, label: classes.inputLabel }}
               value={values.name}
@@ -129,13 +109,13 @@ export default function CompaniesForm() {
                 </Grid.Col>
               </Grid>
             </Group>
-            <Group justify="flex-end" mt="md">
+            <Group justify="center" mt="md">
               <Button
                 type="submit"
                 className={classes.control}
-                disabled={loading}
+                disabled={submitting}
               >
-                Add Company
+                Add Property
               </Button>
             </Group>
           </form>
