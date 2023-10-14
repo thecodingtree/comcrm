@@ -1,7 +1,18 @@
 import { gql } from '@apollo/client';
+import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+
+import {
+  Property,
+  CoreEntityFilter,
+  Company,
+  Contact,
+} from '@/generated/resolvers-types';
 
 /** ***************** CONTACTS ************************** */
-export const GET_CONTACTS = gql`
+export const GET_CONTACTS: TypedDocumentNode<
+  { contacts: Contact[] },
+  { filter: CoreEntityFilter }
+> = gql`
   query GetContacts($filter: CoreEntityFilter) {
     contacts(filter: $filter) {
       id
@@ -48,7 +59,10 @@ export const GET_CONTACT = gql`
 `;
 
 /** ***************** COMPANIES ************************** */
-export const GET_COMPANIES = gql`
+export const GET_COMPANIES: TypedDocumentNode<
+  { companies: Company[] },
+  { filter: CoreEntityFilter }
+> = gql`
   query GetCompanies($filter: CoreEntityFilter) {
     companies(filter: $filter) {
       id
@@ -79,7 +93,10 @@ export const GET_COMPANY = gql`
 `;
 
 /** ***************** PROPERTIES ************************** */
-export const GET_PROPERTIES = gql`
+export const GET_PROPERTIES: TypedDocumentNode<
+  { properties: Property[] },
+  { filter: CoreEntityFilter }
+> = gql`
   query GetProperties($filter: CoreEntityFilter) {
     properties(filter: $filter) {
       id
