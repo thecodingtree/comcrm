@@ -7,14 +7,14 @@ import { useQuery } from '@apollo/client';
 import { Title } from '@mantine/core';
 
 import LinkedEntitiesTable from '@/components/tables/LinkedEntitiesTable';
-import { GET_PROPERTIES } from '@/graphql/queries';
+import { GET_COMPANIES } from '@/graphql/queries';
 
 export default function PropertyCompanies() {
   const params = useParams();
   const session = useSession();
-  const { data, loading, error } = useQuery(GET_PROPERTIES, {
+  const { data, loading, error } = useQuery(GET_COMPANIES, {
     variables: {
-      filter: { user: session?.data?.user?.id, entity: params?.id as string },
+      filter: { entity: params?.id as string },
     },
   });
 
@@ -23,8 +23,8 @@ export default function PropertyCompanies() {
   return (
     data && (
       <div>
-        <Title>Properties</Title>
-        <LinkedEntitiesTable linkedEntities={data?.properties} />
+        <Title>Companies</Title>
+        <LinkedEntitiesTable linkedEntities={data?.companies} />
       </div>
     )
   );
