@@ -75,7 +75,6 @@ export type Contact = {
 
 export type CoreEntityFilter = {
   entity?: InputMaybe<Scalars['ID']['input']>;
-  user?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CoreEntityInput = {

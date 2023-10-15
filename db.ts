@@ -17,17 +17,19 @@ export type CoreEntityResult = Prisma.CoreEntityGetPayload<{
 interface GetCoreEntitiesArgs {
   entityType: CoreEntityType;
   filter?: InputMaybe<CoreEntityFilter>;
+  withUserId?: string;
 }
 
 export const getCoreEntities = async ({
   entityType,
   filter,
+  withUserId,
 }: GetCoreEntitiesArgs): Promise<CoreEntityResult[]> => {
   const results = await prisma.coreEntity.findMany({
     include: coreEntityInclude,
     where: {
       type: entityType,
-      userId: filter?.user ? filter.user : undefined,
+      userId: withUserId ? withUserId : undefined,
       OR: filter?.entity
         ? [
             {
@@ -48,10 +50,13 @@ export const getCoreEntities = async ({
   return results;
 };
 
-export const getCoreEntity = async (id: string): Promise<CoreEntityResult> => {
+export const getCoreEntity = async (
+  id: string,
+  withUserId: string
+): Promise<CoreEntityResult> => {
   const result = await prisma.coreEntity.findUnique({
     include: coreEntityInclude,
-    where: { id },
+    where: { id, userId: withUserId },
   });
 
   if (!result) {
