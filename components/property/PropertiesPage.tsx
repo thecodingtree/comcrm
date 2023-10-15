@@ -15,14 +15,8 @@ import { Space } from '@mantine/core';
 import PropertiesTable from '@/components/property/PropertiesTable';
 import PropertyAdd from '@/components/property/PropertyAdd';
 
-interface PropertiesPageProps {
-  user: any;
-}
-
-export default function PropertiesPage({ user }: PropertiesPageProps) {
-  const { data, error } = useSuspenseQuery(GET_PROPERTIES, {
-    variables: { filter: { user: user.id } },
-  });
+export default function PropertiesPage() {
+  const { data, error } = useSuspenseQuery(GET_PROPERTIES);
 
   const [deleteProperty] = useMutation(DELETE_PROPERTY, {
     refetchQueries: [GET_PROPERTIES],
