@@ -26,10 +26,17 @@ import {
   companyDataMapper,
   propertyDataMapper,
 } from './mappers';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 
-interface CoreEntityResolverArgs {
+interface CoreEntitiesResolverArgs {
   entityType: CoreEntityType;
   filter?: InputMaybe<CoreEntityFilter>;
+  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+}
+
+interface CoreEntityResolverArgs {
+  id: string;
   dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
 }
 
@@ -52,12 +59,37 @@ interface CoreEntityDeleterArgs {
   dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
 }
 
-export const coreEntityResolver = async ({
+const coreEntityResolver = async ({
+  id,
+  dataMapper,
+}: CoreEntityResolverArgs) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user) {
+    return null;
+  }
+
+  const result = await getCoreEntity(id, session.user.id as string);
+
+  return dataMapper(result);
+};
+
+export const coreEntitiesResolver = async ({
   entityType,
   filter,
   dataMapper,
-}: CoreEntityResolverArgs) => {
-  const result = await getCoreEntities({ entityType, filter });
+}: CoreEntitiesResolverArgs) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user) {
+    return [];
+  }
+
+  const result = await getCoreEntities({
+    entityType,
+    filter,
+    withUserId: session.user.id,
+  });
 
   const results = result.map((entity) => {
     return dataMapper(entity);
@@ -145,35 +177,38 @@ const resolvers: Resolvers = {
       return await prisma.user.findMany();
     },
     contacts: async (_, { filter }) =>
-      coreEntityResolver({
+      coreEntitiesResolver({
         entityType: CoreEntityType.CONTACT,
         filter,
         dataMapper: contactDataMapper,
       }) as Promise<Contact[]>,
-    contact: async (_, { id }) => {
-      const entity = await getCoreEntity(id);
-      return contactDataMapper(entity);
-    },
-    companies: async (_, { filter }) =>
+    contact: async (_, { id }) =>
       coreEntityResolver({
+        id,
+        dataMapper: contactDataMapper,
+      }) as Promise<Contact>,
+    companies: async (_, { filter }) =>
+      coreEntitiesResolver({
         entityType: CoreEntityType.COMPANY,
         filter,
         dataMapper: companyDataMapper,
       }) as Promise<Company[]>,
-    company: async (_, { id }) => {
-      const entity = await getCoreEntity(id);
-      return companyDataMapper(entity);
-    },
-    properties: async (_, { filter }) =>
+    company: async (_, { id }) =>
       coreEntityResolver({
+        id,
+        dataMapper: companyDataMapper,
+      }) as Promise<Company>,
+    properties: async (_, { filter }) =>
+      coreEntitiesResolver({
         entityType: CoreEntityType.PROPERTY,
         filter,
         dataMapper: propertyDataMapper,
       }) as Promise<Property[]>,
-    property: async (_, { id }) => {
-      const entity = await getCoreEntity(id);
-      return propertyDataMapper(entity);
-    },
+    property: async (_, { id }) =>
+      coreEntityResolver({
+        id,
+        dataMapper: propertyDataMapper,
+      }) as Promise<Property>,
   },
   Mutation: {
     createContact: async (_, data) =>

@@ -5,7 +5,6 @@ export const GraphQLSchema = gql`
   scalar JSON
 
   input CoreEntityFilter {
-    user: ID
     entity: ID
   }
 
