@@ -15,14 +15,8 @@ import { Space } from '@mantine/core';
 import ContactsTable from '@/components/contact/ContactsTable';
 import ContactAdd from '@/components/contact/ContactAdd';
 
-interface ContactsPageProps {
-  user: any;
-}
-
-export default function CompaniesPage({ user }: ContactsPageProps) {
-  const { data, error } = useSuspenseQuery(GET_CONTACTS, {
-    variables: { filter: { user: user.id } },
-  });
+export default function CompaniesPage() {
+  const { data, error } = useSuspenseQuery(GET_CONTACTS);
 
   const [deleteContact] = useMutation(DELETE_CONTACT, {
     refetchQueries: [GET_CONTACTS],

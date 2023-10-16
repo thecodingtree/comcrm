@@ -20,9 +20,7 @@ interface CompaniesPageProps {
 }
 
 export default function CompaniesPage({ user }: CompaniesPageProps) {
-  const { data, error } = useSuspenseQuery(GET_COMPANIES, {
-    variables: { filter: { user: user.id } },
-  });
+  const { data, error } = useSuspenseQuery(GET_COMPANIES);
 
   const [deleteCompany] = useMutation(DELETE_PROPERTY, {
     refetchQueries: [GET_COMPANIES],

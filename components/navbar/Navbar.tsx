@@ -1,5 +1,10 @@
+'use client';
+
 import { useState } from 'react';
-import { Group, Code } from '@mantine/core';
+
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+
 import {
   IconAddressBook,
   IconTopologyStar3,
@@ -16,21 +21,27 @@ const data = [
 ];
 
 export default function Navbar() {
-  const [active, setActive] = useState('Billing');
+  const pathName = usePathname();
+
+  const getActiveFromPath = (path: string) => {
+    return data.find((item) => path.includes(item.link))?.label;
+  };
+
+  const [active, setActive] = useState(getActiveFromPath(pathName || ''));
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={classes.link}
       data-active={item.label === active || undefined}
       href={item.link}
       key={item.label}
-      onClick={(event) => {
+      onClick={() => {
         setActive(item.label);
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
-    </a>
+    </Link>
   ));
 
   return (

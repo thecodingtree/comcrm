@@ -75,7 +75,6 @@ export type Contact = {
 
 export type CoreEntityFilter = {
   entity?: InputMaybe<Scalars['ID']['input']>;
-  user?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CoreEntityInput = {
@@ -177,7 +176,6 @@ export type Property = {
 
 export type Query = {
   __typename?: 'Query';
-  allUsers?: Maybe<Array<Maybe<User>>>;
   companies?: Maybe<Array<Maybe<Company>>>;
   company?: Maybe<Company>;
   contact?: Maybe<Contact>;
@@ -413,7 +411,6 @@ export type PropertyResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  allUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   companies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Company']>>>, ParentType, ContextType, Partial<QueryCompaniesArgs>>;
   company?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<QueryCompanyArgs, 'id'>>;
   contact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<QueryContactArgs, 'id'>>;
