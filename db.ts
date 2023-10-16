@@ -75,11 +75,19 @@ export const createCoreEntity = (data: Prisma.CoreEntityCreateInput) =>
 
 export const updateCoreEntity = (
   id: string,
+  user: string,
   data: Prisma.CoreEntityUpdateInput
 ) =>
-  prisma.coreEntity.update({ include: coreEntityInclude, where: { id }, data });
+  prisma.coreEntity.update({
+    include: coreEntityInclude,
+    where: { id, userId: user },
+    data,
+  });
 
-export const deleteCoreEntity = (id: string) =>
-  prisma.coreEntity.delete({ include: coreEntityInclude, where: { id } });
+export const deleteCoreEntity = (id: string, user: string) =>
+  prisma.coreEntity.delete({
+    include: coreEntityInclude,
+    where: { id, userId: user },
+  });
 
 export default prisma;

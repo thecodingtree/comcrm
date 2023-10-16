@@ -30,7 +30,6 @@ export const GraphQLSchema = gql`
 
   type Query {
     me: User
-    allUsers: [User]
 
     contacts(filter: CoreEntityFilter): [Contact]
     contact(id: ID!): Contact
