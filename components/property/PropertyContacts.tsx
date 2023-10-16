@@ -16,7 +16,7 @@ export default function CompanyContacts() {
   const session = useSession();
   const { data, loading, error } = useQuery(GET_CONTACTS, {
     variables: {
-      filter: { user: session?.data?.user?.id, entity: params?.id as string },
+      filter: { entity: params?.id as string },
     },
   });
 

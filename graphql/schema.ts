@@ -5,7 +5,6 @@ export const GraphQLSchema = gql`
   scalar JSON
 
   input CoreEntityFilter {
-    user: ID
     entity: ID
   }
 
@@ -31,7 +30,6 @@ export const GraphQLSchema = gql`
 
   type Query {
     me: User
-    allUsers: [User]
 
     contacts(filter: CoreEntityFilter): [Contact]
     contact(id: ID!): Contact
