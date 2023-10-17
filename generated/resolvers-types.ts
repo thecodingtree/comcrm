@@ -102,6 +102,7 @@ export type Mutation = {
 export type MutationCreateCompanyArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  linkedEntity?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
   user: Scalars['ID']['input'];
 };
@@ -110,6 +111,7 @@ export type MutationCreateCompanyArgs = {
 export type MutationCreateContactArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  linkedEntity?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
   surName?: InputMaybe<Scalars['String']['input']>;
   user: Scalars['ID']['input'];
@@ -119,6 +121,7 @@ export type MutationCreateContactArgs = {
 export type MutationCreatePropertyArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  linkedEntity?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
   user: Scalars['ID']['input'];
 };

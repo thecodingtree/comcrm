@@ -1,10 +1,10 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useQuery } from '@apollo/client';
-import { GET_COMPANY, GET_PROPERTY } from '@/graphql/queries';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { GET_PROPERTY } from '@/graphql/queries';
 
-import { Text, Title, Space, Grid } from '@mantine/core';
+import { Space, Grid } from '@mantine/core';
 
 import PropertyInfo from './PropertyInfo';
 import PropertyCompanies from './PropertyCompanies';

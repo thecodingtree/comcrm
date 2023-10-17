@@ -1,8 +1,8 @@
 import { Prisma, CoreEntityType } from '@prisma/client';
 
 import {
-  getCoreEntities,
-  getCoreEntity,
+  getOwnedCoreEntities,
+  getOwnedCoreEntity,
   createCoreEntity,
   updateCoreEntity,
   deleteCoreEntity,
@@ -66,9 +66,9 @@ const coreEntityResolver = async ({
   user,
   dataMapper,
 }: CoreEntityResolverArgs) => {
-  const result = await getCoreEntity(id, user);
+  const result = await getOwnedCoreEntity(id, user);
 
-  return dataMapper(result);
+  return result ? dataMapper(result) : null;
 };
 
 export const coreEntitiesResolver = async ({
@@ -77,13 +77,13 @@ export const coreEntitiesResolver = async ({
   user,
   dataMapper,
 }: CoreEntitiesResolverArgs) => {
-  const result = await getCoreEntities({
+  const result = await getOwnedCoreEntities({
     entityType,
     filter,
     withUserId: user,
   });
 
-  const results = result.map((entity) => {
+  const results = result.map((entity: CoreEntityResult) => {
     return dataMapper(entity);
   });
 
@@ -95,7 +95,7 @@ const coreEntityCreator = async ({
   data,
   dataMapper,
 }: CoreEntityCreatorArgs) => {
-  const { user, name, surName, address, attributes } = data;
+  const { user, name, surName, address, attributes, linkedEntity } = data;
 
   const coreEntityCreateInput = {
     type: entityType,
@@ -118,6 +118,13 @@ const coreEntityCreator = async ({
         id: user,
       },
     },
+    linkedEntities: linkedEntity
+      ? {
+          connect: {
+            id: linkedEntity,
+          },
+        }
+      : undefined,
   } as Prisma.CoreEntityCreateInput;
 
   const result = await createCoreEntity(coreEntityCreateInput);
