@@ -13,7 +13,11 @@ import { GET_PROPERTIES } from '@/graphql/queries';
 
 import PropertyForm from './form/PropertyForm';
 
-export default function PropertyAdd() {
+interface PropertyAddProps {
+  linkedEntity?: string;
+}
+
+export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
   const { data: session, status } = useSession();
   const [addProperty, { data, loading, error }] = useMutation(ADD_PROPERTY, {
     onCompleted: () => {
@@ -35,6 +39,7 @@ export default function PropertyAdd() {
           zip: values.zip,
         },
         user: session?.user?.id ?? '',
+        linkedEntity: linkedEntity ?? null,
       },
     });
   };

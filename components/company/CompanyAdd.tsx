@@ -12,7 +12,11 @@ import { GET_COMPANIES } from '@/graphql/queries';
 
 import CompanyForm from './form/CompanyForm';
 
-export default function CompanyAdd() {
+interface CompanyAddProps {
+  linkedEntity?: string;
+}
+
+export default function CompanyAdd({ linkedEntity }: CompanyAddProps) {
   const { data: session, status } = useSession();
   const [addCompany, { data, loading, error }] = useMutation(ADD_COMPANY, {
     onCompleted: () => {
@@ -33,6 +37,7 @@ export default function CompanyAdd() {
           zip: values.zip,
         },
         user: session?.user?.id ?? '',
+        linkedEntity: linkedEntity ?? null,
       },
     });
   };

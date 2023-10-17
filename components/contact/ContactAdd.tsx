@@ -12,7 +12,11 @@ import { GET_CONTACTS } from '@/graphql/queries';
 
 import ContactForm from './form/ContactForm';
 
-export default function ContactAdd() {
+interface ContactAddProps {
+  linkedEntity?: string;
+}
+
+export default function ContactAdd({ linkedEntity }: ContactAddProps) {
   const { data: session, status } = useSession();
   const [addContact, { data, loading, error }] = useMutation(ADD_CONTACT, {
     onCompleted: () => {
@@ -34,6 +38,7 @@ export default function ContactAdd() {
           zip: values.zip,
         },
         user: session?.user?.id ?? '',
+        linkedEntity,
       },
     });
   };
