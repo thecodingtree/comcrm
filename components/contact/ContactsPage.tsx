@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 
 import { useMutation } from '@apollo/client';
 
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { DELETE_CONTACT } from '@/graphql/mutations';
 
@@ -14,9 +14,10 @@ import { Space } from '@mantine/core';
 
 import ContactsTable from '@/components/contact/ContactsTable';
 import ContactAdd from '@/components/contact/ContactAdd';
+import ReloadQuery from '../controls/ReloadQuery';
 
 export default function CompaniesPage() {
-  const { data, error } = useSuspenseQuery(GET_CONTACTS);
+  const { data, loading, error, refetch } = useQuery(GET_CONTACTS);
 
   const [deleteContact] = useMutation(DELETE_CONTACT, {
     refetchQueries: [GET_CONTACTS],
@@ -38,12 +39,11 @@ export default function CompaniesPage() {
 
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <ContactsTable
-          contacts={data?.contacts}
-          onDeleteContact={deleteContactHandler}
-        />
-      </Suspense>
+      <ContactsTable
+        contacts={data?.contacts}
+        onDeleteContact={deleteContactHandler}
+      />
+      <ReloadQuery reload={refetch} />
       <Space h="lg" />
       <ContactAdd />
     </div>
