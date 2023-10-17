@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { GET_COMPANY } from '@/graphql/queries';
 
 import { Text, Title, Space, Grid } from '@mantine/core';

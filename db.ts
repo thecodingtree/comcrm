@@ -20,16 +20,20 @@ interface GetCoreEntitiesArgs {
   withUserId?: string;
 }
 
-export const getCoreEntities = async ({
+export const getOwnedCoreEntities = async ({
   entityType,
   filter,
   withUserId,
 }: GetCoreEntitiesArgs): Promise<CoreEntityResult[]> => {
+  if (!withUserId) {
+    return [];
+  }
+
   const results = await prisma.coreEntity.findMany({
     include: coreEntityInclude,
     where: {
       type: entityType,
-      userId: withUserId ? withUserId : undefined,
+      userId: withUserId,
       OR: filter?.entity
         ? [
             {
@@ -50,10 +54,14 @@ export const getCoreEntities = async ({
   return results;
 };
 
-export const getCoreEntity = async (
+export const getOwnedCoreEntity = async (
   id: string,
   withUserId: string
-): Promise<CoreEntityResult> => {
+): Promise<CoreEntityResult | null> => {
+  if (!withUserId) {
+    return null;
+  }
+
   const result = await prisma.coreEntity.findUnique({
     include: coreEntityInclude,
     where: { id, userId: withUserId },

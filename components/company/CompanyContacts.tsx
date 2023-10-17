@@ -1,19 +1,20 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
-import { Grid } from '@mantine/core';
+import { Box, Flex, Space } from '@mantine/core';
 
 import { GET_CONTACTS } from '@/graphql/queries';
 
 import ContactCard from '@/components/cards/ContactCard';
+import ContactAdd from '@/components/contact/ContactAdd';
 import { Contact } from '@/generated/resolvers-types';
 
 export default function CompanyContacts() {
   const params = useParams();
-  const session = useSession();
+  const entityId = params?.id as string;
+
   const { data, loading, error } = useQuery(GET_CONTACTS, {
     variables: {
       filter: { entity: params?.id as string },
@@ -23,8 +24,15 @@ export default function CompanyContacts() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <Grid>
-      <Grid.Col span={12}>
+    <Box>
+      <Flex
+        mih={50}
+        gap="lg"
+        justify="flex-start"
+        align="flex-start"
+        direction="row"
+        wrap="wrap"
+      >
         {data?.contacts?.map((contact: Contact) => {
           const contact_title =
             contact?.attributes?.find((attr) => attr?.name === 'COMPANY_TITLE')
@@ -32,7 +40,8 @@ export default function CompanyContacts() {
 
           return (
             <ContactCard
-              key={contact.id}
+              id={contact.id}
+              key={`contact-${contact.id}`}
               name={`${contact.name} ${contact.surName}`}
               title={contact_title}
               email={contact.email || ''}
@@ -41,7 +50,9 @@ export default function CompanyContacts() {
             />
           );
         })}
-      </Grid.Col>
-    </Grid>
+      </Flex>
+      <Space h="lg" />
+      <ContactAdd linkedEntity={entityId} />
+    </Box>
   );
 }
