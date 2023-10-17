@@ -7,12 +7,14 @@ export const ADD_COMPANY = gql`
     $name: String!
     $address: AddressInput
     $attributes: [AttributeInput]
+    $linkedEntity: ID
   ) {
     createCompany(
       user: $user
       name: $name
       address: $address
       attributes: $attributes
+      linkedEntity: $linkedEntity
     ) {
       id
       name
@@ -41,12 +43,14 @@ export const ADD_PROPERTY = gql`
     $name: String!
     $address: AddressInput
     $attributes: [AttributeInput]
+    $linkedEntity: ID
   ) {
     createProperty(
       user: $user
       name: $name
       address: $address
       attributes: $attributes
+      linkedEntity: $linkedEntity
     ) {
       id
       name
@@ -76,6 +80,7 @@ export const ADD_CONTACT = gql`
     $surName: String!
     $address: AddressInput
     $attributes: [AttributeInput]
+    $linkedEntity: ID
   ) {
     createContact(
       user: $user
@@ -83,6 +88,7 @@ export const ADD_CONTACT = gql`
       surName: $surName
       address: $address
       attributes: $attributes
+      linkedEntity: $linkedEntity
     ) {
       id
       name

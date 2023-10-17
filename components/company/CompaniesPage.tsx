@@ -4,23 +4,20 @@ import { Suspense } from 'react';
 
 import { useMutation } from '@apollo/client';
 
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { DELETE_PROPERTY } from '@/graphql/mutations';
 
 import { GET_COMPANIES } from '@/graphql/queries';
 
-import { Space } from '@mantine/core';
+import { Space, Box } from '@mantine/core';
 
 import CompaniesTable from '@/components/company/CompaniesTable';
 import CompanyAdd from '@/components/company/CompanyAdd';
+import ReloadQuery from '@/components/controls/ReloadQuery';
 
-interface CompaniesPageProps {
-  user: any;
-}
-
-export default function CompaniesPage({ user }: CompaniesPageProps) {
-  const { data, error } = useSuspenseQuery(GET_COMPANIES);
+export default function CompaniesPage() {
+  const { data, loading, error, refetch } = useQuery(GET_COMPANIES);
 
   const [deleteCompany] = useMutation(DELETE_PROPERTY, {
     refetchQueries: [GET_COMPANIES],
@@ -42,14 +39,15 @@ export default function CompaniesPage({ user }: CompaniesPageProps) {
 
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <CompaniesTable
-          companies={data?.companies}
-          onDeleteCompany={deleteCompanyHandler}
-        />
-      </Suspense>
+      <CompaniesTable
+        companies={data?.companies}
+        onDeleteCompany={deleteCompanyHandler}
+      />
+      <ReloadQuery reload={refetch} />
       <Space h="lg" />
-      <CompanyAdd />
+      <Box w={'100%'}>
+        <CompanyAdd />
+      </Box>
     </div>
   );
 }

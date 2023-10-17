@@ -50,6 +50,7 @@ export const GraphQLSchema = gql`
       surName: String
       address: AddressInput
       attributes: [AttributeInput]
+      linkedEntity: ID
     ): Contact
     updateContact(
       id: ID!
@@ -65,6 +66,7 @@ export const GraphQLSchema = gql`
       name: String!
       address: AddressInput
       attributes: [AttributeInput]
+      linkedEntity: ID
     ): Company
     updateCompany(
       id: ID!
@@ -79,6 +81,7 @@ export const GraphQLSchema = gql`
       name: String!
       address: AddressInput
       attributes: [AttributeInput]
+      linkedEntity: ID
     ): Property
     updateProperty(
       id: ID!
