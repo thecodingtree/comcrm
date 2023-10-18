@@ -11,8 +11,8 @@ import { theme } from '../theme';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 
 export const metadata = {
-  title: 'Mantine Next.js template',
-  description: 'I am using Mantine with Next.js!',
+  title: 'COMCRM - The Modern CRM for Real Estate Agents',
+  description: 'COMCRM - The Modern CRM for Real Estate Agents',
 };
 
 export default function RootLayout({ children }: { children: any }) {
