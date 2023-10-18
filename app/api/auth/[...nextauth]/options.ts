@@ -33,7 +33,7 @@ const providers = [
       if (process.env.NODE_ENV !== 'development') return null;
 
       // Add logic here to look up the user from the credentials supplied
-      const user = prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { email: credentials?.username },
       });
 
