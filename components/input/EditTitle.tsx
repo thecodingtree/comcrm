@@ -5,16 +5,11 @@ import { Stack, Flex, Title, ActionIcon, TextInput, Box } from '@mantine/core';
 import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
 
 interface EditTitleProps {
-  label?: string | null;
   initValue?: string | null;
   onChange?: (value?: string | null) => void;
 }
 
-export default function EditText({
-  label,
-  initValue,
-  onChange,
-}: EditTitleProps) {
+export default function EditText({ initValue, onChange }: EditTitleProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [tmpValue, setTmpValue] = useState(initValue);
 
@@ -26,7 +21,7 @@ export default function EditText({
     <Stack gap="xs">
       {!isEditing ? (
         <Flex>
-          <Title fs="italic">{tmpValue}</Title>
+          <Title fs="italic">{tmpValue ?? 'No Value'}</Title>
           <ActionIcon
             m={8}
             variant="transparent"
@@ -37,7 +32,11 @@ export default function EditText({
           </ActionIcon>
         </Flex>
       ) : (
-        <TextInput value={tmpValue ?? ''} onChange={(e) => handleChange(e)} />
+        <TextInput
+          placeholder="name"
+          value={tmpValue ?? ''}
+          onChange={(e) => handleChange(e)}
+        />
       )}
       <Flex justify="space-between">
         {isEditing && (

@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { GET_COMPANY } from '@/graphql/queries';
 
-import { Text, Title, Space, Grid } from '@mantine/core';
+import { Avatar, Space, Grid } from '@mantine/core';
 
 import CompanyInfo from './CompanyInfo';
 import CompanyProperties from './CompanyProperties';
@@ -14,23 +14,26 @@ import CompanyNotes from './CompanyNotes';
 export default function CompanyDetails() {
   const params = useParams();
 
+  const companyId = typeof params?.id === 'string' ? params?.id : undefined;
+
   const { data, loading, error } = useQuery(GET_COMPANY, {
-    variables: { id: params?.id },
+    variables: { id: companyId },
   });
 
   return (
     <Grid>
-      {/* <Grid.Col span={12}>
-          <Title>{`Company: ${params?.id}`}</Title>
-          <Text>{loading ? 'Loading....' : JSON.stringify(data)}</Text>
-        </Grid.Col> */}
-      <Grid.Col span={{ base: 12, lg: 6 }}>
-        <CompanyInfo
-          name={data?.company?.name}
-          address={data?.company?.address}
+      <Grid.Col span={{ base: 12, lg: 2 }}>
+        <Avatar
+          color="blue"
+          radius="xl"
+          size={150}
+          src={data?.company?.image}
         />
       </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 6 }}>
+      <Grid.Col span={{ base: 12, lg: 5 }}>
+        <CompanyInfo companyId={companyId} />
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, lg: 5 }}>
         <CompanyNotes />
       </Grid.Col>
       <Grid.Col span={12}>

@@ -66,6 +66,8 @@ export const GraphQLSchema = gql`
     createCompany(
       user: ID!
       name: String!
+      phone: String
+      email: String
       address: AddressInput
       attributes: [AttributeInput]
       linkedEntity: ID
@@ -73,6 +75,8 @@ export const GraphQLSchema = gql`
     updateCompany(
       id: ID!
       name: String
+      phone: String
+      email: String
       address: AddressInput
       attributes: [AttributeInput]
     ): Company
@@ -120,6 +124,8 @@ export const GraphQLSchema = gql`
   type Company {
     id: ID!
     name: String!
+    phone: String
+    email: String
     address: Address
     attributes: [Attribute]
     user: User

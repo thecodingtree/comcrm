@@ -28,6 +28,37 @@ export const ADD_COMPANY = gql`
   }
 `;
 
+export const EDIT_COMPANY = gql`
+  mutation EditCompany(
+    $id: ID!
+    $name: String
+    $phone: String
+    $email: String
+    $address: AddressInput
+    $attributes: [AttributeInput]
+  ) {
+    updateCompany(
+      id: $id
+      name: $name
+      phone: $phone
+      email: $email
+      address: $address
+      attributes: $attributes
+    ) {
+      id
+      name
+      phone
+      email
+      address {
+        street
+        city
+        state
+        zip
+      }
+    }
+  }
+`;
+
 export const DELETE_COMPANY = gql`
   mutation DeleteCompany($id: ID!) {
     deleteCompany(id: $id) {

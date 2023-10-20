@@ -82,6 +82,8 @@ export const GET_COMPANY = gql`
     company(id: $id) {
       id
       name
+      phone
+      email
       address {
         street
         city

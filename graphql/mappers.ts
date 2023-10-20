@@ -24,6 +24,8 @@ export const companyDataMapper = (entity: CoreEntityResult): Company => {
     id,
     name: meta?.name,
     address: meta?.address,
+    phone: meta?.phone,
+    email: meta?.email,
     attributes,
     user,
     createdAt,
