@@ -39,48 +39,40 @@ export default function ContactInfo({ contactId }: ContactCardProps) {
   return (
     <Paper p="sm" maw={rem(500)}>
       <Stack gap="sm">
-        {fullName && (
-          <EditTitle initValue={fullName} onChange={handleNameChange} />
-        )}
+        <EditTitle initValue={fullName} onChange={handleNameChange} />
         <Space h="xs" />
-        {data?.contact?.phone && (
-          <EditText
-            label="phone"
-            initValue={data?.contact?.phone}
-            onChange={(phone) =>
-              updateContact({ variables: { id: data?.contact?.id, phone } })
-            }
-          />
-        )}
+        <EditText
+          label="phone"
+          initValue={data?.contact?.phone}
+          onChange={(phone) =>
+            updateContact({ variables: { id: data?.contact?.id, phone } })
+          }
+        />
 
-        {data?.contact?.email && (
-          <EditText
-            label="email"
-            initValue={data?.contact?.email}
-            onChange={(email) =>
-              updateContact({ variables: { id: data?.contact?.id, email } })
-            }
-          />
-        )}
-        {data?.contact?.address && (
-          <EditAddress
-            label="address"
-            address={data?.contact?.address}
-            onChange={(address) =>
-              updateContact({
-                variables: {
-                  id: data?.contact?.id,
-                  address: {
-                    street: address?.street,
-                    city: address?.city,
-                    state: address?.state,
-                    zip: address?.zip,
-                  },
+        <EditText
+          label="email"
+          initValue={data?.contact?.email}
+          onChange={(email) =>
+            updateContact({ variables: { id: data?.contact?.id, email } })
+          }
+        />
+        <EditAddress
+          label="address"
+          address={data?.contact?.address}
+          onChange={(address) =>
+            updateContact({
+              variables: {
+                id: data?.contact?.id,
+                address: {
+                  street: address?.street,
+                  city: address?.city,
+                  state: address?.state,
+                  zip: address?.zip,
                 },
-              })
-            }
-          />
-        )}
+              },
+            })
+          }
+        />
       </Stack>
     </Paper>
   );

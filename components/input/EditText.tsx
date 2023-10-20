@@ -62,9 +62,13 @@ export default function EditText({
         )}
       </Flex>
       {!isEditing ? (
-        <Text fs="italic">{tmpValue}</Text>
+        <Text fs="italic">{tmpValue ?? 'No Value'}</Text>
       ) : (
-        <TextInput value={tmpValue ?? ''} onChange={(e) => handleChange(e)} />
+        <TextInput
+          placeholder={label ?? ''}
+          value={tmpValue ?? ''}
+          onChange={(e) => handleChange(e)}
+        />
       )}
     </Stack>
   );
