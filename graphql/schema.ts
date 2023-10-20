@@ -56,6 +56,8 @@ export const GraphQLSchema = gql`
       id: ID!
       name: String
       surName: String
+      phone: String
+      email: String
       address: AddressInput
       attributes: [AttributeInput]
     ): Contact

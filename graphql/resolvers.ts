@@ -138,13 +138,15 @@ const coreEntityUpdater = async ({
   user,
   dataMapper,
 }: CoreEntityUpdaterArgs) => {
-  const { name, surName, address, attributes } = data;
+  const { name, surName, phone, email, address, attributes } = data;
 
   const coreEntityUpdateInput = {
     meta: {
       update: {
         name,
-        surName: surName ? surName : '',
+        surName,
+        phone,
+        email,
         address: address
           ? {
               create: address,

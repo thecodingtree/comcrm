@@ -153,8 +153,10 @@ export type MutationUpdateCompanyArgs = {
 export type MutationUpdateContactArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
   surName?: InputMaybe<Scalars['String']['input']>;
 };
 

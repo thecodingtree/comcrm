@@ -103,6 +103,40 @@ export const ADD_CONTACT = gql`
   }
 `;
 
+export const EDIT_CONTACT = gql`
+  mutation EditContact(
+    $id: ID!
+    $name: String
+    $surName: String
+    $phone: String
+    $email: String
+    $address: AddressInput
+    $attributes: [AttributeInput]
+  ) {
+    updateContact(
+      id: $id
+      name: $name
+      surName: $surName
+      phone: $phone
+      email: $email
+      address: $address
+      attributes: $attributes
+    ) {
+      id
+      name
+      surName
+      phone
+      email
+      address {
+        street
+        city
+        state
+        zip
+      }
+    }
+  }
+`;
+
 export const DELETE_CONTACT = gql`
   mutation DeleteContact($id: ID!) {
     deleteContact(id: $id) {
