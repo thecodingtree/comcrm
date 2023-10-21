@@ -17,14 +17,25 @@ export default function EditAddress({
   onChange,
 }: EditAddressProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [tmpAddress, setTmpAddress] = useState<Address | null>(address);
 
-  const handleChange = (name: string, e: React.FormEvent<HTMLInputElement>) => {
+  // TODO: fix this
+  const [street, setStreet] = useState(address?.street);
+  const [city, setCity] = useState(address?.city);
+  const [state, setState] = useState(address?.state);
+  const [zip, setZip] = useState(address?.zip);
+
+  const handleApply = () => {
+    setIsEditing(!isEditing);
     const newAddress = {
-      ...address,
-      [name]: e.currentTarget.value,
+      street,
+      city,
+      state,
+      zip,
     } as Address;
-    setTmpAddress(newAddress);
+
+    if (onChange && newAddress !== address) {
+      onChange(newAddress);
+    }
   };
 
   return (
@@ -33,7 +44,7 @@ export default function EditAddress({
         <Text size="md" c="dimmed">
           {label}
         </Text>
-        {!isEditing ? (
+        {!isEditing && (
           <ActionIcon
             variant="transparent"
             color="gray"
@@ -41,18 +52,40 @@ export default function EditAddress({
           >
             <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
           </ActionIcon>
-        ) : (
+        )}
+      </Flex>
+      {!isEditing ? (
+        <Stack gap="xs">
+          <Text fs="italic">{street}</Text>
+          <Text fs="italic">{`${city} ${state} ${zip}`}</Text>
+        </Stack>
+      ) : (
+        <Stack gap="xs">
+          <TextInput
+            label="street"
+            defaultValue={street}
+            onChange={(e) => setStreet(e.currentTarget.value)}
+          />
+          <TextInput
+            label="city"
+            defaultValue={city}
+            onChange={(e) => setCity(e.currentTarget.value)}
+          />
+          <TextInput
+            label="state"
+            defaultValue={state}
+            onChange={(e) => setState(e.currentTarget.value)}
+          />
+          <TextInput
+            label="zip"
+            defaultValue={zip}
+            onChange={(e) => setZip(e.currentTarget.value)}
+          />
           <Box>
             <ActionIcon
               variant="transparent"
               color="gray"
-              onClick={() => {
-                setIsEditing(!isEditing);
-
-                if (onChange && tmpAddress !== address) {
-                  onChange(tmpAddress);
-                }
-              }}
+              onClick={() => handleApply()}
             >
               <IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />
             </ActionIcon>
@@ -64,35 +97,6 @@ export default function EditAddress({
               <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
             </ActionIcon>
           </Box>
-        )}
-      </Flex>
-      {!isEditing ? (
-        <Stack gap="xs">
-          <Text fs="italic">{tmpAddress?.street}</Text>
-          <Text fs="italic">{`${tmpAddress?.city} ${tmpAddress?.state}, ${tmpAddress?.zip}`}</Text>
-        </Stack>
-      ) : (
-        <Stack gap="xs">
-          <TextInput
-            label="street"
-            defaultValue={tmpAddress?.street}
-            onChange={(e) => handleChange('street', e)}
-          />
-          <TextInput
-            label="city"
-            defaultValue={tmpAddress?.city}
-            onChange={(e) => handleChange('city', e)}
-          />
-          <TextInput
-            label="state"
-            defaultValue={tmpAddress?.state}
-            onChange={(e) => handleChange('state', e)}
-          />
-          <TextInput
-            label="zip"
-            defaultValue={tmpAddress?.zip}
-            onChange={(e) => handleChange('zip', e)}
-          />
         </Stack>
       )}
     </Stack>

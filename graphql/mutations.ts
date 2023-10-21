@@ -72,6 +72,8 @@ export const ADD_PROPERTY = gql`
   mutation AddProperty(
     $user: ID!
     $name: String!
+    $phone: String
+    $email: String
     $address: AddressInput
     $attributes: [AttributeInput]
     $linkedEntity: ID
@@ -79,12 +81,47 @@ export const ADD_PROPERTY = gql`
     createProperty(
       user: $user
       name: $name
+      phone: $phone
+      email: $email
       address: $address
       attributes: $attributes
       linkedEntity: $linkedEntity
     ) {
       id
       name
+      phone
+      email
+      address {
+        street
+        city
+        state
+        zip
+      }
+    }
+  }
+`;
+
+export const EDIT_PROPERTY = gql`
+  mutation EditProperty(
+    $id: ID!
+    $name: String
+    $phone: String
+    $email: String
+    $address: AddressInput
+    $attributes: [AttributeInput]
+  ) {
+    updateProperty(
+      id: $id
+      name: $name
+      phone: $phone
+      email: $email
+      address: $address
+      attributes: $attributes
+    ) {
+      id
+      name
+      phone
+      email
       address {
         street
         city
