@@ -52,8 +52,10 @@ export type Company = {
   address?: Maybe<Address>;
   attributes?: Maybe<Array<Maybe<Attribute>>>;
   createdAt: Scalars['DateTime']['output'];
+  email?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   user?: Maybe<User>;
 };
@@ -102,8 +104,10 @@ export type Mutation = {
 export type MutationCreateCompanyArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  email?: InputMaybe<Scalars['String']['input']>;
   linkedEntity?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
+  phone?: InputMaybe<Scalars['String']['input']>;
   user: Scalars['ID']['input'];
 };
 
@@ -121,8 +125,10 @@ export type MutationCreateContactArgs = {
 export type MutationCreatePropertyArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  email?: InputMaybe<Scalars['String']['input']>;
   linkedEntity?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
+  phone?: InputMaybe<Scalars['String']['input']>;
   user: Scalars['ID']['input'];
 };
 
@@ -145,16 +151,20 @@ export type MutationDeletePropertyArgs = {
 export type MutationUpdateCompanyArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationUpdateContactArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
   surName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -162,8 +172,10 @@ export type MutationUpdateContactArgs = {
 export type MutationUpdatePropertyArgs = {
   address?: InputMaybe<AddressInput>;
   attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
+  email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Property = {
@@ -171,8 +183,10 @@ export type Property = {
   address?: Maybe<Address>;
   attributes?: Maybe<Array<Maybe<Attribute>>>;
   createdAt: Scalars['DateTime']['output'];
+  email?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   user?: Maybe<User>;
 };
@@ -360,8 +374,10 @@ export type CompanyResolvers<ContextType = any, ParentType extends ResolversPare
   address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
   attributes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -406,8 +422,10 @@ export type PropertyResolvers<ContextType = any, ParentType extends ResolversPar
   address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
   attributes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
