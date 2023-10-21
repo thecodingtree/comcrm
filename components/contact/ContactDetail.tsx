@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { GET_CONTACT } from '@/graphql/queries';
 
-import { Grid } from '@mantine/core';
+import { Grid, Avatar } from '@mantine/core';
 
 import ContactInfo from './ContactInfo';
 import ContactNotes from './ContactNotes';
@@ -12,20 +12,28 @@ import ContactNotes from './ContactNotes';
 export default function ContactDetails() {
   const params = useParams();
 
+  const contactId = typeof params?.id === 'string' ? params?.id : undefined;
+
   const { data, loading, error } = useQuery(GET_CONTACT, {
-    variables: { id: params?.id },
+    variables: { id: contactId },
   });
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <Grid>
-      <Grid.Col span={{ base: 12, lg: 6 }}>
-        <ContactInfo
-          name={data?.contact?.name}
-          surName={data?.contact?.surName}
-          address={data?.contact?.address}
+      <Grid.Col span={{ base: 12, lg: 2 }}>
+        <Avatar
+          color="blue"
+          radius="xl"
+          size={150}
+          src={data?.contact?.image}
         />
       </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 6 }}>
+      <Grid.Col span={{ base: 12, lg: 5 }}>
+        <ContactInfo contactId={contactId} />
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, lg: 5 }}>
         <ContactNotes />
       </Grid.Col>
     </Grid>

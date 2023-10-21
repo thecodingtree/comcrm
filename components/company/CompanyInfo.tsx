@@ -1,45 +1,81 @@
+import { useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Address } from '@/generated/resolvers-types';
-import { Group, Box, Grid, Avatar, Title, Text, Space } from '@mantine/core';
+import {
+  Group,
+  Box,
+  Paper,
+  Stack,
+  Title,
+  Text,
+  Space,
+  rem,
+} from '@mantine/core';
+
+import { EDIT_COMPANY } from '@/graphql/mutations';
+import { GET_COMPANY } from '@/graphql/queries';
+
+import EditText from '@/components/input/EditText';
+import EditTitle from '@/components/input/EditTitle';
+import EditAddress from '../input/EditAddress';
 
 interface CompanyCardProps {
-  name?: string;
-  address?: Address;
+  companyId?: string;
 }
 
-const generateAvatarText = (name: string) => {
-  const split = name.split(' ');
-  if (split.length === 1) {
-    return split[0].charAt(0);
-  } else {
-    return `${split[0].charAt(0).toUpperCase()}${split[1]
-      .charAt(0)
-      .toUpperCase()}`;
-  }
-};
+export default function CompanyInfo({ companyId }: CompanyCardProps) {
+  const { data, loading, error } = useQuery(GET_COMPANY, {
+    variables: { id: companyId },
+  });
 
-export default function CompanyInfo({ name, address }: CompanyCardProps) {
-  const address_2 = `${address?.city} ${address?.state}, ${address?.zip}`;
+  const [updateCompany] = useMutation(EDIT_COMPANY);
+
+  if (loading) return <p>Loading...</p>;
+
   return (
-    <Group>
-      <Avatar color="blue" radius="xl" size={150}>
-        {name && generateAvatarText(name)}
-      </Avatar>
-      <Box>
-        <Title order={1}>{name ? name : 'No Name Provided'}</Title>
+    <Paper p="sm" maw={rem(600)}>
+      <Stack gap="sm">
+        {data?.company?.name && (
+          <EditTitle
+            initValue={data?.company?.name}
+            onChange={(name) =>
+              updateCompany({ variables: { id: companyId, name } })
+            }
+          />
+        )}
         <Space h="xs" />
-        <div className="mt-4">
-          {address ? (
-            <>
-              <Text>{address?.street}</Text>
-              <Text>{address_2}</Text>
-            </>
-          ) : (
-            <Text>
-              <i>No Address Provided</i>
-            </Text>
-          )}
-        </div>
-      </Box>
-    </Group>
+        <EditText
+          label="phone"
+          initValue={data?.company?.phone}
+          onChange={(phone) =>
+            updateCompany({ variables: { id: companyId, phone } })
+          }
+        />
+        <EditText
+          label="email"
+          initValue={data?.company?.email}
+          onChange={(email) =>
+            updateCompany({ variables: { id: companyId, email } })
+          }
+        />
+        <EditAddress
+          label="address"
+          address={data?.company?.address}
+          onChange={(address) =>
+            updateCompany({
+              variables: {
+                id: companyId,
+                address: {
+                  street: address?.street,
+                  city: address?.city,
+                  state: address?.state,
+                  zip: address?.zip,
+                },
+              },
+            })
+          }
+        />
+      </Stack>
+    </Paper>
   );
 }
