@@ -4,7 +4,9 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { GET_PROPERTY } from '@/graphql/queries';
 
-import { Space, Grid } from '@mantine/core';
+import { Space, Grid, Avatar } from '@mantine/core';
+
+import { IconBuilding } from '@tabler/icons-react';
 
 import PropertyInfo from './PropertyInfo';
 import PropertyCompanies from './PropertyCompanies';
@@ -14,19 +16,25 @@ import PropertyNotes from './PropertyNotes';
 export default function PropertyDetail() {
   const params = useParams();
 
+  const propertyId = typeof params?.id === 'string' ? params?.id : undefined;
+
   const { data, loading, error } = useQuery(GET_PROPERTY, {
-    variables: { id: params?.id },
+    variables: { id: propertyId },
   });
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <Grid>
-      <Grid.Col span={{ base: 12, lg: 6 }}>
-        <PropertyInfo
-          name={data?.property?.name}
-          address={data?.property?.address}
-        />
+      <Grid.Col span={{ base: 12, lg: 2 }}>
+        <Avatar color="blue" radius="xl" size={150} src={data?.property?.image}>
+          <IconBuilding size={75} />
+        </Avatar>
       </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 6 }}>
+      <Grid.Col span={{ base: 12, lg: 5 }}>
+        <PropertyInfo propertyId={propertyId} />
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, lg: 5 }}>
         <PropertyNotes />
       </Grid.Col>
       <Grid.Col span={12}>

@@ -39,6 +39,8 @@ export const propertyDataMapper = (entity: CoreEntityResult): Property => {
     id,
     name: meta?.name,
     address: meta?.address,
+    phone: meta?.phone,
+    email: meta?.email,
     attributes,
     user,
     createdAt,

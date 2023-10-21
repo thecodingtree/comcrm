@@ -85,6 +85,8 @@ export const GraphQLSchema = gql`
     createProperty(
       user: ID!
       name: String!
+      phone: String
+      email: String
       address: AddressInput
       attributes: [AttributeInput]
       linkedEntity: ID
@@ -92,6 +94,8 @@ export const GraphQLSchema = gql`
     updateProperty(
       id: ID!
       name: String
+      phone: String
+      email: String
       address: AddressInput
       attributes: [AttributeInput]
     ): Property
@@ -136,6 +140,8 @@ export const GraphQLSchema = gql`
   type Property {
     id: ID!
     name: String!
+    phone: String
+    email: String
     address: Address
     attributes: [Attribute]
     user: User

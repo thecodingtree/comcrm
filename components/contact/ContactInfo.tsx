@@ -29,7 +29,7 @@ export default function ContactInfo({ contactId }: ContactCardProps) {
     const [firstName, lastName] = name?.split(' ');
     updateContact({
       variables: {
-        id: data?.contact?.id,
+        id: contactId,
         name: firstName,
         surName: lastName,
       },
@@ -45,7 +45,7 @@ export default function ContactInfo({ contactId }: ContactCardProps) {
           label="phone"
           initValue={data?.contact?.phone}
           onChange={(phone) =>
-            updateContact({ variables: { id: data?.contact?.id, phone } })
+            updateContact({ variables: { id: contactId, phone } })
           }
         />
 
@@ -53,7 +53,7 @@ export default function ContactInfo({ contactId }: ContactCardProps) {
           label="email"
           initValue={data?.contact?.email}
           onChange={(email) =>
-            updateContact({ variables: { id: data?.contact?.id, email } })
+            updateContact({ variables: { id: contactId, email } })
           }
         />
         <EditAddress
@@ -62,7 +62,7 @@ export default function ContactInfo({ contactId }: ContactCardProps) {
           onChange={(address) =>
             updateContact({
               variables: {
-                id: data?.contact?.id,
+                id: contactId,
                 address: {
                   street: address?.street,
                   city: address?.city,
