@@ -82,6 +82,8 @@ export const GET_COMPANY = gql`
     company(id: $id) {
       id
       name
+      phone
+      email
       address {
         street
         city
@@ -101,6 +103,8 @@ export const GET_PROPERTIES: TypedDocumentNode<
     properties(filter: $filter) {
       id
       name
+      phone
+      email
       address {
         street
         city
@@ -116,6 +120,8 @@ export const GET_PROPERTY = gql`
     property(id: $id) {
       id
       name
+      phone
+      email
       address {
         street
         city
