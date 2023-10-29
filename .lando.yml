@@ -14,14 +14,14 @@ services:
     ssl: true
     scanner: false
 
-  database:
-    type: postgres
-    portforward: 5432
-    scanner: false
-    creds:
-      user: postgres
-      password: postgres
-      database: main
+  # database:
+  #   type: postgres
+  #   portforward: 5432
+  #   scanner: false
+  #   creds:
+  #     user: postgres
+  #     password: postgres
+  #     database: main
 
 tooling:
   startapp:
