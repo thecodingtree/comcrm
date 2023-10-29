@@ -7,7 +7,7 @@ import { GET_CONTACT } from '@/graphql/queries';
 import { Grid, Avatar } from '@mantine/core';
 
 import ContactInfo from './ContactInfo';
-import ContactNotes from './ContactNotes';
+import EntityNotes from '@/components/entities/EntityNotes';
 
 export default function ContactDetails() {
   const params = useParams();
@@ -34,7 +34,7 @@ export default function ContactDetails() {
         <ContactInfo contactId={contactId} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
-        <ContactNotes />
+        <EntityNotes entityId={contactId} />
       </Grid.Col>
     </Grid>
   );

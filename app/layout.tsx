@@ -1,8 +1,11 @@
 import '@mantine/core/styles.css';
 import React from 'react';
+import { headers } from 'next/headers';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 
 import { ApolloWrapper } from '@/lib/apollo-provider';
+
+import { TRPCProvider } from '@/app/_trpc/TRPCProvider';
 
 import '@mantine/core/styles.css';
 
@@ -28,9 +31,11 @@ export default function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <MantineProvider theme={theme}>
-          <ApolloWrapper>
-            <DashboardLayout>{children}</DashboardLayout>
-          </ApolloWrapper>
+          <TRPCProvider headers={headers()}>
+            <ApolloWrapper>
+              <DashboardLayout>{children}</DashboardLayout>
+            </ApolloWrapper>
+          </TRPCProvider>
         </MantineProvider>
       </body>
     </html>

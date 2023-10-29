@@ -45,6 +45,7 @@ interface CoreEntityCreatorArgs {
   data: MutationCreateContactArgs &
     MutationCreateCompanyArgs &
     MutationCreatePropertyArgs;
+  user: string;
   dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
 }
 
@@ -93,9 +94,10 @@ export const coreEntitiesResolver = async ({
 const coreEntityCreator = async ({
   entityType,
   data,
+  user,
   dataMapper,
 }: CoreEntityCreatorArgs) => {
-  const { user, name, surName, address, attributes, linkedEntity } = data;
+  const { name, surName, address, attributes, linkedEntity } = data;
 
   const coreEntityCreateInput = {
     type: entityType,
@@ -228,22 +230,25 @@ const resolvers: Resolvers = {
       }) as Promise<Property>,
   },
   Mutation: {
-    createContact: async (_, data) =>
+    createContact: async (_, data, contextValue) =>
       coreEntityCreator({
         entityType: CoreEntityType.CONTACT,
         data,
+        user: contextValue.user?.id,
         dataMapper: contactDataMapper,
       }) as Promise<Contact>,
-    createCompany: async (_, data) =>
+    createCompany: async (_, data, contextValue) =>
       coreEntityCreator({
         entityType: CoreEntityType.COMPANY,
         data,
+        user: contextValue.user?.id,
         dataMapper: companyDataMapper,
       }) as Promise<Company>,
-    createProperty: async (_, data) =>
+    createProperty: async (_, data, contextValue) =>
       coreEntityCreator({
         entityType: CoreEntityType.PROPERTY,
         data,
+        user: contextValue.user?.id,
         dataMapper: propertyDataMapper,
       }) as Promise<Property>,
     updateContact: async (_, data, contextValue) =>
