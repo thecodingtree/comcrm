@@ -8,6 +8,8 @@ import { Space, Grid, Avatar } from '@mantine/core';
 
 import { IconBuilding } from '@tabler/icons-react';
 
+import useUser from '@/hooks/useUser';
+
 import PropertyInfo from './PropertyInfo';
 import PropertyCompanies from './PropertyCompanies';
 import PropertyContacts from './PropertyContacts';
