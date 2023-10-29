@@ -9,7 +9,15 @@ export default function EntityNotes({
 }: {
   entityId?: string | null;
 }) {
-  const getNotesForEntity = trpc.notes.getNotesForEntity.useQuery();
+  const getNotesForEntity = entityId
+    ? trpc.notes.getNotesForEntity.useQuery({ entityId, limit: 3 })
+    : null;
+
+  const createNote = trpc.notes.createNote.useMutation({
+    onSettled: () => getNotesForEntity?.refetch(),
+  });
+
+  if (!entityId) return null;
 
   return (
     <Stack justify="flex-start">
@@ -20,7 +28,9 @@ export default function EntityNotes({
           content={note.content}
         />
       ))}
-      <AddNote />
+      <AddNote
+        onAddNote={(content) => createNote.mutate({ entityId, content })}
+      />
     </Stack>
   );
 }

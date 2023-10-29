@@ -78,7 +78,7 @@ export function AddNote({ onAddNote }: AddNoteProps) {
       return;
     }
 
-    if (onAddNote) {
+    if (onAddNote && content.length > 0) {
       onAddNote(content);
     }
 
