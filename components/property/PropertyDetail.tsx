@@ -11,7 +11,7 @@ import { IconBuilding } from '@tabler/icons-react';
 import PropertyInfo from './PropertyInfo';
 import PropertyCompanies from './PropertyCompanies';
 import PropertyContacts from './PropertyContacts';
-import PropertyNotes from './PropertyNotes';
+import EntityNotes from '@/components/entities/EntityNotes';
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -35,7 +35,7 @@ export default function PropertyDetail() {
         <PropertyInfo propertyId={propertyId} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
-        <PropertyNotes />
+        <EntityNotes entityId={propertyId} />
       </Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />
