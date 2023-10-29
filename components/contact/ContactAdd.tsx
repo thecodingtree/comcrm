@@ -2,8 +2,6 @@
 
 import { useMutation } from '@apollo/client';
 
-import { useSession } from 'next-auth/react';
-
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
@@ -17,7 +15,6 @@ interface ContactAddProps {
 }
 
 export default function ContactAdd({ linkedEntity }: ContactAddProps) {
-  const { data: session, status } = useSession();
   const [addContact, { data, loading, error }] = useMutation(ADD_CONTACT, {
     onCompleted: () => {
       close();
@@ -37,7 +34,6 @@ export default function ContactAdd({ linkedEntity }: ContactAddProps) {
           state: values.state,
           zip: values.zip,
         },
-        user: session?.user?.id ?? '',
         linkedEntity,
       },
     });

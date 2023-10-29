@@ -2,8 +2,6 @@
 
 import { useMutation } from '@apollo/client';
 
-import { useSession } from 'next-auth/react';
-
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
@@ -17,7 +15,6 @@ interface CompanyAddProps {
 }
 
 export default function CompanyAdd({ linkedEntity }: CompanyAddProps) {
-  const { data: session, status } = useSession();
   const [addCompany, { data, loading, error }] = useMutation(ADD_COMPANY, {
     onCompleted: () => {
       close();
@@ -36,7 +33,6 @@ export default function CompanyAdd({ linkedEntity }: CompanyAddProps) {
           state: values.state,
           zip: values.zip,
         },
-        user: session?.user?.id ?? '',
         linkedEntity: linkedEntity ?? null,
       },
     });

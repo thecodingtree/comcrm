@@ -10,7 +10,7 @@ import { NextApiRequest } from 'next';
 
 import { authOptions } from '../auth/[...nextauth]/options';
 
-const prisma = new PrismaClient();
+import prisma from '@/db';
 
 const typeDefs = GraphQLSchema;
 

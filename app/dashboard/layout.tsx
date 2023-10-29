@@ -1,5 +1,5 @@
 import { Space } from '@mantine/core';
-import BackButton from '@/components/controls/BackButton';
+import { BackButton } from '@/components/controls/NavButtons';
 
 export default function MainLayout({ children }: { children: any }) {
   return (

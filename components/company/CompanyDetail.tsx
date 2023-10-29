@@ -9,7 +9,7 @@ import { Avatar, Space, Grid } from '@mantine/core';
 import CompanyInfo from './CompanyInfo';
 import CompanyProperties from './CompanyProperties';
 import CompanyContacts from './CompanyContacts';
-import CompanyNotes from './CompanyNotes';
+import EntityNotes from '@/components/entities/EntityNotes';
 
 export default function CompanyDetails() {
   const params = useParams();
@@ -34,7 +34,7 @@ export default function CompanyDetails() {
         <CompanyInfo companyId={companyId} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
-        <CompanyNotes />
+        <EntityNotes entityId={companyId} />
       </Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />

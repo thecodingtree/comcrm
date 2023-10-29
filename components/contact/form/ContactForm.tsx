@@ -22,8 +22,8 @@ export default function ContactForm({
     <div className={classes.wrapper}>
       <Formik
         initialValues={{
-          name: 'test',
-          surName: 'test123',
+          name: '',
+          surName: '',
           street: '',
           city: '',
           state: '',

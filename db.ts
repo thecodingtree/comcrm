@@ -98,4 +98,6 @@ export const deleteCoreEntity = (id: string, user: string) =>
     where: { id, userId: user },
   });
 
+export const getNoteForEntity = async (entityId: string) => {};
+
 export default prisma;

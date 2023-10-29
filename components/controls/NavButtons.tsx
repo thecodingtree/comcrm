@@ -4,10 +4,9 @@ import { useRouter } from 'next/navigation';
 
 import { ActionIcon } from '@mantine/core';
 
-import { Text } from '@mantine/core';
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
-export default function BackButton() {
+export function BackButton() {
   const router = useRouter();
   return (
     <ActionIcon
