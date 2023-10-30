@@ -72,6 +72,7 @@ model CoreEntity {
   attributes      Attributes[]
   meta            MetaData?      @relation(fields: [metaId], references: [id])
   metaId          String?
+  notes           Note[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 }
@@ -109,4 +110,13 @@ model Address {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   meta      MetaData[]
+}
+
+model Note {
+  id        String     @id @default(uuid()) @map("_id")
+  content   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId  String
 }

@@ -45,7 +45,6 @@ export const GraphQLSchema = gql`
     #createUser(name: String, email: String!): User
 
     createContact(
-      user: ID!
       name: String!
       surName: String
       address: AddressInput
@@ -64,7 +63,6 @@ export const GraphQLSchema = gql`
     deleteContact(id: ID!): Contact
 
     createCompany(
-      user: ID!
       name: String!
       phone: String
       email: String
@@ -83,7 +81,6 @@ export const GraphQLSchema = gql`
     deleteCompany(id: ID!): Company
 
     createProperty(
-      user: ID!
       name: String!
       phone: String
       email: String

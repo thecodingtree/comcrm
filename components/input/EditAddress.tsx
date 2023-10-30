@@ -1,7 +1,12 @@
 import { useState } from 'react';
 
-import { Text, TextInput, Stack, Flex, ActionIcon, Box } from '@mantine/core';
-import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
+import { Text, Space, TextInput, Stack, Flex, Box } from '@mantine/core';
+
+import {
+  EditButton,
+  DeleteButton,
+  ConfirmButton,
+} from '@/components/controls/Buttons';
 
 import { Address, Maybe } from '@/generated/resolvers-types';
 
@@ -40,19 +45,12 @@ export default function EditAddress({
 
   return (
     <Stack gap="xs">
-      <Flex justify="space-between">
+      <Flex justify="left">
         <Text size="md" c="dimmed">
           {label}
         </Text>
-        {!isEditing && (
-          <ActionIcon
-            variant="transparent"
-            color="gray"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
-          </ActionIcon>
-        )}
+        <Space w="lg" />
+        {!isEditing && <EditButton onClick={() => setIsEditing(!isEditing)} />}
       </Flex>
       {!isEditing ? (
         <Stack gap="xs">
@@ -82,20 +80,8 @@ export default function EditAddress({
             onChange={(e) => setZip(e.currentTarget.value)}
           />
           <Box>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
-              onClick={() => handleApply()}
-            >
-              <IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
+            <ConfirmButton onClick={() => handleApply()} />
+            <DeleteButton onClick={() => setIsEditing(!isEditing)} />
           </Box>
         </Stack>
       )}
