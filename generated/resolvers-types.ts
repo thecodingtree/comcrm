@@ -89,44 +89,12 @@ export type CoreEntityInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createCompany?: Maybe<Company>;
-  createContact?: Maybe<Contact>;
-  createProperty?: Maybe<Property>;
   deleteCompany?: Maybe<Company>;
   deleteContact?: Maybe<Contact>;
   deleteProperty?: Maybe<Property>;
   updateCompany?: Maybe<Company>;
   updateContact?: Maybe<Contact>;
   updateProperty?: Maybe<Property>;
-};
-
-
-export type MutationCreateCompanyArgs = {
-  address?: InputMaybe<AddressInput>;
-  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  linkedEntity?: InputMaybe<Scalars['ID']['input']>;
-  name: Scalars['String']['input'];
-  phone?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationCreateContactArgs = {
-  address?: InputMaybe<AddressInput>;
-  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
-  linkedEntity?: InputMaybe<Scalars['ID']['input']>;
-  name: Scalars['String']['input'];
-  surName?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationCreatePropertyArgs = {
-  address?: InputMaybe<AddressInput>;
-  attributes?: InputMaybe<Array<InputMaybe<AttributeInput>>>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  linkedEntity?: InputMaybe<Scalars['ID']['input']>;
-  name: Scalars['String']['input'];
-  phone?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -404,9 +372,6 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createCompany?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<MutationCreateCompanyArgs, 'name'>>;
-  createContact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<MutationCreateContactArgs, 'name'>>;
-  createProperty?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, RequireFields<MutationCreatePropertyArgs, 'name'>>;
   deleteCompany?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<MutationDeleteCompanyArgs, 'id'>>;
   deleteContact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<MutationDeleteContactArgs, 'id'>>;
   deleteProperty?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, RequireFields<MutationDeletePropertyArgs, 'id'>>;

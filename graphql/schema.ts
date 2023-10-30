@@ -43,14 +43,6 @@ export const GraphQLSchema = gql`
 
   type Mutation {
     #createUser(name: String, email: String!): User
-
-    createContact(
-      name: String!
-      surName: String
-      address: AddressInput
-      attributes: [AttributeInput]
-      linkedEntity: ID
-    ): Contact
     updateContact(
       id: ID!
       name: String
@@ -61,15 +53,6 @@ export const GraphQLSchema = gql`
       attributes: [AttributeInput]
     ): Contact
     deleteContact(id: ID!): Contact
-
-    createCompany(
-      name: String!
-      phone: String
-      email: String
-      address: AddressInput
-      attributes: [AttributeInput]
-      linkedEntity: ID
-    ): Company
     updateCompany(
       id: ID!
       name: String
@@ -79,15 +62,6 @@ export const GraphQLSchema = gql`
       attributes: [AttributeInput]
     ): Company
     deleteCompany(id: ID!): Company
-
-    createProperty(
-      name: String!
-      phone: String
-      email: String
-      address: AddressInput
-      attributes: [AttributeInput]
-      linkedEntity: ID
-    ): Property
     updateProperty(
       id: ID!
       name: String

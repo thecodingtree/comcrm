@@ -90,7 +90,7 @@ model Attributes {
 model MetaData {
   id         String       @id @default(uuid()) @map("_id")
   name       String
-  surName    String
+  surName    String?
   image      String?
   email      String?
   phone      String?
