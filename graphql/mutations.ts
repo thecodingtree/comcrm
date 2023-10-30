@@ -1,31 +1,6 @@
 import { gql } from '@apollo/client';
 
 /* ***************** COMPANY ***************** */
-export const ADD_COMPANY = gql`
-  mutation AddCompany(
-    $name: String!
-    $address: AddressInput
-    $attributes: [AttributeInput]
-    $linkedEntity: ID
-  ) {
-    createCompany(
-      name: $name
-      address: $address
-      attributes: $attributes
-      linkedEntity: $linkedEntity
-    ) {
-      id
-      name
-      address {
-        street
-        city
-        state
-        zip
-      }
-    }
-  }
-`;
-
 export const EDIT_COMPANY = gql`
   mutation EditCompany(
     $id: ID!
@@ -66,37 +41,6 @@ export const DELETE_COMPANY = gql`
 `;
 
 /* ***************** PROPERTY ***************** */
-export const ADD_PROPERTY = gql`
-  mutation AddProperty(
-    $name: String!
-    $phone: String
-    $email: String
-    $address: AddressInput
-    $attributes: [AttributeInput]
-    $linkedEntity: ID
-  ) {
-    createProperty(
-      name: $name
-      phone: $phone
-      email: $email
-      address: $address
-      attributes: $attributes
-      linkedEntity: $linkedEntity
-    ) {
-      id
-      name
-      phone
-      email
-      address {
-        street
-        city
-        state
-        zip
-      }
-    }
-  }
-`;
-
 export const EDIT_PROPERTY = gql`
   mutation EditProperty(
     $id: ID!
@@ -137,34 +81,6 @@ export const DELETE_PROPERTY = gql`
 `;
 
 /* ***************** CONTACT ***************** */
-export const ADD_CONTACT = gql`
-  mutation AddContact(
-    $name: String!
-    $surName: String!
-    $address: AddressInput
-    $attributes: [AttributeInput]
-    $linkedEntity: ID
-  ) {
-    createContact(
-      name: $name
-      surName: $surName
-      address: $address
-      attributes: $attributes
-      linkedEntity: $linkedEntity
-    ) {
-      id
-      name
-      surName
-      address {
-        street
-        city
-        state
-        zip
-      }
-    }
-  }
-`;
-
 export const EDIT_CONTACT = gql`
   mutation EditContact(
     $id: ID!

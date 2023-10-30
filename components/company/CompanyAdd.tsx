@@ -1,12 +1,9 @@
 'use client';
 
-import { useMutation } from '@apollo/client';
+import { trpc } from '@/app/_trpc/client';
 
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
-
-import { ADD_COMPANY } from '@/graphql/mutations';
-import { GET_COMPANIES } from '@/graphql/queries';
 
 import CompanyForm from './form/CompanyForm';
 
@@ -15,26 +12,21 @@ interface CompanyAddProps {
 }
 
 export default function CompanyAdd({ linkedEntity }: CompanyAddProps) {
-  const [addCompany, { data, loading, error }] = useMutation(ADD_COMPANY, {
-    onCompleted: () => {
-      close();
-    },
-    refetchQueries: [GET_COMPANIES],
+  const createCompany = trpc.company.createCompany.useMutation({
+    onSettled: () => close(),
   });
   const [opened, { open, close }] = useDisclosure(false);
 
   const submitHandler = (values: any) => {
-    addCompany({
-      variables: {
-        name: values.name,
-        address: {
-          street: values.street,
-          city: values.city,
-          state: values.state,
-          zip: values.zip,
-        },
-        linkedEntity: linkedEntity ?? null,
+    createCompany.mutate({
+      name: values.name,
+      address: {
+        street: values.street,
+        city: values.city,
+        state: values.state,
+        zip: values.zip,
       },
+      linkedEntity,
     });
   };
 
@@ -44,7 +36,10 @@ export default function CompanyAdd({ linkedEntity }: CompanyAddProps) {
         Add Company
       </Button>
       <Modal opened={opened} onClose={close} size="lg" centered>
-        <CompanyForm onSubmit={submitHandler} submitting={loading} />
+        <CompanyForm
+          onSubmit={submitHandler}
+          submitting={createCompany.isLoading}
+        />
       </Modal>
     </Stack>
   );

@@ -3,7 +3,6 @@ import { Prisma, CoreEntityType } from '@prisma/client';
 import {
   getOwnedCoreEntities,
   getOwnedCoreEntity,
-  createCoreEntity,
   updateCoreEntity,
   deleteCoreEntity,
   CoreEntityResult,
@@ -15,9 +14,6 @@ import {
   Property,
   InputMaybe,
   CoreEntityFilter,
-  MutationCreateContactArgs,
-  MutationCreateCompanyArgs,
-  MutationCreatePropertyArgs,
   MutationUpdateContactArgs,
 } from '../generated/resolvers-types';
 
@@ -36,15 +32,6 @@ interface CoreEntitiesResolverArgs {
 
 interface CoreEntityResolverArgs {
   id: string;
-  user: string;
-  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
-}
-
-interface CoreEntityCreatorArgs {
-  entityType: CoreEntityType;
-  data: MutationCreateContactArgs &
-    MutationCreateCompanyArgs &
-    MutationCreatePropertyArgs;
   user: string;
   dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
 }
@@ -89,49 +76,6 @@ export const coreEntitiesResolver = async ({
   });
 
   return results;
-};
-
-const coreEntityCreator = async ({
-  entityType,
-  data,
-  user,
-  dataMapper,
-}: CoreEntityCreatorArgs) => {
-  const { name, surName, address, attributes, linkedEntity } = data;
-
-  const coreEntityCreateInput = {
-    type: entityType,
-    meta: {
-      create: {
-        name,
-        surName: surName ? surName : '',
-        address: address
-          ? {
-              create: address,
-            }
-          : undefined,
-      },
-    },
-    attributes: {
-      create: attributes,
-    },
-    user: {
-      connect: {
-        id: user,
-      },
-    },
-    linkedEntities: linkedEntity
-      ? {
-          connect: {
-            id: linkedEntity,
-          },
-        }
-      : undefined,
-  } as Prisma.CoreEntityCreateInput;
-
-  const result = await createCoreEntity(coreEntityCreateInput);
-
-  return dataMapper(result);
 };
 
 const coreEntityUpdater = async ({
@@ -230,27 +174,6 @@ const resolvers: Resolvers = {
       }) as Promise<Property>,
   },
   Mutation: {
-    createContact: async (_, data, contextValue) =>
-      coreEntityCreator({
-        entityType: CoreEntityType.CONTACT,
-        data,
-        user: contextValue.user?.id,
-        dataMapper: contactDataMapper,
-      }) as Promise<Contact>,
-    createCompany: async (_, data, contextValue) =>
-      coreEntityCreator({
-        entityType: CoreEntityType.COMPANY,
-        data,
-        user: contextValue.user?.id,
-        dataMapper: companyDataMapper,
-      }) as Promise<Company>,
-    createProperty: async (_, data, contextValue) =>
-      coreEntityCreator({
-        entityType: CoreEntityType.PROPERTY,
-        data,
-        user: contextValue.user?.id,
-        dataMapper: propertyDataMapper,
-      }) as Promise<Property>,
     updateContact: async (_, data, contextValue) =>
       coreEntityUpdater({
         id: data.id,

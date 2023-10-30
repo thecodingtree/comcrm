@@ -1,12 +1,9 @@
 'use client';
 
-import { useMutation } from '@apollo/client';
-
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
-import { ADD_CONTACT } from '@/graphql/mutations';
-import { GET_CONTACTS } from '@/graphql/queries';
+import { trpc } from '@/app/_trpc/client';
 
 import ContactForm from './form/ContactForm';
 
@@ -15,27 +12,23 @@ interface ContactAddProps {
 }
 
 export default function ContactAdd({ linkedEntity }: ContactAddProps) {
-  const [addContact, { data, loading, error }] = useMutation(ADD_CONTACT, {
-    onCompleted: () => {
-      close();
-    },
-    refetchQueries: [GET_CONTACTS],
+  const createContact = trpc.contact.createContact.useMutation({
+    onSettled: () => close(),
   });
+
   const [opened, { open, close }] = useDisclosure(false);
 
   const submitHandler = (values: any) => {
-    addContact({
-      variables: {
-        name: values.name,
-        surName: values.surName,
-        address: {
-          street: values.street,
-          city: values.city,
-          state: values.state,
-          zip: values.zip,
-        },
-        linkedEntity,
+    createContact.mutate({
+      name: values.name,
+      surName: values.surName,
+      address: {
+        street: values.street,
+        city: values.city,
+        state: values.state,
+        zip: values.zip,
       },
+      linkedEntity,
     });
   };
 
@@ -45,7 +38,10 @@ export default function ContactAdd({ linkedEntity }: ContactAddProps) {
         Add Contact
       </Button>
       <Modal opened={opened} onClose={close} size="lg" centered>
-        <ContactForm onSubmit={submitHandler} submitting={loading} />
+        <ContactForm
+          onSubmit={submitHandler}
+          submitting={createContact.isLoading}
+        />
       </Modal>
     </Stack>
   );
