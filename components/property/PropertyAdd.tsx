@@ -3,8 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@apollo/client';
 
-import { useSession } from 'next-auth/react';
-
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
@@ -18,7 +16,6 @@ interface PropertyAddProps {
 }
 
 export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
-  const { data: session, status } = useSession();
   const [addProperty, { data, loading, error }] = useMutation(ADD_PROPERTY, {
     onCompleted: () => {
       close();
@@ -38,7 +35,6 @@ export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
           state: values.state,
           zip: values.zip,
         },
-        user: session?.user?.id ?? '',
         linkedEntity: linkedEntity ?? null,
       },
     });

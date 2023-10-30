@@ -1,8 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
-import { Stack, Flex, Text, ActionIcon, TextInput, Box } from '@mantine/core';
+import { Stack, Space, Flex, Text, TextInput, Box } from '@mantine/core';
 
-import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
+import {
+  EditButton,
+  DeleteButton,
+  ConfirmButton,
+} from '@/components/controls/Buttons';
 
 interface EditTextProps {
   label?: string | null;
@@ -24,23 +28,16 @@ export default function EditText({
 
   return (
     <Stack gap="xs">
-      <Flex justify="space-between">
+      <Flex justify="left">
         <Text size="md" c="dimmed">
           {label}
         </Text>
+        <Space w="lg" />
         {!isEditing ? (
-          <ActionIcon
-            variant="transparent"
-            color="gray"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
-          </ActionIcon>
+          <EditButton onClick={() => setIsEditing(!isEditing)} />
         ) : (
           <Box>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
+            <ConfirmButton
               onClick={() => {
                 setIsEditing(!isEditing);
 
@@ -48,16 +45,8 @@ export default function EditText({
                   onChange(tmpValue);
                 }
               }}
-            >
-              <IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
+            />
+            <DeleteButton onClick={() => setIsEditing(!isEditing)} />
           </Box>
         )}
       </Flex>

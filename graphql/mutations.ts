@@ -3,14 +3,12 @@ import { gql } from '@apollo/client';
 /* ***************** COMPANY ***************** */
 export const ADD_COMPANY = gql`
   mutation AddCompany(
-    $user: ID!
     $name: String!
     $address: AddressInput
     $attributes: [AttributeInput]
     $linkedEntity: ID
   ) {
     createCompany(
-      user: $user
       name: $name
       address: $address
       attributes: $attributes
@@ -70,7 +68,6 @@ export const DELETE_COMPANY = gql`
 /* ***************** PROPERTY ***************** */
 export const ADD_PROPERTY = gql`
   mutation AddProperty(
-    $user: ID!
     $name: String!
     $phone: String
     $email: String
@@ -79,7 +76,6 @@ export const ADD_PROPERTY = gql`
     $linkedEntity: ID
   ) {
     createProperty(
-      user: $user
       name: $name
       phone: $phone
       email: $email
@@ -143,7 +139,6 @@ export const DELETE_PROPERTY = gql`
 /* ***************** CONTACT ***************** */
 export const ADD_CONTACT = gql`
   mutation AddContact(
-    $user: ID!
     $name: String!
     $surName: String!
     $address: AddressInput
@@ -151,7 +146,6 @@ export const ADD_CONTACT = gql`
     $linkedEntity: ID
   ) {
     createContact(
-      user: $user
       name: $name
       surName: $surName
       address: $address
