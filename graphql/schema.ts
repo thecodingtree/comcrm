@@ -89,6 +89,7 @@ export const GraphQLSchema = gql`
     image: String
     email: String
     phone: String
+    alt_phone: String
     address: Address
     attributes: [Attribute]
     user: User

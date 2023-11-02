@@ -103,10 +103,10 @@ model MetaData {
 
 model Address {
   id        String     @id @default(uuid()) @map("_id")
-  street    String
-  city      String
-  state     String
-  zip       String
+  street    String?
+  city      String?
+  state     String?
+  zip       String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   meta      MetaData[]

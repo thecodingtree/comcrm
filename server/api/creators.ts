@@ -1,6 +1,6 @@
-import { Prisma, CoreEntityType, CoreEntity } from '@prisma/client';
+import { Prisma, CoreEntityType } from '@prisma/client';
 
-import { CoreEntityResult, createCoreEntity } from '@/db';
+import { createCoreEntity } from '@/db';
 
 import { CreateContactInputType } from '@/server/api/routers/contact';
 import { CreateCompanyInputType } from '@/server/api/routers/company';
@@ -11,15 +11,6 @@ import {
   propertyDataMapper,
 } from '@/graphql/mappers';
 
-interface CoreEntityCreatorArgs {
-  entityType: CoreEntityType;
-  data: CreateContactInputType &
-    CreateCompanyInputType &
-    CreatePropertyInputType;
-  user: string;
-  dataMapper: (entity: CoreEntityResult) => CoreEntity;
-}
-
 export const contactCreator = async ({
   data,
   user,
@@ -27,24 +18,30 @@ export const contactCreator = async ({
   data: CreateContactInputType;
   user: string;
 }) => {
-  const { name, surName, address, attributes, linkedEntity } = data;
+  const { name, surName, phone, email, address, attributes, linkedEntity } =
+    data;
 
-  const coreEntityCreateInput = {
+  const contactCreateInput = {
     type: CoreEntityType.CONTACT,
     meta: {
       create: {
         name,
         surName: surName ? surName : '',
+        phone,
+        email,
         address: address
           ? {
-              create: address,
+              create: {
+                street: address.street,
+                city: address.city,
+                state: address.state,
+                zip: address.zip,
+              },
             }
           : undefined,
       },
     },
-    attributes: {
-      create: attributes,
-    },
+    attributes: attributes ? { create: attributes } : undefined,
     user: {
       connect: {
         id: user,
@@ -59,7 +56,7 @@ export const contactCreator = async ({
       : undefined,
   } as Prisma.CoreEntityCreateInput;
 
-  const result = await createCoreEntity(coreEntityCreateInput);
+  const result = await createCoreEntity(contactCreateInput);
 
   return contactDataMapper(result);
 };

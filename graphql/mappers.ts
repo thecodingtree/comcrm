@@ -1,3 +1,4 @@
+import { ContactReservedAttributes } from '@/server/sharedTypes';
 import { CoreEntityResult } from '../db';
 import { Contact, Company, Property } from '../generated/resolvers-types';
 
@@ -11,7 +12,12 @@ export const contactDataMapper = (entity: CoreEntityResult): Contact => {
     image: meta?.image,
     email: meta?.email,
     phone: meta?.phone,
-    attributes,
+    alt_phone: attributes?.find(
+      (a) => a.name === ContactReservedAttributes.ALT_PHONE
+    )?.value,
+    attributes: attributes?.filter(
+      (a) => a.name !== ContactReservedAttributes.ALT_PHONE
+    ),
     user,
     createdAt,
     updatedAt,
