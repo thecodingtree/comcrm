@@ -5,7 +5,8 @@ import { Stack, Button, Modal } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
 
-import ContactForm from './form/ContactForm';
+import ContactForm, { ContactFormValues } from './form/ContactForm';
+import { ContactReservedAttributes } from '@/server/sharedTypes';
 
 interface ContactAddProps {
   linkedEntity?: string;
@@ -18,16 +19,24 @@ export default function ContactAdd({ linkedEntity }: ContactAddProps) {
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: any) => {
+  const submitHandler = (values: ContactFormValues) => {
+    let attributes = undefined;
+
+    if (values.alt_phone) {
+      attributes = [
+        {
+          name: ContactReservedAttributes.ALT_PHONE,
+          value: values.alt_phone,
+        },
+      ];
+    }
+
     createContact.mutate({
       name: values.name,
       surName: values.surName,
-      address: {
-        street: values.street,
-        city: values.city,
-        state: values.state,
-        zip: values.zip,
-      },
+      phone: values.phone,
+      email: values.email,
+      attributes,
       linkedEntity,
     });
   };

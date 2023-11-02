@@ -49,7 +49,7 @@ interface CoreEntityDeleterArgs {
   dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
 }
 
-const coreEntityResolver = async ({
+export const coreEntityResolver = async ({
   id,
   user,
   dataMapper,
@@ -78,7 +78,7 @@ export const coreEntitiesResolver = async ({
   return results;
 };
 
-const coreEntityUpdater = async ({
+export const coreEntityUpdater = async ({
   id,
   data,
   user,

@@ -63,6 +63,7 @@ export type Company = {
 export type Contact = {
   __typename?: 'Contact';
   address?: Maybe<Address>;
+  alt_phone?: Maybe<Scalars['String']['output']>;
   attributes?: Maybe<Array<Maybe<Attribute>>>;
   createdAt: Scalars['DateTime']['output'];
   email?: Maybe<Scalars['String']['output']>;
@@ -350,6 +351,7 @@ export type CompanyResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type ContactResolvers<ContextType = any, ParentType extends ResolversParentTypes['Contact'] = ResolversParentTypes['Contact']> = ResolversObject<{
   address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
+  alt_phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   attributes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

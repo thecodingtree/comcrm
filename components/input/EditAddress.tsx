@@ -24,10 +24,10 @@ export default function EditAddress({
   const [isEditing, setIsEditing] = useState(false);
 
   // TODO: fix this
-  const [street, setStreet] = useState(address?.street);
-  const [city, setCity] = useState(address?.city);
-  const [state, setState] = useState(address?.state);
-  const [zip, setZip] = useState(address?.zip);
+  const [street, setStreet] = useState(address?.street || '');
+  const [city, setCity] = useState(address?.city || '');
+  const [state, setState] = useState(address?.state || '');
+  const [zip, setZip] = useState(address?.zip || '');
 
   const handleApply = () => {
     setIsEditing(!isEditing);
