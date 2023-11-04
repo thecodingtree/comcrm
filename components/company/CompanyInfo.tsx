@@ -1,6 +1,3 @@
-import { useMutation } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { Address } from '@/generated/resolvers-types';
 import {
   Group,
   Box,
@@ -12,65 +9,125 @@ import {
   rem,
 } from '@mantine/core';
 
-import { EDIT_COMPANY } from '@/graphql/mutations';
-import { GET_COMPANY } from '@/graphql/queries';
+import { trpc } from '@/app/_trpc/client';
 
 import EditText from '@/components/input/EditText';
 import EditTitle from '@/components/input/EditTitle';
 import EditAddress from '../input/EditAddress';
+import EditAttribute from '../input/EditAttribute';
+import { CompanyReservedAttributes } from '@/server/sharedTypes';
 
 interface CompanyCardProps {
   companyId?: string;
 }
 
 export default function CompanyInfo({ companyId }: CompanyCardProps) {
-  const { data, loading, error } = useQuery(GET_COMPANY, {
-    variables: { id: companyId },
-  });
+  const { data, isLoading } = trpc.company.getCompany.useQuery(companyId);
 
-  const [updateCompany] = useMutation(EDIT_COMPANY);
+  const updateCompany = trpc.company.updateCompany.useMutation();
 
-  if (loading) return <p>Loading...</p>;
+  const updateOrCreateAttribute =
+    trpc.attributes.updateOrCreateAttribute.useMutation();
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <Paper p="sm" maw={rem(600)}>
       <Stack gap="sm">
-        {data?.company?.name && (
+        {data?.name && (
           <EditTitle
-            initValue={data?.company?.name}
+            initValue={data?.name}
             onChange={(name) =>
-              updateCompany({ variables: { id: companyId, name } })
+              updateCompany.mutate({ id: companyId!, name: name || undefined })
             }
           />
         )}
         <Space h="xs" />
         <EditText
           label="phone"
-          initValue={data?.company?.phone}
+          initValue={data?.phone}
           onChange={(phone) =>
-            updateCompany({ variables: { id: companyId, phone } })
+            updateCompany.mutate({ id: companyId!, phone: phone || undefined })
           }
+        />
+        <EditAttribute
+          label="alt phone"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === CompanyReservedAttributes.ALT_PHONE
+          )}
+          reservedName={CompanyReservedAttributes.ALT_PHONE}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: companyId!,
+            });
+          }}
         />
         <EditText
           label="email"
-          initValue={data?.company?.email}
+          initValue={data?.email}
           onChange={(email) =>
-            updateCompany({ variables: { id: companyId, email } })
+            updateCompany.mutate({ id: companyId!, email: email || undefined })
           }
+        />
+        <EditAttribute
+          label="alt email"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === CompanyReservedAttributes.ALT_EMAIL
+          )}
+          reservedName={CompanyReservedAttributes.ALT_EMAIL}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: companyId!,
+            });
+          }}
+        />
+        <EditAttribute
+          label="website"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === CompanyReservedAttributes.WEBSITE
+          )}
+          reservedName={CompanyReservedAttributes.WEBSITE}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: companyId!,
+            });
+          }}
+        />
+        <EditAttribute
+          label="size"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === CompanyReservedAttributes.SIZE
+          )}
+          reservedName={CompanyReservedAttributes.SIZE}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: companyId!,
+            });
+          }}
         />
         <EditAddress
           label="address"
-          address={data?.company?.address}
+          address={data?.address}
           onChange={(address) =>
-            updateCompany({
-              variables: {
-                id: companyId,
-                address: {
-                  street: address?.street,
-                  city: address?.city,
-                  state: address?.state,
-                  zip: address?.zip,
-                },
+            updateCompany.mutate({
+              id: companyId!,
+              address: {
+                street: address?.street,
+                city: address?.city,
+                state: address?.state,
+                zip: address?.zip,
               },
             })
           }

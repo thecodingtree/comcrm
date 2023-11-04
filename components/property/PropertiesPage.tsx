@@ -1,38 +1,23 @@
 'use client';
 
-import { Suspense } from 'react';
-
-import { useMutation } from '@apollo/client';
-
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-
-import { DELETE_PROPERTY } from '@/graphql/mutations';
-
-import { GET_PROPERTIES } from '@/graphql/queries';
-
 import { Space } from '@mantine/core';
 
 import PropertiesTable from '@/components/property/PropertiesTable';
 import PropertyAdd from '@/components/property/PropertyAdd';
 import ReloadQuery from '../controls/ReloadQuery';
+import { trpc } from '@/app/_trpc/client';
 
 export default function PropertiesPage() {
-  const { data, loading, error, refetch } = useQuery(GET_PROPERTIES);
+  const { data, refetch } = trpc.property.getProperties.useQuery();
 
-  const [deleteProperty] = useMutation(DELETE_PROPERTY, {
-    refetchQueries: [GET_PROPERTIES],
-  });
+  const deleteProperty = trpc.property.deleteProperty.useMutation();
 
   const deletePropertyHandler = (id: string) => {
     {
       const answerYes = confirm('Are you sure?');
 
       if (answerYes) {
-        deleteProperty({
-          variables: {
-            id,
-          },
-        });
+        deleteProperty.mutate(id);
       }
     }
   };
@@ -40,7 +25,7 @@ export default function PropertiesPage() {
   return (
     <div>
       <PropertiesTable
-        properties={data?.properties}
+        properties={data}
         onDeleteProperty={deletePropertyHandler}
       />
       <ReloadQuery reload={refetch} />

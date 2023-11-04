@@ -1,41 +1,46 @@
 'use client';
 
-import { useMutation } from '@apollo/client';
-
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
-import { ADD_CONTACT } from '@/graphql/mutations';
-import { GET_CONTACTS } from '@/graphql/queries';
+import { trpc } from '@/app/_trpc/client';
 
-import ContactForm from './form/ContactForm';
+import ContactForm, { ContactFormValues } from './form/ContactForm';
+import { ContactReservedAttributes } from '@/server/sharedTypes';
 
-interface ContactAddProps {
+export default function ContactAdd({
+  linkedEntity,
+  onAdded,
+}: {
   linkedEntity?: string;
-}
-
-export default function ContactAdd({ linkedEntity }: ContactAddProps) {
-  const [addContact, { data, loading, error }] = useMutation(ADD_CONTACT, {
-    onCompleted: () => {
-      close();
-    },
-    refetchQueries: [GET_CONTACTS],
+  onAdded?: () => void;
+}) {
+  const createContact = trpc.contact.createContact.useMutation({
+    onSettled: () => close(),
+    onSuccess: () => onAdded && onAdded(),
   });
+
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: any) => {
-    addContact({
-      variables: {
-        name: values.name,
-        surName: values.surName,
-        address: {
-          street: values.street,
-          city: values.city,
-          state: values.state,
-          zip: values.zip,
+  const submitHandler = (values: ContactFormValues) => {
+    let attributes = undefined;
+
+    if (values.alt_phone) {
+      attributes = [
+        {
+          name: ContactReservedAttributes.ALT_PHONE,
+          value: values.alt_phone,
         },
-        linkedEntity,
-      },
+      ];
+    }
+
+    createContact.mutate({
+      name: values.name,
+      surName: values.surName,
+      phone: values.phone,
+      email: values.email,
+      attributes,
+      linkedEntity,
     });
   };
 
@@ -44,8 +49,17 @@ export default function ContactAdd({ linkedEntity }: ContactAddProps) {
       <Button onClick={open} w={400}>
         Add Contact
       </Button>
-      <Modal opened={opened} onClose={close} size="lg" centered>
-        <ContactForm onSubmit={submitHandler} submitting={loading} />
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="lg"
+        centered
+        closeOnClickOutside={false}
+      >
+        <ContactForm
+          onSubmit={submitHandler}
+          submitting={createContact.isLoading}
+        />
       </Modal>
     </Stack>
   );

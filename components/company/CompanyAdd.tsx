@@ -1,40 +1,56 @@
 'use client';
 
-import { useMutation } from '@apollo/client';
+import { trpc } from '@/app/_trpc/client';
 
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
-import { ADD_COMPANY } from '@/graphql/mutations';
-import { GET_COMPANIES } from '@/graphql/queries';
+import { CompanyReservedAttributes } from '@/server/sharedTypes';
 
-import CompanyForm from './form/CompanyForm';
+import CompanyForm, { CompanyFormValues } from './form/CompanyForm';
 
-interface CompanyAddProps {
+export default function CompanyAdd({
+  linkedEntity,
+  onAdd,
+}: {
   linkedEntity?: string;
-}
-
-export default function CompanyAdd({ linkedEntity }: CompanyAddProps) {
-  const [addCompany, { data, loading, error }] = useMutation(ADD_COMPANY, {
-    onCompleted: () => {
-      close();
-    },
-    refetchQueries: [GET_COMPANIES],
+  onAdd?: () => void;
+}) {
+  const createCompany = trpc.company.createCompany.useMutation({
+    onSettled: () => close(),
+    onSuccess: () => onAdd && onAdd(),
   });
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: any) => {
-    addCompany({
-      variables: {
-        name: values.name,
-        address: {
-          street: values.street,
-          city: values.city,
-          state: values.state,
-          zip: values.zip,
-        },
-        linkedEntity: linkedEntity ?? null,
+  const submitHandler = (values: CompanyFormValues) => {
+    let attributes = [];
+
+    if (values.website) {
+      attributes.push({
+        name: CompanyReservedAttributes.WEBSITE,
+        value: values.website,
+      });
+    }
+
+    if (values.size) {
+      attributes.push({
+        name: CompanyReservedAttributes.SIZE,
+        value: values.size.toString(),
+      });
+    }
+
+    createCompany.mutate({
+      name: values.name,
+      phone: values.phone,
+      email: values.email,
+      address: {
+        street: values.street,
+        city: values.city,
+        state: values.state,
+        zip: values.zip,
       },
+      attributes,
+      linkedEntity,
     });
   };
 
@@ -43,8 +59,17 @@ export default function CompanyAdd({ linkedEntity }: CompanyAddProps) {
       <Button onClick={open} w={400}>
         Add Company
       </Button>
-      <Modal opened={opened} onClose={close} size="lg" centered>
-        <CompanyForm onSubmit={submitHandler} submitting={loading} />
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="lg"
+        centered
+        closeOnClickOutside={false}
+      >
+        <CompanyForm
+          onSubmit={submitHandler}
+          submitting={createCompany.isLoading}
+        />
       </Modal>
     </Stack>
   );
