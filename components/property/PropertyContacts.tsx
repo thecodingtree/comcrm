@@ -1,28 +1,25 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { Flex, Box, Space } from '@mantine/core';
 
-import { GET_CONTACTS } from '@/graphql/queries';
+import { trpc } from '@/app/_trpc/client';
+
+import { ContactType } from '@/server/sharedTypes';
 
 import ContactCard from '@/components/cards/ContactCard';
 import ContactAdd from '@/components/contact/ContactAdd';
-
-import { Contact } from '@/generated/resolvers-types';
 
 export default function CompanyContacts() {
   const params = useParams();
   const entityId = params?.id as string;
 
-  const { data, loading, error } = useQuery(GET_CONTACTS, {
-    variables: {
-      filter: { entity: params?.id as string },
-    },
+  const { data, isLoading, refetch } = trpc.contact.getContacts.useQuery({
+    filter: { id: entityId },
   });
 
-  if (loading) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <Box>
@@ -34,7 +31,7 @@ export default function CompanyContacts() {
         direction="row"
         wrap="wrap"
       >
-        {data?.contacts?.map((contact: Contact) => {
+        {data?.map((contact: ContactType) => {
           const contact_title =
             contact?.attributes?.find((attr) => attr?.name === 'COMPANY_TITLE')
               ?.value || '';
@@ -53,7 +50,7 @@ export default function CompanyContacts() {
         })}
       </Flex>
       <Space h="lg" />
-      <ContactAdd linkedEntity={entityId} />
+      <ContactAdd linkedEntity={entityId} onAdded={refetch} />
     </Box>
   );
 }

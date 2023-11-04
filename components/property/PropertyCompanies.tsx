@@ -1,25 +1,21 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+
+import { trpc } from '@/app/_trpc/client';
 
 import { Title } from '@mantine/core';
 
 import LinkedEntitiesTable from '@/components/tables/LinkedEntitiesTable';
 import CompanyAdd from '@/components/company/CompanyAdd';
 
-import { GET_COMPANIES } from '@/graphql/queries';
-
 export default function PropertyCompanies() {
   const params = useParams();
 
   const entityId = params?.id as string;
 
-  const { data, loading, error } = useQuery(GET_COMPANIES, {
-    variables: {
-      filter: { entity: entityId },
-    },
-  });
+  const data = null;
+  const loading = false;
 
   if (loading) return <div>Loading...</div>;
 
@@ -27,7 +23,7 @@ export default function PropertyCompanies() {
     data && (
       <div>
         <Title>Companies</Title>
-        <LinkedEntitiesTable linkedEntities={data?.companies} />
+        <LinkedEntitiesTable linkedEntities={data} />
         <CompanyAdd linkedEntity={entityId} />
       </div>
     )

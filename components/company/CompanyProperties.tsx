@@ -1,12 +1,12 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 import { Title } from '@mantine/core';
 
+import { PropertyType } from '@/server/sharedTypes';
+
 import LinkedEntitiesTable from '@/components/tables/LinkedEntitiesTable';
-import { GET_PROPERTIES } from '@/graphql/queries';
 import PropertyAdd from '../property/PropertyAdd';
 
 export default function CompanyProperties() {
@@ -14,19 +14,16 @@ export default function CompanyProperties() {
 
   const entityId = params?.id as string;
 
-  const { data, loading, error } = useQuery(GET_PROPERTIES, {
-    variables: {
-      filter: { entity: params?.id as string },
-    },
-  });
+  const data: PropertyType[] = [];
+  const isLoading = false;
 
-  if (loading) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     data && (
       <div>
         <Title>Properties</Title>
-        <LinkedEntitiesTable linkedEntities={data?.properties} />
+        <LinkedEntitiesTable linkedEntities={data} />
         <PropertyAdd linkedEntity={entityId} />
       </div>
     )

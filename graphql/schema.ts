@@ -31,28 +31,12 @@ export const GraphQLSchema = gql`
   type Query {
     me: User
 
-    contacts(filter: CoreEntityFilter): [Contact]
-    contact(id: ID!): Contact
-
     companies(filter: CoreEntityFilter): [Company]
     company(id: ID!): Company
-
-    properties(filter: CoreEntityFilter): [Property]
-    property(id: ID!): Property
   }
 
   type Mutation {
     #createUser(name: String, email: String!): User
-    updateContact(
-      id: ID!
-      name: String
-      surName: String
-      phone: String
-      email: String
-      address: AddressInput
-      attributes: [AttributeInput]
-    ): Contact
-    deleteContact(id: ID!): Contact
     updateCompany(
       id: ID!
       name: String
@@ -62,15 +46,6 @@ export const GraphQLSchema = gql`
       attributes: [AttributeInput]
     ): Company
     deleteCompany(id: ID!): Company
-    updateProperty(
-      id: ID!
-      name: String
-      phone: String
-      email: String
-      address: AddressInput
-      attributes: [AttributeInput]
-    ): Property
-    deleteProperty(id: ID!): Property
   }
 
   type User {
@@ -82,34 +57,8 @@ export const GraphQLSchema = gql`
   }
 
   # Core Entities
-  type Contact {
-    id: ID!
-    name: String!
-    surName: String
-    image: String
-    email: String
-    phone: String
-    alt_phone: String
-    address: Address
-    attributes: [Attribute]
-    user: User
-    createdAt: DateTime!
-    updatedAt: DateTime!
-  }
 
   type Company {
-    id: ID!
-    name: String!
-    phone: String
-    email: String
-    address: Address
-    attributes: [Attribute]
-    user: User
-    createdAt: DateTime!
-    updatedAt: DateTime!
-  }
-
-  type Property {
     id: ID!
     name: String!
     phone: String

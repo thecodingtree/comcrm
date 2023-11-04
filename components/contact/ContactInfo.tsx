@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { Stack, Space, Paper, rem } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
@@ -9,11 +8,7 @@ import EditAddress from '../input/EditAddress';
 import EditAttribute from '../input/EditAttribute';
 import { ContactReservedAttributes } from '@/server/sharedTypes';
 
-interface ContactCardProps {
-  contactId?: string;
-}
-
-export default function ContactInfo({ contactId }: ContactCardProps) {
+export default function ContactInfo({ contactId }: { contactId?: string }) {
   const { data, isLoading } = trpc.contact.getContact.useQuery(contactId);
 
   const updateContact = trpc.contact.updateContact.useMutation();

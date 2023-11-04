@@ -93,7 +93,7 @@ model MetaData {
   image      String?
   email      String?
   phone      String?
-  address    Address[]
+  address    Address?
   addressId  String?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
@@ -110,7 +110,7 @@ model Address {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   meta      MetaData?  @relation(fields: [metaId], references: [id], onDelete: Cascade)
-  metaId    String?
+  metaId    String?   @unique
 }
 
 model Note {
