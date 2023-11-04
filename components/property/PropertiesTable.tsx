@@ -3,12 +3,12 @@
 import { Table, Text, Space } from '@mantine/core';
 import Link from 'next/link';
 
-import { Property } from '@/generated/resolvers-types';
+import { PropertyReservedAttributes, PropertyType } from '@/server/sharedTypes';
 
 import { EntitiesTable, ETColumn } from '@/components/entities/EntitiesTable';
 
 interface PropertiesTableProps {
-  properties?: Property[];
+  properties?: PropertyType[];
   onDeleteProperty?(id: string): void;
 }
 
@@ -25,6 +25,16 @@ export default function PropertiesTable({
     {
       name: 'Address',
       key: 'address',
+      sortable: false,
+    },
+    {
+      name: 'Size',
+      key: 'size',
+      sortable: false,
+    },
+    {
+      name: 'Price',
+      key: 'price',
       sortable: false,
     },
     {
@@ -54,13 +64,27 @@ export default function PropertiesTable({
     );
   };
 
-  const rowRenderer = (row: Property) => {
+  const rowRenderer = (row: PropertyType) => {
     if (row) {
-      const addressStr = `${row?.address?.street} ${row?.address?.city} ${row?.address?.state} ${row?.address?.zip}`;
+      const addressStr =
+        row?.address &&
+        `${row?.address?.street || ''} ${row?.address?.city || ''} ${
+          row?.address?.state || ''
+        } ${row?.address?.zip || ''}`;
+      const size = row?.attributes?.find(
+        (attr) => attr.name === PropertyReservedAttributes.SIZE
+      )?.value;
+      const sizeStr = size ? `${size} sqft` : '';
+      const price = row?.attributes?.find(
+        (attr) => attr.name === PropertyReservedAttributes.PRICE
+      )?.value;
+      const priceStr = price ? `$${price}` : '';
       return (
-        <Table.Tr key={row.name}>
+        <Table.Tr key={row.id}>
           <Table.Td>{row.name}</Table.Td>
           <Table.Td>{addressStr}</Table.Td>
+          <Table.Td>{sizeStr}</Table.Td>
+          <Table.Td>{priceStr}</Table.Td>
           <Table.Td>
             <div>{deleteBtn(row.id)}</div>
             <div>{goToProperty(row.id)}</div>

@@ -2,12 +2,12 @@
 
 import { Table, Text, Space } from '@mantine/core';
 import Link from 'next/link';
-import { Contact } from '@/generated/resolvers-types';
+import { ContactType } from '@/server/sharedTypes';
 
 import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
 
 interface ContactsTableProps {
-  contacts?: Contact[];
+  contacts?: ContactType[];
   onDeleteContact?(id: string): void;
 }
 
@@ -24,6 +24,16 @@ export default function ContactsTable({
     {
       name: 'Last Name',
       key: 'surName',
+      sortable: true,
+    },
+    {
+      name: 'Phone',
+      key: 'phone',
+      sortable: true,
+    },
+    {
+      name: 'Email',
+      key: 'email',
       sortable: true,
     },
     {
@@ -58,13 +68,17 @@ export default function ContactsTable({
     );
   };
 
-  const rowRenderer = (row: Contact) => {
+  const rowRenderer = (row: ContactType) => {
     if (row) {
-      const addressStr = `${row?.address?.street} ${row?.address?.city} ${row?.address?.state} ${row?.address?.zip}`;
+      const addressStr = `${row?.address?.street || ''} ${
+        row?.address?.city || ''
+      } ${row?.address?.state || ''} ${row?.address?.zip || ''}`;
       return (
-        <Table.Tr key={row.name}>
+        <Table.Tr key={row.id}>
           <Table.Td>{row.name}</Table.Td>
           <Table.Td>{row.surName}</Table.Td>
+          <Table.Td>{row.phone}</Table.Td>
+          <Table.Td>{row.email}</Table.Td>
           <Table.Td>{addressStr}</Table.Td>
           <Table.Td>
             <div>{deleteBtn(row.id)}</div>

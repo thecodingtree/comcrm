@@ -8,12 +8,12 @@ import {
   ConfirmButton,
 } from '@/components/controls/Buttons';
 
-import { Address, Maybe } from '@/generated/resolvers-types';
+import { AddressType } from '@/server/sharedTypes';
 
 interface EditAddressProps {
   label?: string | null;
-  address: Maybe<Address>;
-  onChange?: (value: Maybe<Address>) => void;
+  address?: AddressType;
+  onChange?: (value?: AddressType) => void;
 }
 
 export default function EditAddress({
@@ -24,10 +24,10 @@ export default function EditAddress({
   const [isEditing, setIsEditing] = useState(false);
 
   // TODO: fix this
-  const [street, setStreet] = useState(address?.street);
-  const [city, setCity] = useState(address?.city);
-  const [state, setState] = useState(address?.state);
-  const [zip, setZip] = useState(address?.zip);
+  const [street, setStreet] = useState(address?.street || '');
+  const [city, setCity] = useState(address?.city || '');
+  const [state, setState] = useState(address?.state || '');
+  const [zip, setZip] = useState(address?.zip || '');
 
   const handleApply = () => {
     setIsEditing(!isEditing);
@@ -36,7 +36,7 @@ export default function EditAddress({
       city,
       state,
       zip,
-    } as Address;
+    } as AddressType;
 
     if (onChange && newAddress !== address) {
       onChange(newAddress);

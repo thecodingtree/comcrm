@@ -70,8 +70,7 @@ model CoreEntity {
   linkedEntities  CoreEntity[]   @relation("CoreEntityToCoreEntity")
   relatedEntities CoreEntity[]   @relation("CoreEntityToCoreEntity")
   attributes      Attributes[]
-  meta            MetaData?      @relation(fields: [metaId], references: [id])
-  metaId          String?
+  meta            MetaData?
   notes           Note[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -90,26 +89,28 @@ model Attributes {
 model MetaData {
   id         String       @id @default(uuid()) @map("_id")
   name       String
-  surName    String
+  surName    String?
   image      String?
   email      String?
   phone      String?
-  address    Address?     @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  address    Address?
   addressId  String?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
-  CoreEntity CoreEntity[]
+  CoreEntity CoreEntity? @relation(fields: [CoreEntityId], references: [id], onDelete: Cascade)
+  CoreEntityId String? @unique
 }
 
 model Address {
   id        String     @id @default(uuid()) @map("_id")
-  street    String
-  city      String
-  state     String
-  zip       String
+  street    String?
+  city      String?
+  state     String?
+  zip       String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  meta      MetaData[]
+  meta      MetaData?  @relation(fields: [metaId], references: [id], onDelete: Cascade)
+  metaId    String?   @unique
 }
 
 model Note {
