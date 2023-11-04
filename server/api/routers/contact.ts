@@ -18,13 +18,13 @@ import {
   deleteCoreEntity,
   CoreEntityResult,
 } from '@/db';
-import { contactDataMapper } from '@/graphql/mappers';
+import { contactDataMapper } from '@/server/api/mappers';
 
 const CreateContactInput = z.object({
   name: z.string(),
   surName: z.string(),
   phone: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.string().email().optional().or(z.literal('')),
   address: z.optional(AddressInput),
   attributes: z.optional(z.array(AttributeInput)),
   linkedEntity: z.optional(z.string()),

@@ -1,14 +1,6 @@
 import * as R from 'ramda';
-import { PropertyType } from '@/server/sharedTypes';
-import { CoreEntityResult } from '../db';
-import { Company } from '../generated/resolvers-types';
-import { RESERVED_PREFIX } from '@/server/sharedTypes';
-
-import { ContactType } from '@/server/sharedTypes';
-
-const isNotReservedAttribute = (attribute: any) => {
-  return !R.startsWith(RESERVED_PREFIX, attribute.name);
-};
+import { CoreEntityResult } from '../../db';
+import { ContactType, CompanyType, PropertyType } from '@/server/sharedTypes';
 
 export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
   const { id, meta, attributes, user, createdAt, updatedAt } = entity;
@@ -27,19 +19,19 @@ export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
   } as ContactType;
 };
 
-export const companyDataMapper = (entity: CoreEntityResult): Company => {
+export const companyDataMapper = (entity: CoreEntityResult): CompanyType => {
   const { id, meta, attributes, user, createdAt, updatedAt } = entity;
   return {
     id,
-    name: meta?.name,
-    address: meta?.address,
-    phone: meta?.phone,
-    email: meta?.email,
+    name: meta?.name!,
+    address: meta?.address || {} || undefined,
+    phone: meta?.phone || undefined,
+    email: meta?.email || undefined,
     attributes,
-    user,
+    user: user?.id ?? '',
     createdAt,
     updatedAt,
-  } as Company;
+  } as CompanyType;
 };
 
 export const propertyDataMapper = (entity: CoreEntityResult): PropertyType => {

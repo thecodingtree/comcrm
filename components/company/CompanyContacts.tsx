@@ -4,6 +4,8 @@ import { useParams } from 'next/navigation';
 
 import { Box, Flex, Space } from '@mantine/core';
 
+import { trpc } from '@/app/_trpc/client';
+
 import { ContactType } from '@/server/sharedTypes';
 
 import ContactCard from '@/components/cards/ContactCard';
@@ -13,14 +15,9 @@ export default function CompanyContacts() {
   const params = useParams();
   const entityId = params?.id as string;
 
-  // const { data, loading, error } = useQuery(GET_CONTACTS, {
-  //   variables: {
-  //     filter: { entity: params?.id as string },
-  //   },
-  // });
-
-  const data: ContactType[] = [];
-  const isLoading = false;
+  const { data, isLoading, refetch } = trpc.contact.getContacts.useQuery({
+    filter: { id: entityId },
+  });
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -53,7 +50,7 @@ export default function CompanyContacts() {
         })}
       </Flex>
       <Space h="lg" />
-      <ContactAdd linkedEntity={entityId} />
+      <ContactAdd linkedEntity={entityId} onAdded={refetch} />
     </Box>
   );
 }

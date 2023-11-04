@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-export const RESERVED_PREFIX = 'RESERVED_';
+export const CONTACT_RESERVED_PREFIX = 'CONTACT_RESERVED_';
+export const PROPERTY_RESERVED_PREFIX = 'PROPERTY_RESERVED_';
+export const COMPANY_RESERVED_PREFIX = 'COMPANY_RESERVED_';
 
 export type AttributeType = {
   id?: string;
@@ -45,6 +47,19 @@ export type PropertyType = {
   updatedAt: Date;
 };
 
+export type CompanyType = {
+  id: string;
+  name: string;
+  phone?: string;
+  email?: string;
+  address?: AddressType;
+  attributes: AttributeType[];
+  image?: string;
+  user?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export const AddressInput = z.object({
   street: z.string().optional(),
   city: z.string().optional(),
@@ -65,11 +80,18 @@ export const EntityFilterInput = z.object({
 export type EntityFilterType = z.infer<typeof EntityFilterInput>;
 
 export enum ContactReservedAttributes {
-  ALT_PHONE = `${RESERVED_PREFIX}ALT_PHONE`,
+  ALT_PHONE = `${CONTACT_RESERVED_PREFIX}ALT_PHONE`,
 }
 
 export enum PropertyReservedAttributes {
-  SUITE = `${RESERVED_PREFIX}SUITE`,
-  SIZE = `${RESERVED_PREFIX}SIZE`,
-  PRICE = `${RESERVED_PREFIX}PRICE`,
+  SUITE = `${PROPERTY_RESERVED_PREFIX}SUITE`,
+  SIZE = `${PROPERTY_RESERVED_PREFIX}SIZE`,
+  PRICE = `${PROPERTY_RESERVED_PREFIX}PRICE`,
+}
+
+export enum CompanyReservedAttributes {
+  WEBSITE = `${COMPANY_RESERVED_PREFIX}WEBSITE`,
+  SIZE = `${COMPANY_RESERVED_PREFIX}SIZE`,
+  ALT_PHONE = `${COMPANY_RESERVED_PREFIX}ALT_PHONE`,
+  ALT_EMAIL = `${COMPANY_RESERVED_PREFIX}ALT_EMAIL`,
 }

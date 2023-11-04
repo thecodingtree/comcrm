@@ -9,7 +9,7 @@ import {
   contactDataMapper,
   companyDataMapper,
   propertyDataMapper,
-} from '@/graphql/mappers';
+} from '@/server/api/mappers';
 
 export const contactCreator = async ({
   data,
@@ -68,13 +68,15 @@ export const companyCreator = async ({
   data: CreateCompanyInputType;
   user: string;
 }) => {
-  const { name, address, attributes, linkedEntity } = data;
+  const { name, phone, email, address, attributes, linkedEntity } = data;
 
   const coreEntityCreateInput = {
     type: CoreEntityType.COMPANY,
     meta: {
       create: {
         name,
+        phone,
+        email,
         address: address
           ? {
               create: address,

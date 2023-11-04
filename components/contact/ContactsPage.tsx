@@ -11,7 +11,9 @@ import ReloadQuery from '../controls/ReloadQuery';
 export default function ContactsPage() {
   const { data, refetch } = trpc.contact.getContacts.useQuery();
 
-  const deleteContact = trpc.contact.deleteContact.useMutation();
+  const deleteContact = trpc.contact.deleteContact.useMutation({
+    onSuccess: () => refetch,
+  });
 
   const deleteContactHandler = (id: string) => {
     {
@@ -28,7 +30,7 @@ export default function ContactsPage() {
       <ContactsTable contacts={data} onDeleteContact={deleteContactHandler} />
       <ReloadQuery reload={refetch} />
       <Space h="lg" />
-      <ContactAdd />
+      <ContactAdd onAdded={refetch} />
     </div>
   );
 }

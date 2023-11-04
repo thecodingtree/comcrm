@@ -11,11 +11,19 @@ import PropertyForm, { PropertyFormValues } from './form/PropertyForm';
 
 interface PropertyAddProps {
   linkedEntity?: string;
+  onAdd?: () => void;
 }
 
-export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
+export default function PropertyAdd({
+  linkedEntity,
+  onAdd,
+}: {
+  linkedEntity?: string;
+  onAdd?: () => void;
+}) {
   const createProperty = trpc.property.createProperty.useMutation({
     onSettled: () => close(),
+    onSuccess: () => onAdd && onAdd(),
   });
 
   const [opened, { open, close }] = useDisclosure(false);
@@ -62,7 +70,13 @@ export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
       <Button onClick={open} w={400}>
         Add Property
       </Button>
-      <Modal opened={opened} onClose={close} size="lg" centered>
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="lg"
+        centered
+        closeOnClickOutside={false}
+      >
         <PropertyForm
           onSubmit={submitHandler}
           submitting={createProperty.isLoading}

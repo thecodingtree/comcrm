@@ -2,23 +2,15 @@
 
 import { Table } from '@mantine/core';
 
-import { useMutation } from '@apollo/client';
-
-import { ContactType, PropertyType } from '@/server/sharedTypes';
-
-import { Company } from '@/generated/resolvers-types';
-
-import { DELETE_COMPANY } from '@/graphql/mutations';
+import { ContactType, PropertyType, CompanyType } from '@/server/sharedTypes';
 
 import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
 
 export default function LinkedEntitiesTable({
   linkedEntities,
 }: {
-  linkedEntities: Company[] | ContactType[] | PropertyType[];
+  linkedEntities: CompanyType[] | ContactType[] | PropertyType[];
 }) {
-  const [deleteCompany, { data, loading, error }] = useMutation(DELETE_COMPANY);
-
   if (linkedEntities.length === 0) return <div>Nothing to display</div>;
 
   const columns = [
@@ -39,7 +31,7 @@ export default function LinkedEntitiesTable({
     },
   ] as ETColumn[];
 
-  const rowRenderer = (row: Company) => {
+  const rowRenderer = (row: CompanyType | PropertyType) => {
     const addressStr = `${row?.address?.street} ${row?.address?.city} ${row?.address?.state} ${row?.address?.zip}`;
     return (
       <Table.Tr key={row.name}>
