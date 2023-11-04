@@ -1,12 +1,24 @@
 import { Prisma, CoreEntityType } from '@prisma/client';
-import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { z } from 'zod';
+import * as R from 'ramda';
+import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
+
 import { TRPCError } from '@trpc/server';
 
-import { AddressInput, AttributeInput } from '@/server/sharedTypes';
+import {
+  AddressInput,
+  AttributeInput,
+  ContactReservedAttributes,
+} from '@/server/sharedTypes';
 import { contactCreator } from '@/server/api/creators';
 
-import { getOwnedCoreEntity, updateCoreEntity } from '@/db';
+import {
+  getOwnedCoreEntities,
+  getOwnedCoreEntity,
+  updateCoreEntity,
+  deleteCoreEntity,
+  CoreEntityResult,
+} from '@/db';
 import { contactDataMapper } from '@/graphql/mappers';
 import { coreEntityUpdater } from '@/graphql/resolvers';
 
@@ -36,6 +48,19 @@ const UpdateContactInput = z.object({
 export type UpdateContactInputType = z.infer<typeof UpdateContactInput>;
 
 export const contactRouter = createTRPCRouter({
+  getContacts: protectedProcedure.query(async ({ ctx }) => {
+    const result = await getOwnedCoreEntities({
+      entityType: CoreEntityType.CONTACT,
+      filter: null,
+      withUserId: ctx.session.user.id,
+    });
+
+    const results = result.map((entity: CoreEntityResult) => {
+      return contactDataMapper(entity);
+    });
+
+    return results;
+  }),
   getContact: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
@@ -83,9 +108,6 @@ export const contactRouter = createTRPCRouter({
               : undefined,
           },
         },
-        attributes: {
-          create: input.attributes,
-        },
       } as Prisma.CoreEntityUpdateInput;
 
       const result = await updateCoreEntity(
@@ -99,6 +121,17 @@ export const contactRouter = createTRPCRouter({
           code: 'NOT_FOUND',
           message: `CoreEntity with ID ${input.id} not found`,
         });
+      }
+
+      return contactDataMapper(result);
+    }),
+  deleteContact: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const result = await deleteCoreEntity(input, ctx.session.user?.id!!);
+
+      if (!result) {
+        throw new Error(`CoreEntity with ID ${input} not found`);
       }
 
       return contactDataMapper(result);

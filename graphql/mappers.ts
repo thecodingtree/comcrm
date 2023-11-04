@@ -1,27 +1,33 @@
+import * as R from 'ramda';
 import { ContactReservedAttributes } from '@/server/sharedTypes';
 import { CoreEntityResult } from '../db';
-import { Contact, Company, Property } from '../generated/resolvers-types';
+import { Company, Property } from '../generated/resolvers-types';
+import { RESERVED_PREFIX } from '@/server/sharedTypes';
 
-export const contactDataMapper = (entity: CoreEntityResult): Contact => {
+import { ContactType } from '@/server/sharedTypes';
+
+const isNotReservedAttribute = (attribute: any) => {
+  return !R.startsWith(RESERVED_PREFIX, attribute.name);
+};
+
+export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
   const { id, meta, attributes, user, createdAt, updatedAt } = entity;
   return {
     id,
-    name: meta?.name,
-    surName: meta?.surName,
+    name: meta?.name!,
+    surName: meta?.surName!,
     address: meta?.address,
     image: meta?.image,
     email: meta?.email,
     phone: meta?.phone,
     alt_phone: attributes?.find(
-      (a) => a.name === ContactReservedAttributes.ALT_PHONE
+      (attr) => attr.name === ContactReservedAttributes.ALT_PHONE
     )?.value,
-    attributes: attributes?.filter(
-      (a) => a.name !== ContactReservedAttributes.ALT_PHONE
-    ),
-    user,
+    attributes: R.filter(isNotReservedAttribute, attributes),
+    user: user?.id ?? '',
     createdAt,
     updatedAt,
-  } as Contact;
+  } as ContactType;
 };
 
 export const companyDataMapper = (entity: CoreEntityResult): Company => {

@@ -1,4 +1,6 @@
 'use client';
+import { CreateContactInputType } from '@/server/api/routers/contact';
+import { ContactReservedAttributes } from '@/server/sharedTypes';
 import { Paper, Title, TextInput, Button, Group } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 
@@ -18,6 +20,18 @@ const schema = z.object({
 
 export type ContactFormValues = z.infer<typeof schema>;
 
+const normalizeValues = (values: ContactFormValues) => {
+  const { name, surName, phone, alt_phone, email } = values;
+
+  return {
+    name,
+    surName,
+    phone: phone || undefined,
+    alt_phone: alt_phone || undefined,
+    email: email || undefined,
+  };
+};
+
 export default function ContactForm({
   onSubmit,
   submitting,
@@ -26,7 +40,7 @@ export default function ContactForm({
   submitting?: boolean;
 }) {
   const handleSubmit = (values: ContactFormValues) => {
-    onSubmit && onSubmit(values);
+    onSubmit && onSubmit(normalizeValues(values));
   };
 
   const form = useForm({

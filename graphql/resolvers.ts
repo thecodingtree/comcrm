@@ -133,19 +133,6 @@ const resolvers: Resolvers = {
     me: async (_, __, contextValue) => {
       return contextValue.user;
     },
-    contacts: async (_, { filter }, contextValue) =>
-      coreEntitiesResolver({
-        entityType: CoreEntityType.CONTACT,
-        filter,
-        user: contextValue.user?.id,
-        dataMapper: contactDataMapper,
-      }) as Promise<Contact[]>,
-    contact: async (_, { id }, contextValue) =>
-      coreEntityResolver({
-        id,
-        user: contextValue.user?.id,
-        dataMapper: contactDataMapper,
-      }) as Promise<Contact>,
     companies: async (_, { filter }, contextValue) =>
       coreEntitiesResolver({
         entityType: CoreEntityType.COMPANY,
@@ -174,13 +161,6 @@ const resolvers: Resolvers = {
       }) as Promise<Property>,
   },
   Mutation: {
-    updateContact: async (_, data, contextValue) =>
-      coreEntityUpdater({
-        id: data.id,
-        data,
-        user: contextValue.user?.id,
-        dataMapper: contactDataMapper,
-      }) as Promise<Contact>,
     updateCompany: async (_, data, contextValue) =>
       coreEntityUpdater({
         id: data.id,
@@ -195,12 +175,6 @@ const resolvers: Resolvers = {
         user: contextValue.user?.id,
         dataMapper: propertyDataMapper,
       }) as Promise<Property>,
-    deleteContact: async (_, { id }, contextValue) =>
-      coreEntityDeleter({
-        id,
-        user: contextValue.user?.id,
-        dataMapper: contactDataMapper,
-      }) as Promise<Contact>,
     deleteCompany: async (_, { id }, contextValue) =>
       coreEntityDeleter({
         id,

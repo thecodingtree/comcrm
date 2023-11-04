@@ -1,6 +1,33 @@
 import { z } from 'zod';
 
-const RESERVED_PREFIX = 'RESERVED_';
+export const RESERVED_PREFIX = 'RESERVED_';
+
+export type AttributeType = {
+  name: string;
+  value: string;
+};
+
+export type AddressType = {
+  street?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+};
+
+export type ContactType = {
+  id: string;
+  name: string;
+  surName: string;
+  phone?: string;
+  alt_phone?: string;
+  email?: string;
+  address?: AddressType;
+  image?: string;
+  attributes: AttributeType[];
+  user?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export const AddressInput = z.object({
   street: z.string().optional(),
