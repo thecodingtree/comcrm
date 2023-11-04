@@ -20,10 +20,7 @@ export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
     image: meta?.image,
     email: meta?.email,
     phone: meta?.phone,
-    alt_phone: attributes?.find(
-      (attr) => attr.name === ContactReservedAttributes.ALT_PHONE
-    )?.value,
-    attributes: R.filter(isNotReservedAttribute, attributes),
+    attributes,
     user: user?.id ?? '',
     createdAt,
     updatedAt,

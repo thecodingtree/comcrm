@@ -6,6 +6,7 @@ import { trpc } from '@/app/_trpc/client';
 import EditText from '@/components/input/EditText';
 import EditTitle from '@/components/input/EditTitle';
 import EditAddress from '../input/EditAddress';
+import EditAttribute from '../input/EditAttribute';
 import { ContactReservedAttributes } from '@/server/sharedTypes';
 
 interface ContactCardProps {
@@ -16,6 +17,9 @@ export default function ContactInfo({ contactId }: ContactCardProps) {
   const { data, isLoading } = trpc.contact.getContact.useQuery(contactId);
 
   const updateContact = trpc.contact.updateContact.useMutation();
+
+  const updateOrCreateAttribute =
+    trpc.attributes.updateOrCreateAttribute.useMutation();
 
   const fullName = `${data?.name || ''} ${data?.surName || ''}`;
 
@@ -46,16 +50,20 @@ export default function ContactInfo({ contactId }: ContactCardProps) {
               })
             }
           />
-          <EditText
+          <EditAttribute
             label="alt phone"
-            initValue={data?.alt_phone}
-            onChange={(phone) =>
-              // updateContact.mutate({
-              //   id: contactId!,
-              //   alt_phone: phone || undefined,
-              // })
-              console.log(phone)
-            }
+            initAttr={data?.attributes?.find(
+              (attr) => attr.name === ContactReservedAttributes.ALT_PHONE
+            )}
+            reservedName={ContactReservedAttributes.ALT_PHONE}
+            onChange={(attr) => {
+              updateOrCreateAttribute.mutate({
+                id: attr?.id,
+                name: attr?.name!,
+                value: attr?.value!,
+                entityId: contactId!,
+              });
+            }}
           />
 
           <EditText
