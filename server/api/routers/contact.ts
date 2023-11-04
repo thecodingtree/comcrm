@@ -1,6 +1,5 @@
 import { Prisma, CoreEntityType } from '@prisma/client';
 import { z } from 'zod';
-import * as R from 'ramda';
 import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 
 import { TRPCError } from '@trpc/server';
@@ -8,7 +7,7 @@ import { TRPCError } from '@trpc/server';
 import {
   AddressInput,
   AttributeInput,
-  ContactReservedAttributes,
+  EntityFilterInput,
 } from '@/server/sharedTypes';
 import { contactCreator } from '@/server/api/creators';
 
@@ -20,7 +19,6 @@ import {
   CoreEntityResult,
 } from '@/db';
 import { contactDataMapper } from '@/graphql/mappers';
-import { coreEntityUpdater } from '@/graphql/resolvers';
 
 const CreateContactInput = z.object({
   name: z.string(),
@@ -48,19 +46,21 @@ const UpdateContactInput = z.object({
 export type UpdateContactInputType = z.infer<typeof UpdateContactInput>;
 
 export const contactRouter = createTRPCRouter({
-  getContacts: protectedProcedure.query(async ({ ctx }) => {
-    const result = await getOwnedCoreEntities({
-      entityType: CoreEntityType.CONTACT,
-      filter: null,
-      withUserId: ctx.session.user.id,
-    });
+  getContacts: protectedProcedure
+    .input(z.object({ filter: EntityFilterInput }).optional())
+    .query(async ({ ctx, input }) => {
+      const result = await getOwnedCoreEntities({
+        entityType: CoreEntityType.CONTACT,
+        filter: input?.filter,
+        withUserId: ctx.session.user.id,
+      });
 
-    const results = result.map((entity: CoreEntityResult) => {
-      return contactDataMapper(entity);
-    });
+      const results = result.map((entity: CoreEntityResult) => {
+        return contactDataMapper(entity);
+      });
 
-    return results;
-  }),
+      return results;
+    }),
   getContact: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {

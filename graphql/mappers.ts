@@ -1,7 +1,7 @@
 import * as R from 'ramda';
-import { ContactReservedAttributes } from '@/server/sharedTypes';
+import { PropertyType } from '@/server/sharedTypes';
 import { CoreEntityResult } from '../db';
-import { Company, Property } from '../generated/resolvers-types';
+import { Company } from '../generated/resolvers-types';
 import { RESERVED_PREFIX } from '@/server/sharedTypes';
 
 import { ContactType } from '@/server/sharedTypes';
@@ -42,7 +42,7 @@ export const companyDataMapper = (entity: CoreEntityResult): Company => {
   } as Company;
 };
 
-export const propertyDataMapper = (entity: CoreEntityResult): Property => {
+export const propertyDataMapper = (entity: CoreEntityResult): PropertyType => {
   const { id, meta, attributes, user, createdAt, updatedAt } = entity;
   return {
     id,
@@ -51,8 +51,8 @@ export const propertyDataMapper = (entity: CoreEntityResult): Property => {
     phone: meta?.phone,
     email: meta?.email,
     attributes,
-    user,
+    user: user?.id ?? '',
     createdAt,
     updatedAt,
-  } as Property;
+  } as PropertyType;
 };

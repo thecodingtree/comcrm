@@ -1,66 +1,112 @@
-import { useMutation } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Paper, Stack, Text, Space, rem } from '@mantine/core';
 
-import { GET_PROPERTY } from '@/graphql/queries';
-import { EDIT_PROPERTY } from '@/graphql/mutations';
+import { trpc } from '@/app/_trpc/client';
 
 import EditText from '@/components/input/EditText';
 import EditTitle from '@/components/input/EditTitle';
 import EditAddress from '../input/EditAddress';
+import EditAttribute from '../input/EditAttribute';
 
-interface PropertyInfoProps {
-  propertyId?: string;
-}
+import { PropertyReservedAttributes } from '@/server/sharedTypes';
 
-export default function PropertyInfo({ propertyId }: PropertyInfoProps) {
-  const { data, loading, error } = useQuery(GET_PROPERTY, {
-    variables: { id: propertyId },
-  });
+export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
+  const { data, isLoading } = trpc.property.getProperty.useQuery(propertyId);
 
-  const [updateProperty] = useMutation(EDIT_PROPERTY);
+  const updateProperty = trpc.property.updateProperty.useMutation();
+
+  const updateOrCreateAttribute =
+    trpc.attributes.updateOrCreateAttribute.useMutation();
 
   return (
     <Paper p="sm" maw={rem(500)}>
       <Stack gap="sm">
         <EditTitle
-          initValue={data?.property?.name}
+          initValue={data?.name}
           onChange={(name) =>
-            updateProperty({ variables: { id: propertyId, name } })
+            updateProperty.mutate({ id: propertyId!, name: name || undefined })
           }
         />
         <Space h="xs" />
+        <EditAddress
+          label="address"
+          address={data?.address}
+          onChange={(address) =>
+            updateProperty.mutate({
+              id: propertyId!,
+              address: {
+                street: address?.street,
+                city: address?.city,
+                state: address?.state,
+                zip: address?.zip,
+              },
+            })
+          }
+        />
         <EditText
           label="phone"
-          initValue={data?.property?.phone}
+          initValue={data?.phone}
           onChange={(phone) =>
-            updateProperty({ variables: { id: propertyId, phone } })
+            updateProperty.mutate({
+              id: propertyId!,
+              phone: phone || undefined,
+            })
           }
         />
 
         <EditText
           label="email"
-          initValue={data?.property?.email}
+          initValue={data?.email}
           onChange={(email) =>
-            updateProperty({ variables: { id: propertyId, email } })
-          }
-        />
-        <EditAddress
-          label="address"
-          address={data?.property?.address}
-          onChange={(address) =>
-            updateProperty({
-              variables: {
-                id: propertyId,
-                address: {
-                  street: address?.street,
-                  city: address?.city,
-                  state: address?.state,
-                  zip: address?.zip,
-                },
-              },
+            updateProperty.mutate({
+              id: propertyId!,
+              email: email || undefined,
             })
           }
+        />
+        <EditAttribute
+          label="suite"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === PropertyReservedAttributes.SUITE
+          )}
+          reservedName={PropertyReservedAttributes.SUITE}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: propertyId!,
+            });
+          }}
+        />
+        <EditAttribute
+          label="price"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === PropertyReservedAttributes.PRICE
+          )}
+          reservedName={PropertyReservedAttributes.PRICE}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: propertyId!,
+            });
+          }}
+        />
+        <EditAttribute
+          label="size"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === PropertyReservedAttributes.SIZE
+          )}
+          reservedName={PropertyReservedAttributes.SIZE}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: propertyId!,
+            });
+          }}
         />
       </Stack>
     </Paper>

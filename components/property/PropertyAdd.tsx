@@ -1,13 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
 
-import PropertyForm from './form/PropertyForm';
+import { PropertyReservedAttributes } from '@/server/sharedTypes';
+
+import PropertyForm, { PropertyFormValues } from './form/PropertyForm';
 
 interface PropertyAddProps {
   linkedEntity?: string;
@@ -18,10 +18,32 @@ export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
     onSettled: () => close(),
   });
 
-  const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: any) => {
+  const submitHandler = (values: PropertyFormValues) => {
+    const attributes = [];
+
+    if (values.suite) {
+      attributes.push({
+        name: PropertyReservedAttributes.SUITE,
+        value: values.suite,
+      });
+    }
+
+    if (values.size) {
+      attributes.push({
+        name: PropertyReservedAttributes.SIZE,
+        value: values.size.toString(),
+      });
+    }
+
+    if (values.price) {
+      attributes.push({
+        name: PropertyReservedAttributes.PRICE,
+        value: values.price.toString(),
+      });
+    }
+
     createProperty.mutate({
       name: values.name,
       address: {
@@ -30,6 +52,7 @@ export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
         state: values.state,
         zip: values.zip,
       },
+      attributes,
       linkedEntity,
     });
   };

@@ -9,44 +9,38 @@ import {
 } from '../db';
 import {
   Resolvers,
-  Contact,
   Company,
-  Property,
   InputMaybe,
   CoreEntityFilter,
-  MutationUpdateContactArgs,
+  MutationUpdateCompanyArgs,
 } from '../generated/resolvers-types';
 
-import {
-  contactDataMapper,
-  companyDataMapper,
-  propertyDataMapper,
-} from './mappers';
+import { companyDataMapper } from './mappers';
 
 interface CoreEntitiesResolverArgs {
   entityType: CoreEntityType;
   filter?: InputMaybe<CoreEntityFilter>;
   user?: string;
-  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+  dataMapper: (entity: CoreEntityResult) => Company;
 }
 
 interface CoreEntityResolverArgs {
   id: string;
   user: string;
-  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+  dataMapper: (entity: CoreEntityResult) => Company;
 }
 
 interface CoreEntityUpdaterArgs {
   id: string;
-  data: MutationUpdateContactArgs;
+  data: MutationUpdateCompanyArgs;
   user: string;
-  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+  dataMapper: (entity: CoreEntityResult) => Company;
 }
 
 interface CoreEntityDeleterArgs {
   id: string;
   user: string;
-  dataMapper: (entity: CoreEntityResult) => Contact | Company | Property;
+  dataMapper: (entity: CoreEntityResult) => Company;
 }
 
 export const coreEntityResolver = async ({
@@ -67,7 +61,7 @@ export const coreEntitiesResolver = async ({
 }: CoreEntitiesResolverArgs) => {
   const result = await getOwnedCoreEntities({
     entityType,
-    filter,
+    filter: null,
     withUserId: user,
   });
 
@@ -84,13 +78,12 @@ export const coreEntityUpdater = async ({
   user,
   dataMapper,
 }: CoreEntityUpdaterArgs) => {
-  const { name, surName, phone, email, address, attributes } = data;
+  const { name, phone, email, address, attributes } = data;
 
   const coreEntityUpdateInput = {
     meta: {
       update: {
         name,
-        surName,
         phone,
         email,
         address: address
@@ -146,19 +139,6 @@ const resolvers: Resolvers = {
         user: contextValue.user?.id,
         dataMapper: companyDataMapper,
       }) as Promise<Company>,
-    properties: async (_, { filter }, contextValue) =>
-      coreEntitiesResolver({
-        entityType: CoreEntityType.PROPERTY,
-        filter,
-        user: contextValue.user?.id,
-        dataMapper: propertyDataMapper,
-      }) as Promise<Property[]>,
-    property: async (_, { id }, contextValue) =>
-      coreEntityResolver({
-        id,
-        user: contextValue.user?.id,
-        dataMapper: propertyDataMapper,
-      }) as Promise<Property>,
   },
   Mutation: {
     updateCompany: async (_, data, contextValue) =>
@@ -168,25 +148,12 @@ const resolvers: Resolvers = {
         user: contextValue.user?.id,
         dataMapper: companyDataMapper,
       }) as Promise<Company>,
-    updateProperty: async (_, data, contextValue) =>
-      coreEntityUpdater({
-        id: data.id,
-        data,
-        user: contextValue.user?.id,
-        dataMapper: propertyDataMapper,
-      }) as Promise<Property>,
     deleteCompany: async (_, { id }, contextValue) =>
       coreEntityDeleter({
         id,
         user: contextValue.user?.id,
         dataMapper: companyDataMapper,
       }) as Promise<Company>,
-    deleteProperty: async (_, { id }, contextValue) =>
-      coreEntityDeleter({
-        id,
-        user: contextValue.user?.id,
-        dataMapper: propertyDataMapper,
-      }) as Promise<Property>,
   },
 };
 

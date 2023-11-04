@@ -8,13 +8,16 @@ import { trpc } from '@/app/_trpc/client';
 import ContactForm, { ContactFormValues } from './form/ContactForm';
 import { ContactReservedAttributes } from '@/server/sharedTypes';
 
-interface ContactAddProps {
+export default function ContactAdd({
+  linkedEntity,
+  onAdded,
+}: {
   linkedEntity?: string;
-}
-
-export default function ContactAdd({ linkedEntity }: ContactAddProps) {
+  onAdded?: () => void;
+}) {
   const createContact = trpc.contact.createContact.useMutation({
     onSettled: () => close(),
+    onSuccess: () => onAdded && onAdded(),
   });
 
   const [opened, { open, close }] = useDisclosure(false);
@@ -46,7 +49,13 @@ export default function ContactAdd({ linkedEntity }: ContactAddProps) {
       <Button onClick={open} w={400}>
         Add Contact
       </Button>
-      <Modal opened={opened} onClose={close} size="lg" centered>
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="lg"
+        centered
+        closeOnClickOutside={false}
+      >
         <ContactForm
           onSubmit={submitHandler}
           submitting={createContact.isLoading}

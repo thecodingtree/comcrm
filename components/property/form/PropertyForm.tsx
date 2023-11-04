@@ -1,126 +1,148 @@
 'use client';
 
-import { Grid, TextInput, Button, Group } from '@mantine/core';
+import {
+  Paper,
+  Title,
+  Grid,
+  NumberInput,
+  TextInput,
+  Button,
+  Group,
+} from '@mantine/core';
 
-import { Formik } from 'formik';
+import { useForm, zodResolver } from '@mantine/form';
 
-import classes from './PropertyForm.module.css';
+import { z } from 'zod';
 
-export interface PropertyFormProps {
-  onSubmit?(values: any): void;
-  submitting?: boolean;
-}
+const schema = z.object({
+  name: z.string().min(1, { message: 'Property Name is required' }),
+  street: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zip: z.string().optional(),
+  suite: z.string().optional(),
+  size: z.number().optional(),
+  price: z.number().optional(),
+});
+
+export type PropertyFormValues = z.infer<typeof schema>;
 
 export default function PropertyForm({
   onSubmit,
   submitting,
-}: PropertyFormProps) {
-  const handleSubmit = (values: any) => {
+}: {
+  onSubmit?: (values: PropertyFormValues) => void;
+  submitting?: boolean;
+}) {
+  const handleSubmit = (values: PropertyFormValues) => {
     onSubmit && onSubmit(values);
   };
 
+  const form = useForm({
+    initialValues: {
+      name: '',
+      street: '',
+      city: '',
+      state: '',
+      zip: '',
+      suite: '',
+      size: undefined,
+      price: undefined,
+    },
+    validate: zodResolver(schema),
+  });
+
   return (
-    <div className={classes.wrapper}>
-      <Formik
-        initialValues={{
-          name: '',
-          street: '',
-          city: '',
-          state: '',
-          zip: '',
-        }}
-        onSubmit={handleSubmit}
-      >
-        {({ values, handleChange, handleBlur, handleSubmit }) => (
-          <form onSubmit={handleSubmit} className={classes.form}>
+    <Paper withBorder={false} m={4}>
+      <Title>Quick Add: Property</Title>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <TextInput
+          id="name"
+          name="name"
+          label="Property Name"
+          placeholder="Property Name"
+          mt="lg"
+          withAsterisk
+          {...form.getInputProps('name')}
+        />
+        <Grid>
+          <Grid.Col span={12}>
             <TextInput
-              id="name"
-              name="name"
-              label="Name"
-              placeholder="Property"
+              id="street"
+              name="street"
+              label="Street"
               mt="lg"
-              classNames={{ input: classes.input, label: classes.inputLabel }}
-              value={values.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              placeholder="Street"
+              {...form.getInputProps('street')}
             />
-            <Group mt={'lg'}>
-              <Grid>
-                <Grid.Col span={12}>
-                  <TextInput
-                    id="street"
-                    name="street"
-                    label="Street"
-                    mt="lg"
-                    placeholder="Street"
-                    classNames={{
-                      input: classes.input,
-                      label: classes.inputLabel,
-                    }}
-                    value={values.street}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Grid.Col>
-                <Grid.Col span={4}>
-                  <TextInput
-                    id="city"
-                    name="city"
-                    label="City"
-                    placeholder="City"
-                    classNames={{
-                      input: classes.input,
-                      label: classes.inputLabel,
-                    }}
-                    value={values.city}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Grid.Col>
-                <Grid.Col span={4}>
-                  <TextInput
-                    id="state"
-                    name="state"
-                    label="State"
-                    placeholder="State"
-                    classNames={{
-                      input: classes.input,
-                      label: classes.inputLabel,
-                    }}
-                    value={values.state}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Grid.Col>
-                <Grid.Col span={4}>
-                  <TextInput
-                    id="zip"
-                    name="zip"
-                    label="Zip"
-                    placeholder="Zip"
-                    classNames={{
-                      input: classes.input,
-                      label: classes.inputLabel,
-                    }}
-                    value={values.zip}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Grid.Col>
-              </Grid>
-            </Group>
-            <Group justify="center" mt="md">
-              <Button
-                type="submit"
-                className={classes.control}
-                disabled={submitting}
-              >
-                Add Property
-              </Button>
-            </Group>
-          </form>
-        )}
-      </Formik>
-    </div>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <TextInput
+              id="city"
+              name="city"
+              label="City"
+              placeholder="City"
+              {...form.getInputProps('city')}
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <TextInput
+              id="state"
+              name="state"
+              label="State"
+              placeholder="State"
+              {...form.getInputProps('state')}
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <TextInput
+              id="zip"
+              name="zip"
+              label="Zip"
+              placeholder="Zip"
+              {...form.getInputProps('zip')}
+            />
+          </Grid.Col>
+        </Grid>
+        <TextInput
+          id="suite"
+          name="suite"
+          label="Suite"
+          placeholder="Suite"
+          mt="lg"
+          {...form.getInputProps('suite')}
+        />
+        <NumberInput
+          id="size"
+          name="size"
+          label="Size (sqft)"
+          placeholder="Size (sqft)"
+          mt="lg"
+          allowLeadingZeros={false}
+          allowNegative={false}
+          decimalScale={0}
+          hideControls
+          {...form.getInputProps('size')}
+        />
+        <NumberInput
+          id="price"
+          name="price"
+          label="Price"
+          placeholder="Price"
+          mt="lg"
+          allowLeadingZeros={false}
+          allowNegative={false}
+          decimalScale={2}
+          fixedDecimalScale={true}
+          hideControls
+          {...form.getInputProps('price')}
+        />
+        <Group justify="center" mt="md">
+          <Button type="submit" disabled={submitting}>
+            Add Property
+          </Button>
+        </Group>
+      </form>
+    </Paper>
   );
 }

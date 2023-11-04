@@ -1,6 +1,5 @@
 'use client';
-import { CreateContactInputType } from '@/server/api/routers/contact';
-import { ContactReservedAttributes } from '@/server/sharedTypes';
+
 import { Paper, Title, TextInput, Button, Group } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 

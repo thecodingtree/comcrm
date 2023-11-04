@@ -32,6 +32,19 @@ export type ContactType = {
   updatedAt: Date;
 };
 
+export type PropertyType = {
+  id: string;
+  name: string;
+  phone?: string;
+  email?: string;
+  address?: AddressType;
+  attributes: AttributeType[];
+  image?: string;
+  user?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export const AddressInput = z.object({
   street: z.string().optional(),
   city: z.string().optional(),
@@ -45,6 +58,18 @@ export const AttributeInput = z.object({
   value: z.string(),
 });
 
+export const EntityFilterInput = z.object({
+  id: z.string().optional(),
+});
+
+export type EntityFilterType = z.infer<typeof EntityFilterInput>;
+
 export enum ContactReservedAttributes {
   ALT_PHONE = `${RESERVED_PREFIX}ALT_PHONE`,
+}
+
+export enum PropertyReservedAttributes {
+  SUITE = `${RESERVED_PREFIX}SUITE`,
+  SIZE = `${RESERVED_PREFIX}SIZE`,
+  PRICE = `${RESERVED_PREFIX}PRICE`,
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Table,
   ScrollArea,
@@ -19,13 +19,13 @@ import {
   IconSearch,
 } from '@tabler/icons-react';
 
-import { Company, Property } from '@/generated/resolvers-types';
+import { Company } from '@/generated/resolvers-types';
 
-import { ContactType } from '@/server/sharedTypes';
+import { ContactType, PropertyType } from '@/server/sharedTypes';
 
 import classes from './EntitiesTable.module.css';
 
-type RowData = Company | ContactType | Property;
+type RowData = Company | ContactType | PropertyType;
 
 interface ThSortableProps {
   thKey?: string;
