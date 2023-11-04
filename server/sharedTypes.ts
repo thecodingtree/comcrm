@@ -3,8 +3,12 @@ import { z } from 'zod';
 export const RESERVED_PREFIX = 'RESERVED_';
 
 export type AttributeType = {
+  id?: string;
   name: string;
   value: string;
+  entityId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type AddressType = {
@@ -19,7 +23,6 @@ export type ContactType = {
   name: string;
   surName: string;
   phone?: string;
-  alt_phone?: string;
   email?: string;
   address?: AddressType;
   image?: string;
@@ -37,6 +40,7 @@ export const AddressInput = z.object({
 });
 
 export const AttributeInput = z.object({
+  id: z.string().optional(),
   name: z.string(),
   value: z.string(),
 });
