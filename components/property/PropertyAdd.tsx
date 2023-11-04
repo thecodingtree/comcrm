@@ -1,42 +1,67 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@apollo/client';
-
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
-import { ADD_PROPERTY } from '@/graphql/mutations';
-import { GET_PROPERTIES } from '@/graphql/queries';
+import { trpc } from '@/app/_trpc/client';
 
-import PropertyForm from './form/PropertyForm';
+import { PropertyReservedAttributes } from '@/server/sharedTypes';
+
+import PropertyForm, { PropertyFormValues } from './form/PropertyForm';
 
 interface PropertyAddProps {
   linkedEntity?: string;
+  onAdd?: () => void;
 }
 
-export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
-  const [addProperty, { data, loading, error }] = useMutation(ADD_PROPERTY, {
-    onCompleted: () => {
-      close();
-    },
-    refetchQueries: [GET_PROPERTIES],
+export default function PropertyAdd({
+  linkedEntity,
+  onAdd,
+}: {
+  linkedEntity?: string;
+  onAdd?: () => void;
+}) {
+  const createProperty = trpc.property.createProperty.useMutation({
+    onSettled: () => close(),
+    onSuccess: () => onAdd && onAdd(),
   });
-  const router = useRouter();
+
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: any) => {
-    addProperty({
-      variables: {
-        name: values.name,
-        address: {
-          street: values.street,
-          city: values.city,
-          state: values.state,
-          zip: values.zip,
-        },
-        linkedEntity: linkedEntity ?? null,
+  const submitHandler = (values: PropertyFormValues) => {
+    const attributes = [];
+
+    if (values.suite) {
+      attributes.push({
+        name: PropertyReservedAttributes.SUITE,
+        value: values.suite,
+      });
+    }
+
+    if (values.size) {
+      attributes.push({
+        name: PropertyReservedAttributes.SIZE,
+        value: values.size.toString(),
+      });
+    }
+
+    if (values.price) {
+      attributes.push({
+        name: PropertyReservedAttributes.PRICE,
+        value: values.price.toString(),
+      });
+    }
+
+    createProperty.mutate({
+      name: values.name,
+      address: {
+        street: values.street,
+        city: values.city,
+        state: values.state,
+        zip: values.zip,
       },
+      attributes,
+      linkedEntity,
     });
   };
 
@@ -45,8 +70,17 @@ export default function PropertyAdd({ linkedEntity }: PropertyAddProps) {
       <Button onClick={open} w={400}>
         Add Property
       </Button>
-      <Modal opened={opened} onClose={close} size="lg" centered>
-        <PropertyForm onSubmit={submitHandler} submitting={loading} />
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="lg"
+        centered
+        closeOnClickOutside={false}
+      >
+        <PropertyForm
+          onSubmit={submitHandler}
+          submitting={createProperty.isLoading}
+        />
       </Modal>
     </Stack>
   );

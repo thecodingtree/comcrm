@@ -1,26 +1,18 @@
 'use client';
 
-import { Suspense } from 'react';
-
-import { useMutation } from '@apollo/client';
-
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-
-import { DELETE_CONTACT } from '@/graphql/mutations';
-
-import { GET_CONTACTS } from '@/graphql/queries';
-
 import { Space } from '@mantine/core';
+
+import { trpc } from '@/app/_trpc/client';
 
 import ContactsTable from '@/components/contact/ContactsTable';
 import ContactAdd from '@/components/contact/ContactAdd';
 import ReloadQuery from '../controls/ReloadQuery';
 
-export default function CompaniesPage() {
-  const { data, loading, error, refetch } = useQuery(GET_CONTACTS);
+export default function ContactsPage() {
+  const { data, refetch } = trpc.contact.getContacts.useQuery();
 
-  const [deleteContact] = useMutation(DELETE_CONTACT, {
-    refetchQueries: [GET_CONTACTS],
+  const deleteContact = trpc.contact.deleteContact.useMutation({
+    onSuccess: () => refetch,
   });
 
   const deleteContactHandler = (id: string) => {
@@ -28,24 +20,17 @@ export default function CompaniesPage() {
       const answerYes = confirm('Are you sure?');
 
       if (answerYes) {
-        deleteContact({
-          variables: {
-            id,
-          },
-        });
+        deleteContact.mutate(id);
       }
     }
   };
 
   return (
     <div>
-      <ContactsTable
-        contacts={data?.contacts}
-        onDeleteContact={deleteContactHandler}
-      />
+      <ContactsTable contacts={data} onDeleteContact={deleteContactHandler} />
       <ReloadQuery reload={refetch} />
       <Space h="lg" />
-      <ContactAdd />
+      <ContactAdd onAdded={refetch} />
     </div>
   );
 }

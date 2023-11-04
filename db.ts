@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient, CoreEntityType } from '@prisma/client';
 
-import { InputMaybe, CoreEntityFilter } from './generated/resolvers-types';
+import { EntityFilterType } from '@/server/sharedTypes';
 
 const prisma = new PrismaClient();
 
@@ -16,7 +16,7 @@ export type CoreEntityResult = Prisma.CoreEntityGetPayload<{
 
 interface GetCoreEntitiesArgs {
   entityType: CoreEntityType;
-  filter?: InputMaybe<CoreEntityFilter>;
+  filter?: EntityFilterType;
   withUserId?: string;
 }
 
@@ -34,16 +34,16 @@ export const getOwnedCoreEntities = async ({
     where: {
       type: entityType,
       userId: withUserId,
-      OR: filter?.entity
+      OR: filter?.id
         ? [
             {
-              relatedEntities: filter?.entity
-                ? { some: { id: filter.entity } }
+              relatedEntities: filter?.id
+                ? { some: { id: filter.id } }
                 : undefined,
             },
             {
-              linkedEntities: filter?.entity
-                ? { some: { id: filter.entity } }
+              linkedEntities: filter?.id
+                ? { some: { id: filter.id } }
                 : undefined,
             },
           ]
