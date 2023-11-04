@@ -8,12 +8,12 @@ import {
   ConfirmButton,
 } from '@/components/controls/Buttons';
 
-import { Address, Maybe } from '@/generated/resolvers-types';
+import { AddressType } from '@/server/sharedTypes';
 
 interface EditAddressProps {
   label?: string | null;
-  address: Maybe<Address>;
-  onChange?: (value: Maybe<Address>) => void;
+  address?: AddressType;
+  onChange?: (value?: AddressType) => void;
 }
 
 export default function EditAddress({
@@ -36,7 +36,7 @@ export default function EditAddress({
       city,
       state,
       zip,
-    } as Address;
+    } as AddressType;
 
     if (onChange && newAddress !== address) {
       onChange(newAddress);
