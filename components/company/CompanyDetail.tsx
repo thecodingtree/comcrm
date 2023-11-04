@@ -1,10 +1,10 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { GET_COMPANY } from '@/graphql/queries';
 
 import { Avatar, Space, Grid } from '@mantine/core';
+
+import { trpc } from '@/app/_trpc/client';
 
 import CompanyInfo from './CompanyInfo';
 import CompanyProperties from './CompanyProperties';
@@ -16,19 +16,12 @@ export default function CompanyDetails() {
 
   const companyId = typeof params?.id === 'string' ? params?.id : undefined;
 
-  const { data, loading, error } = useQuery(GET_COMPANY, {
-    variables: { id: companyId },
-  });
+  const { data, isLoading } = trpc.company.getCompany.useQuery(companyId);
 
   return (
     <Grid>
       <Grid.Col span={{ base: 12, lg: 2 }}>
-        <Avatar
-          color="blue"
-          radius="xl"
-          size={150}
-          src={data?.company?.image}
-        />
+        <Avatar color="blue" radius="xl" size={150} src={data?.image} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
         <CompanyInfo companyId={companyId} />

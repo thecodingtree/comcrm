@@ -71,16 +71,14 @@ export default function PropertiesTable({
         `${row?.address?.street || ''} ${row?.address?.city || ''} ${
           row?.address?.state || ''
         } ${row?.address?.zip || ''}`;
-      const sizeStr = `${
-        row?.attributes?.find(
-          (attr) => attr.name === PropertyReservedAttributes.SIZE
-        )?.value
-      } sqft`;
-      const priceStr = `$${
-        row?.attributes?.find(
-          (attr) => attr.name === PropertyReservedAttributes.PRICE
-        )?.value
-      }`;
+      const size = row?.attributes?.find(
+        (attr) => attr.name === PropertyReservedAttributes.SIZE
+      )?.value;
+      const sizeStr = size ? `${size} sqft` : '';
+      const price = row?.attributes?.find(
+        (attr) => attr.name === PropertyReservedAttributes.PRICE
+      )?.value;
+      const priceStr = price ? `$${price}` : '';
       return (
         <Table.Tr key={row.id}>
           <Table.Td>{row.name}</Table.Td>

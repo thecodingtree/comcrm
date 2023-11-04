@@ -2,20 +2,20 @@
 
 import { useParams } from 'next/navigation';
 
-import { Title } from '@mantine/core';
+import { trpc } from '@/app/_trpc/client';
 
-import { PropertyType } from '@/server/sharedTypes';
+import { Title } from '@mantine/core';
 
 import LinkedEntitiesTable from '@/components/tables/LinkedEntitiesTable';
 import PropertyAdd from '../property/PropertyAdd';
 
 export default function CompanyProperties() {
   const params = useParams();
-
   const entityId = params?.id as string;
 
-  const data: PropertyType[] = [];
-  const isLoading = false;
+  const { data, isLoading, refetch } = trpc.property.getProperties.useQuery({
+    filter: { id: entityId },
+  });
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -24,7 +24,7 @@ export default function CompanyProperties() {
       <div>
         <Title>Properties</Title>
         <LinkedEntitiesTable linkedEntities={data} />
-        <PropertyAdd linkedEntity={entityId} />
+        <PropertyAdd linkedEntity={entityId} onAdd={refetch} />
       </div>
     )
   );

@@ -4,7 +4,11 @@ import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 
 import { TRPCError } from '@trpc/server';
 
-import { AddressInput, AttributeInput } from '@/server/sharedTypes';
+import {
+  AddressInput,
+  AttributeInput,
+  EntityFilterInput,
+} from '@/server/sharedTypes';
 import { propertyCreator } from '@/server/api/creators';
 
 import {
@@ -14,7 +18,7 @@ import {
   deleteCoreEntity,
   updateCoreEntity,
 } from '@/db';
-import { propertyDataMapper } from '@/graphql/mappers';
+import { propertyDataMapper } from '@/server/api/mappers';
 
 const CreatePropertyInput = z.object({
   name: z.string(),
@@ -38,19 +42,21 @@ const UpdatePropertyInput = z.object({
 export type UpdatePropertyInputType = z.infer<typeof UpdatePropertyInput>;
 
 export const propertyRouter = createTRPCRouter({
-  getProperties: protectedProcedure.query(async ({ ctx }) => {
-    const result = await getOwnedCoreEntities({
-      entityType: CoreEntityType.PROPERTY,
-      filter: null,
-      withUserId: ctx.session.user.id,
-    });
+  getProperties: protectedProcedure
+    .input(z.object({ filter: EntityFilterInput }).optional())
+    .query(async ({ ctx, input }) => {
+      const result = await getOwnedCoreEntities({
+        entityType: CoreEntityType.PROPERTY,
+        filter: input?.filter,
+        withUserId: ctx.session.user.id,
+      });
 
-    const results = result.map((entity: CoreEntityResult) => {
-      return propertyDataMapper(entity);
-    });
+      const results = result.map((entity: CoreEntityResult) => {
+        return propertyDataMapper(entity);
+      });
 
-    return results;
-  }),
+      return results;
+    }),
   getProperty: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
@@ -63,8 +69,6 @@ export const propertyRouter = createTRPCRouter({
       }
 
       const result = await getOwnedCoreEntity(input, ctx?.session?.user?.id);
-
-      console.log('result', result);
 
       return result ? propertyDataMapper(result) : null;
     }),

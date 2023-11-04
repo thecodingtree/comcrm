@@ -19,13 +19,11 @@ import {
   IconSearch,
 } from '@tabler/icons-react';
 
-import { Company } from '@/generated/resolvers-types';
-
-import { ContactType, PropertyType } from '@/server/sharedTypes';
+import { ContactType, PropertyType, CompanyType } from '@/server/sharedTypes';
 
 import classes from './EntitiesTable.module.css';
 
-type RowData = Company | ContactType | PropertyType;
+type RowData = CompanyType | ContactType | PropertyType;
 
 interface ThSortableProps {
   thKey?: string;

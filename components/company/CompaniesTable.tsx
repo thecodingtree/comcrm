@@ -2,12 +2,13 @@
 
 import { Table, Text, Space } from '@mantine/core';
 import Link from 'next/link';
-import { Company } from '@/generated/resolvers-types';
+
+import { CompanyReservedAttributes, CompanyType } from '@/server/sharedTypes';
 
 import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
 
 interface CompaniesTableProps {
-  companies?: Company[];
+  companies?: CompanyType[];
   onDeleteCompany?(id: string): void;
 }
 
@@ -22,8 +23,18 @@ export default function CompaniesTable({
       sortable: true,
     },
     {
-      name: 'Address',
-      key: 'address',
+      name: 'Size',
+      key: 'size',
+      sortable: false,
+    },
+    {
+      name: 'Website',
+      key: 'website',
+      sortable: false,
+    },
+    {
+      name: 'Phone',
+      key: 'phone',
       sortable: false,
     },
     {
@@ -53,13 +64,21 @@ export default function CompaniesTable({
     );
   };
 
-  const rowRenderer = (row: Company) => {
+  const rowRenderer = (row: CompanyType) => {
     if (row) {
       const addressStr = `${row?.address?.street} ${row?.address?.city} ${row?.address?.state} ${row?.address?.zip}`;
+      const website = row?.attributes?.find(
+        (attr) => attr.name === CompanyReservedAttributes.WEBSITE
+      )?.value;
+      const size = row?.attributes?.find(
+        (attr) => attr.name === CompanyReservedAttributes.SIZE
+      )?.value;
       return (
         <Table.Tr key={row.name}>
           <Table.Td>{row.name}</Table.Td>
-          <Table.Td>{addressStr}</Table.Td>
+          <Table.Td>{size}</Table.Td>
+          <Table.Td>{website}</Table.Td>
+          <Table.Td>{row.phone}</Table.Td>
           <Table.Td>
             <div>{deleteBtn(row.id)}</div>
             <div>{goToCompany(row.id)}</div>
