@@ -14,8 +14,7 @@ import { ZodError } from 'zod';
 
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
-
-import prisma from '@/db';
+import { PrismaClient } from '@prisma/client';
 
 /**
  * 1. CONTEXT
@@ -45,7 +44,7 @@ export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   return {
     session,
     headers: opts.headers,
-    prisma,
+    prisma: new PrismaClient(),
   };
 };
 
