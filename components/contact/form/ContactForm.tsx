@@ -20,9 +20,11 @@ const schema = z.object({
 export type ContactFormValues = z.infer<typeof schema>;
 
 export default function ContactForm({
+  name,
   onSubmit,
   submitting,
 }: {
+  name?: string;
   onSubmit?: (values: ContactFormValues) => void;
   submitting?: boolean;
 }) {
@@ -30,10 +32,19 @@ export default function ContactForm({
     onSubmit && onSubmit(values);
   };
 
+  const splitNames = (nameValue?: string) => {
+    if (!nameValue) return null;
+
+    const names = nameValue.split(' ');
+    const name = names[0];
+    const surName = names.slice(1).join(' ');
+    return { name, surName };
+  };
+
   const form = useForm({
     initialValues: {
-      name: '',
-      surName: '',
+      name: splitNames(name)?.name || '',
+      surName: splitNames(name)?.surName || '',
       phone: '',
       alt_phone: '',
       email: '',

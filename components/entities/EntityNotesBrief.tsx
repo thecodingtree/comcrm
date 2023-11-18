@@ -4,7 +4,7 @@ import { Note, AddNote } from '@/components/content/Notes';
 
 import { trpc } from '@/app/_trpc/client';
 
-export default function EntityNotes({
+export default function EntityNotesBrief({
   entityId,
 }: {
   entityId?: string | null;
