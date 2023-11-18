@@ -50,6 +50,7 @@ export const contactRouter = createTRPCRouter({
     .input(z.object({ filter: EntityFilterInput }).optional())
     .query(async ({ ctx, input }) => {
       const result = await getOwnedCoreEntities({
+        db: ctx.prisma,
         entityType: CoreEntityType.CONTACT,
         filter: input?.filter,
         withUserId: ctx.session.user.id,
@@ -72,7 +73,11 @@ export const contactRouter = createTRPCRouter({
         return null;
       }
 
-      const result = await getOwnedCoreEntity(input, ctx?.session?.user?.id);
+      const result = await getOwnedCoreEntity(
+        ctx.prisma,
+        input,
+        ctx?.session?.user?.id
+      );
 
       return result ? contactDataMapper(result) : null;
     }),
@@ -87,6 +92,7 @@ export const contactRouter = createTRPCRouter({
       }
 
       return contactCreator({
+        db: ctx.prisma,
         data: input,
         user: ctx.session.user.id,
       });
@@ -111,6 +117,7 @@ export const contactRouter = createTRPCRouter({
       } as Prisma.CoreEntityUpdateInput;
 
       const result = await updateCoreEntity(
+        ctx.prisma,
         input.id,
         ctx.session.user?.id || '',
         coreEntityUpdateInput
@@ -128,7 +135,11 @@ export const contactRouter = createTRPCRouter({
   deleteContact: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const result = await deleteCoreEntity(input, ctx.session.user?.id!!);
+      const result = await deleteCoreEntity(
+        ctx.prisma,
+        input,
+        ctx.session.user?.id!!
+      );
 
       if (!result) {
         throw new Error(`CoreEntity with ID ${input} not found`);
