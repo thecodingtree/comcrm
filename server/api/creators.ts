@@ -1,4 +1,4 @@
-import { Prisma, CoreEntityType } from '@prisma/client';
+import { Prisma, CoreEntityType, PrismaClient } from '@prisma/client';
 
 import { createCoreEntity } from '@/db';
 
@@ -12,9 +12,11 @@ import {
 } from '@/server/api/mappers';
 
 export const contactCreator = async ({
+  db,
   data,
   user,
 }: {
+  db: PrismaClient;
   data: CreateContactInputType;
   user: string;
 }) => {
@@ -56,15 +58,17 @@ export const contactCreator = async ({
       : undefined,
   } as Prisma.CoreEntityCreateInput;
 
-  const result = await createCoreEntity(contactCreateInput);
+  const result = await createCoreEntity(db, contactCreateInput);
 
   return contactDataMapper(result);
 };
 
 export const companyCreator = async ({
+  db,
   data,
   user,
 }: {
+  db: PrismaClient;
   data: CreateCompanyInputType;
   user: string;
 }) => {
@@ -101,15 +105,17 @@ export const companyCreator = async ({
       : undefined,
   } as Prisma.CoreEntityCreateInput;
 
-  const result = await createCoreEntity(coreEntityCreateInput);
+  const result = await createCoreEntity(db, coreEntityCreateInput);
 
   return companyDataMapper(result);
 };
 
 export const propertyCreator = async ({
+  db,
   data,
   user,
 }: {
+  db: PrismaClient;
   data: CreatePropertyInputType;
   user: string;
 }) => {
@@ -144,7 +150,7 @@ export const propertyCreator = async ({
       : undefined,
   } as Prisma.CoreEntityCreateInput;
 
-  const result = await createCoreEntity(coreEntityCreateInput);
+  const result = await createCoreEntity(db, coreEntityCreateInput);
 
   return propertyDataMapper(result);
 };

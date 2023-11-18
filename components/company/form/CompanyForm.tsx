@@ -16,11 +16,6 @@ import { z } from 'zod';
 const schema = z.object({
   name: z.string().min(1, { message: 'Company Name is required' }),
   phone: z.string().optional(),
-  email: z
-    .string()
-    .email({ message: 'Invalid email' })
-    .optional()
-    .or(z.literal('')),
   website: z.string().optional(),
   size: z.number().optional(),
   street: z.string().optional(),
@@ -32,9 +27,11 @@ const schema = z.object({
 export type CompanyFormValues = z.infer<typeof schema>;
 
 export default function CompaniesForm({
+  name,
   onSubmit,
   submitting,
 }: {
+  name?: string;
   onSubmit?: (values: CompanyFormValues) => void;
   submitting?: boolean;
 }) {
@@ -44,9 +41,8 @@ export default function CompaniesForm({
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name: name || '',
       phone: '',
-      email: '',
       website: '',
       size: undefined,
       street: '',
@@ -77,14 +73,6 @@ export default function CompaniesForm({
           placeholder="Phone"
           mt="lg"
           {...form.getInputProps('phone')}
-        />
-        <TextInput
-          id="email"
-          name="email"
-          label="Email"
-          placeholder="Email"
-          mt="lg"
-          {...form.getInputProps('email')}
         />
         <TextInput
           id="website"
