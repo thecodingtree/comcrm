@@ -2,7 +2,9 @@
 
 import { useParams } from 'next/navigation';
 
-import { Space, Grid, Avatar } from '@mantine/core';
+import { Text, Space, Grid, Avatar } from '@mantine/core';
+
+import { CoreEntityType } from '@prisma/client';
 
 import { IconBuilding } from '@tabler/icons-react';
 
@@ -10,6 +12,7 @@ import PropertyInfo from './PropertyInfo';
 import PropertyCompanies from './PropertyCompanies';
 import PropertyContacts from './PropertyContacts';
 import EntityNotes from '@/components/entities/EntityNotes';
+import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 import { trpc } from '@/app/_trpc/client';
 
 export default function PropertyDetail() {
@@ -42,14 +45,16 @@ export default function PropertyDetail() {
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
-      <Grid.Col span={12}>
-        <PropertyContacts />
-      </Grid.Col>
+      <Grid.Col span={12}>{/* <PropertyContacts /> */}</Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
       <Grid.Col span={12}>
-        <PropertyCompanies />
+        <Text size="lg">Relationships</Text>
+        <RelationshipsTable
+          fromEntityId={propertyId!}
+          fromEntityType={CoreEntityType.PROPERTY}
+        />
       </Grid.Col>
     </Grid>
   );

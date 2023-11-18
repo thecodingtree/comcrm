@@ -2,11 +2,14 @@
 
 import { useParams } from 'next/navigation';
 
-import { Grid, Avatar } from '@mantine/core';
+import { Grid, Avatar, Text } from '@mantine/core';
+
+import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 
 import ContactInfo from './ContactInfo';
 import EntityNotes from '@/components/entities/EntityNotes';
 import { trpc } from '@/app/_trpc/client';
+import { CoreEntityType } from '@prisma/client';
 
 export default function ContactDetails() {
   const params = useParams();
@@ -32,6 +35,13 @@ export default function ContactDetails() {
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
         <EntityNotes entityId={contactId} />
+      </Grid.Col>
+      <Grid.Col span={12}>
+        <Text size="lg">Relationships</Text>
+        <RelationshipsTable
+          fromEntityId={contactId!}
+          fromEntityType={CoreEntityType.CONTACT}
+        />
       </Grid.Col>
     </Grid>
   );

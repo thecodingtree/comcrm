@@ -32,9 +32,11 @@ const schema = z.object({
 export type CompanyFormValues = z.infer<typeof schema>;
 
 export default function CompaniesForm({
+  name,
   onSubmit,
   submitting,
 }: {
+  name?: string;
   onSubmit?: (values: CompanyFormValues) => void;
   submitting?: boolean;
 }) {
@@ -44,7 +46,7 @@ export default function CompaniesForm({
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name: name || '',
       phone: '',
       email: '',
       website: '',

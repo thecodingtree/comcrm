@@ -5,65 +5,27 @@ import { Stack, Button, Modal } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { PropertyReservedAttributes } from '@/server/sharedTypes';
+import { PropertyType } from '@/server/sharedTypes';
 
 import PropertyForm, { PropertyFormValues } from './form/PropertyForm';
-
-interface PropertyAddProps {
-  linkedEntity?: string;
-  onAdd?: () => void;
-}
+import { buildPropertyMutatePayload } from './utils';
 
 export default function PropertyAdd({
   linkedEntity,
-  onAdd,
+  onAdded,
 }: {
   linkedEntity?: string;
-  onAdd?: () => void;
+  onAdded?: (property: PropertyType) => void;
 }) {
   const createProperty = trpc.property.createProperty.useMutation({
     onSettled: () => close(),
-    onSuccess: () => onAdd && onAdd(),
+    onSuccess: (data) => onAdded && onAdded(data),
   });
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: PropertyFormValues) => {
-    const attributes = [];
-
-    if (values.suite) {
-      attributes.push({
-        name: PropertyReservedAttributes.SUITE,
-        value: values.suite,
-      });
-    }
-
-    if (values.size) {
-      attributes.push({
-        name: PropertyReservedAttributes.SIZE,
-        value: values.size.toString(),
-      });
-    }
-
-    if (values.price) {
-      attributes.push({
-        name: PropertyReservedAttributes.PRICE,
-        value: values.price.toString(),
-      });
-    }
-
-    createProperty.mutate({
-      name: values.name,
-      address: {
-        street: values.street,
-        city: values.city,
-        state: values.state,
-        zip: values.zip,
-      },
-      attributes,
-      linkedEntity,
-    });
-  };
+  const submitHandler = (values: PropertyFormValues) =>
+    createProperty.mutate(buildPropertyMutatePayload({ values }));
 
   return (
     <Stack align="center">

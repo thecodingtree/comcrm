@@ -5,54 +5,25 @@ import { trpc } from '@/app/_trpc/client';
 import { useDisclosure } from '@mantine/hooks';
 import { Stack, Button, Modal } from '@mantine/core';
 
-import { CompanyReservedAttributes } from '@/server/sharedTypes';
+import { CompanyType } from '@/server/sharedTypes';
 
 import CompanyForm, { CompanyFormValues } from './form/CompanyForm';
 
+import { buildCompanyMutatePayload } from './utils';
+
 export default function CompanyAdd({
-  linkedEntity,
-  onAdd,
+  onAdded,
 }: {
-  linkedEntity?: string;
-  onAdd?: () => void;
+  onAdded?: (company: CompanyType) => void;
 }) {
   const createCompany = trpc.company.createCompany.useMutation({
     onSettled: () => close(),
-    onSuccess: () => onAdd && onAdd(),
+    onSuccess: (data) => onAdded && onAdded(data),
   });
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: CompanyFormValues) => {
-    let attributes = [];
-
-    if (values.website) {
-      attributes.push({
-        name: CompanyReservedAttributes.WEBSITE,
-        value: values.website,
-      });
-    }
-
-    if (values.size) {
-      attributes.push({
-        name: CompanyReservedAttributes.SIZE,
-        value: values.size.toString(),
-      });
-    }
-
-    createCompany.mutate({
-      name: values.name,
-      phone: values.phone,
-      email: values.email,
-      address: {
-        street: values.street,
-        city: values.city,
-        state: values.state,
-        zip: values.zip,
-      },
-      attributes,
-      linkedEntity,
-    });
-  };
+  const submitHandler = (values: CompanyFormValues) =>
+    createCompany.mutate(buildCompanyMutatePayload({ values }));
 
   return (
     <Stack align="center">
