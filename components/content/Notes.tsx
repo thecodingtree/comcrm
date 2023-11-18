@@ -19,8 +19,6 @@ const getDaysSinceDate = (date: Date): number => {
 const getDaysSinceDateText = (date: Date): string => {
   const daysSinceDate = getDaysSinceDate(date);
 
-  console.log('daysSinceDate', daysSinceDate);
-
   if (daysSinceDate === 0) {
     return 'Today';
   }

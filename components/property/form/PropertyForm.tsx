@@ -28,9 +28,11 @@ const schema = z.object({
 export type PropertyFormValues = z.infer<typeof schema>;
 
 export default function PropertyForm({
+  name,
   onSubmit,
   submitting,
 }: {
+  name?: string;
   onSubmit?: (values: PropertyFormValues) => void;
   submitting?: boolean;
 }) {
@@ -40,7 +42,7 @@ export default function PropertyForm({
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name: name || '',
       street: '',
       city: '',
       state: '',

@@ -6,43 +6,23 @@ import { Stack, Button, Modal } from '@mantine/core';
 import { trpc } from '@/app/_trpc/client';
 
 import ContactForm, { ContactFormValues } from './form/ContactForm';
-import { ContactReservedAttributes } from '@/server/sharedTypes';
+import { ContactType } from '@/server/sharedTypes';
+import { buildContactMutatePayload } from './utils';
 
 export default function ContactAdd({
-  linkedEntity,
   onAdded,
 }: {
-  linkedEntity?: string;
-  onAdded?: () => void;
+  onAdded?: (contact: ContactType) => void;
 }) {
   const createContact = trpc.contact.createContact.useMutation({
     onSettled: () => close(),
-    onSuccess: () => onAdded && onAdded(),
+    onSuccess: (data) => onAdded && onAdded(data),
   });
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const submitHandler = (values: ContactFormValues) => {
-    let attributes = undefined;
-
-    if (values.alt_phone) {
-      attributes = [
-        {
-          name: ContactReservedAttributes.ALT_PHONE,
-          value: values.alt_phone,
-        },
-      ];
-    }
-
-    createContact.mutate({
-      name: values.name,
-      surName: values.surName,
-      phone: values.phone,
-      email: values.email,
-      attributes,
-      linkedEntity,
-    });
-  };
+  const submitHandler = (values: ContactFormValues) =>
+    createContact.mutate(buildContactMutatePayload({ values }));
 
   return (
     <Stack align="center">

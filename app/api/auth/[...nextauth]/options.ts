@@ -3,8 +3,7 @@ import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-
-import prisma from '@/db';
+import { PrismaClient } from '@prisma/client';
 
 const providers = [
   GitHubProvider({
@@ -39,5 +38,5 @@ export const authOptions: NextAuthOptions = {
     },
   },
   providers,
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(new PrismaClient()),
 };
