@@ -7,6 +7,7 @@ import { trpc } from '@/app/_trpc/client';
 import CompaniesTable from '@/components/company/CompaniesTable';
 import CompanyAdd from '@/components/company/CompanyAdd';
 import ReloadQuery from '@/components/controls/ReloadQuery';
+import { CompanyType } from '@/server/sharedTypes';
 
 export default function CompaniesPage() {
   const { data, refetch } = trpc.company.getCompanies.useQuery();
@@ -31,7 +32,7 @@ export default function CompaniesPage() {
       <ReloadQuery reload={refetch} />
       <Space h="lg" />
       <Box w={'100%'}>
-        <CompanyAdd onAdd={refetch} />
+        <CompanyAdd onAdded={() => refetch()} />
       </Box>
     </div>
   );

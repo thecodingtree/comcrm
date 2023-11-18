@@ -9,9 +9,9 @@ import { CoreEntityType } from '@prisma/client';
 import { trpc } from '@/app/_trpc/client';
 
 import CompanyInfo from './CompanyInfo';
-import CompanyContacts from './CompanyContacts';
-import EntityNotes from '@/components/entities/EntityNotes';
+import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
+import EntitiyNotesTable from '../entities/EntityNotesTable';
 
 export default function CompanyDetails() {
   const params = useParams();
@@ -31,21 +31,22 @@ export default function CompanyDetails() {
         <CompanyInfo companyId={companyId} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
-        <EntityNotes entityId={companyId} />
+        <EntityNotesBrief entityId={companyId} />
       </Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
-      <Grid.Col span={12}>{/* <CompanyContacts /> */}</Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
       <Grid.Col span={12}>
-        <Text size="lg">Relationships</Text>
         <RelationshipsTable
           fromEntityId={companyId!}
           fromEntityType={CoreEntityType.COMPANY}
         />
+      </Grid.Col>
+      <Grid.Col span={12}>
+        <EntitiyNotesTable entity={companyId!} />
       </Grid.Col>
     </Grid>
   );

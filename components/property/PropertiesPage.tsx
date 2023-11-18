@@ -30,7 +30,7 @@ export default function PropertiesPage() {
       />
       <ReloadQuery reload={refetch} />
       <Space h="lg" />
-      <PropertyAdd />
+      <PropertyAdd onAdded={() => refetch()} />
     </div>
   );
 }

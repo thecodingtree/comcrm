@@ -30,7 +30,7 @@ export default function ContactsPage() {
       <ContactsTable contacts={data} onDeleteContact={deleteContactHandler} />
       <ReloadQuery reload={refetch} />
       <Space h="lg" />
-      <ContactAdd onAdded={refetch} />
+      <ContactAdd onAdded={() => refetch()} />
     </div>
   );
 }

@@ -9,6 +9,14 @@ export const CONTACT_RESERVED_PREFIX = 'CONTACT_RESERVED_';
 export const PROPERTY_RESERVED_PREFIX = 'PROPERTY_RESERVED_';
 export const COMPANY_RESERVED_PREFIX = 'COMPANY_RESERVED_';
 
+export type NoteType = {
+  id: string;
+  entityId: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type AttributeType = {
   id?: string;
   name: string;
