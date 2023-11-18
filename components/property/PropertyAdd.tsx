@@ -11,10 +11,8 @@ import PropertyForm, { PropertyFormValues } from './form/PropertyForm';
 import { buildPropertyMutatePayload } from './utils';
 
 export default function PropertyAdd({
-  linkedEntity,
   onAdded,
 }: {
-  linkedEntity?: string;
   onAdded?: (property: PropertyType) => void;
 }) {
   const createProperty = trpc.property.createProperty.useMutation({

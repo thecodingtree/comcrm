@@ -16,11 +16,6 @@ import { z } from 'zod';
 const schema = z.object({
   name: z.string().min(1, { message: 'Company Name is required' }),
   phone: z.string().optional(),
-  email: z
-    .string()
-    .email({ message: 'Invalid email' })
-    .optional()
-    .or(z.literal('')),
   website: z.string().optional(),
   size: z.number().optional(),
   street: z.string().optional(),
@@ -48,7 +43,6 @@ export default function CompaniesForm({
     initialValues: {
       name: name || '',
       phone: '',
-      email: '',
       website: '',
       size: undefined,
       street: '',
@@ -79,14 +73,6 @@ export default function CompaniesForm({
           placeholder="Phone"
           mt="lg"
           {...form.getInputProps('phone')}
-        />
-        <TextInput
-          id="email"
-          name="email"
-          label="Email"
-          placeholder="Email"
-          mt="lg"
-          {...form.getInputProps('email')}
         />
         <TextInput
           id="website"

@@ -1,6 +1,8 @@
 import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { z } from 'zod';
 
+import { NoteType } from '@/server/sharedTypes';
+
 export const notesRouter = createTRPCRouter({
   getNotesForEntity: protectedProcedure
     .input(z.object({ entityId: z.string(), limit: z.number().optional() }))
@@ -8,8 +10,8 @@ export const notesRouter = createTRPCRouter({
       return ctx.prisma.note.findMany({
         where: { entityId: input.entityId },
         orderBy: { createdAt: 'desc' },
-        take: input?.limit ?? 10,
-      });
+        take: input?.limit ?? undefined,
+      }) as Promise<NoteType[]>;
     }),
   createNote: protectedProcedure
     .input(z.object({ entityId: z.string(), content: z.string() }))

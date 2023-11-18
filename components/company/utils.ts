@@ -26,7 +26,6 @@ export const buildCompanyMutatePayload = ({
   return {
     name: values.name,
     phone: values.phone,
-    email: values.email,
     address: {
       street: values.street,
       city: values.city,

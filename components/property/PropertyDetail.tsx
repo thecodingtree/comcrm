@@ -2,18 +2,17 @@
 
 import { useParams } from 'next/navigation';
 
-import { Text, Space, Grid, Avatar } from '@mantine/core';
+import { Space, Grid, Avatar } from '@mantine/core';
 
 import { CoreEntityType } from '@prisma/client';
 
 import { IconBuilding } from '@tabler/icons-react';
 
 import PropertyInfo from './PropertyInfo';
-import PropertyCompanies from './PropertyCompanies';
-import PropertyContacts from './PropertyContacts';
-import EntityNotes from '@/components/entities/EntityNotes';
+import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 import { trpc } from '@/app/_trpc/client';
+import EntityNotesTable from '@/components/entities/EntityNotesTable';
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -40,21 +39,22 @@ export default function PropertyDetail() {
         <PropertyInfo propertyId={propertyId} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
-        <EntityNotes entityId={propertyId} />
+        <EntityNotesBrief entityId={propertyId} />
       </Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
-      <Grid.Col span={12}>{/* <PropertyContacts /> */}</Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
       <Grid.Col span={12}>
-        <Text size="lg">Relationships</Text>
         <RelationshipsTable
           fromEntityId={propertyId!}
           fromEntityType={CoreEntityType.PROPERTY}
         />
+      </Grid.Col>
+      <Grid.Col span={12}>
+        <EntityNotesTable entity={propertyId!} />
       </Grid.Col>
     </Grid>
   );

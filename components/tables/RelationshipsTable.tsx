@@ -1,6 +1,8 @@
 'use client';
 
-import { Table, ScrollArea, Text, Badge } from '@mantine/core';
+import Link from 'next/link';
+
+import { Table, ScrollArea, Text } from '@mantine/core';
 
 import { RelationshipType } from '@/server/sharedTypes';
 
@@ -61,12 +63,38 @@ const columns = [
 ] as ETColumn[];
 
 const getRelationshipType = (type: string) => {
-  switch (type) {
-    case RelationshipTypeEnum.OWNER_OF:
-      return <Badge color="blue">Owner</Badge>;
-    default:
-      return <Badge color="red">Other</Badge>;
+  // TODO: Fix this
+  // switch (type) {
+  //   case RelationshipTypeEnum.OWNER_OF:
+  //     return <Badge color="blue">Owner</Badge>;
+  //   default:
+  //     return <Badge color="red">Other</Badge>;
+  // }
+
+  return type;
+};
+
+const getEntityLink = ({
+  entityType,
+  id,
+}: {
+  entityType: string;
+  id: string;
+}) => {
+  let typeHref = '';
+  switch (entityType) {
+    case CoreEntityType.COMPANY:
+      typeHref = '/dashboard/companies';
+      break;
+    case CoreEntityType.CONTACT:
+      typeHref = '/dashboard/contacts';
+      break;
+    case CoreEntityType.PROPERTY:
+      typeHref = '/dashboard/properties';
+      break;
   }
+
+  return <Link href={`${typeHref}/${id}`}>Go To</Link>;
 };
 
 const rowRenderer = (row: RelationshipType) => {
@@ -77,7 +105,7 @@ const rowRenderer = (row: RelationshipType) => {
       <Table.Td>{to.type}</Table.Td>
       <Table.Td>{to.name}</Table.Td>
       <Table.Td>{getRelationshipType(type)}</Table.Td>
-      <Table.Td>Go To</Table.Td>
+      <Table.Td>{getEntityLink({ entityType: to.type, id: to.id })}</Table.Td>
     </Table.Tr>
   );
 };
