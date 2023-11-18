@@ -2,14 +2,16 @@
 
 import { useParams } from 'next/navigation';
 
-import { Avatar, Space, Grid } from '@mantine/core';
+import { Text, Avatar, Space, Grid } from '@mantine/core';
+
+import { CoreEntityType } from '@prisma/client';
 
 import { trpc } from '@/app/_trpc/client';
 
 import CompanyInfo from './CompanyInfo';
-import CompanyProperties from './CompanyProperties';
 import CompanyContacts from './CompanyContacts';
 import EntityNotes from '@/components/entities/EntityNotes';
+import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 
 export default function CompanyDetails() {
   const params = useParams();
@@ -17,6 +19,8 @@ export default function CompanyDetails() {
   const companyId = typeof params?.id === 'string' ? params?.id : undefined;
 
   const { data, isLoading } = trpc.company.getCompany.useQuery(companyId);
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <Grid>
@@ -32,14 +36,16 @@ export default function CompanyDetails() {
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
-      <Grid.Col span={12}>
-        <CompanyContacts />
-      </Grid.Col>
+      <Grid.Col span={12}>{/* <CompanyContacts /> */}</Grid.Col>
       <Grid.Col span={12}>
         <Space h="md" />
       </Grid.Col>
       <Grid.Col span={12}>
-        <CompanyProperties />
+        <Text size="lg">Relationships</Text>
+        <RelationshipsTable
+          fromEntityId={companyId!}
+          fromEntityType={CoreEntityType.COMPANY}
+        />
       </Grid.Col>
     </Grid>
   );

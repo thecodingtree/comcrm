@@ -5,19 +5,20 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-import {
-  IconAddressBook,
-  IconTopologyStar3,
-  IconBuilding,
-} from '@tabler/icons-react';
 import classes from './Navbar.module.css';
 
 import { AccountMenu } from '@/components/account/AccountMenu';
 
+import {
+  IconCompany,
+  IconContact,
+  IconProperty,
+} from '@/components/common/icons';
+
 const data = [
-  { link: '/dashboard/contacts', label: 'Contacts', icon: IconAddressBook },
-  { link: '/dashboard/companies', label: 'Companies', icon: IconTopologyStar3 },
-  { link: '/dashboard/properties', label: 'Properties', icon: IconBuilding },
+  { link: '/dashboard/contacts', label: 'Contacts', icon: IconContact },
+  { link: '/dashboard/companies', label: 'Companies', icon: IconCompany },
+  { link: '/dashboard/properties', label: 'Properties', icon: IconProperty },
 ];
 
 export default function Navbar() {
