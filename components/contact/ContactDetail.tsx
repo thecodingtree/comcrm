@@ -7,28 +7,40 @@ import { Grid, Avatar, Text } from '@mantine/core';
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 
 import ContactInfo from './ContactInfo';
+import ContactAvatar from './ContactAvatar';
 import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
 import { trpc } from '@/app/_trpc/client';
 import { CoreEntityType } from '@prisma/client';
 import EntitiyNotesTable from '../entities/EntityNotesTable';
+import { on } from 'events';
 
 export default function ContactDetails() {
   const params = useParams();
 
   const contactId = typeof params?.id === 'string' ? params?.id : undefined;
 
-  const getContact = trpc.contact.getContact.useQuery(contactId);
+  const { data, isLoading, refetch } =
+    trpc.contact.getContact.useQuery(contactId);
 
-  if (getContact.isLoading) return <p>Loading...</p>;
+  const updateAvatarImg = trpc.contact.updateAvatarSrc.useMutation({
+    onSuccess: () => refetch(),
+  });
+
+  const handleAvatarImgUpdate = (res: any) => {
+    updateAvatarImg.mutate({
+      id: contactId!,
+      avatarSrc: res[0]?.url,
+    });
+  };
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <Grid>
       <Grid.Col span={{ base: 12, lg: 2 }}>
-        <Avatar
-          color="blue"
-          radius="xl"
-          size={150}
-          src={getContact.data?.image}
+        <ContactAvatar
+          avatarSrc={data?.image}
+          onUpdated={handleAvatarImgUpdate}
         />
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>

@@ -1,10 +1,11 @@
 'use client';
 
-import { Table, Text, Space } from '@mantine/core';
+import { Table, Text, Space, Avatar } from '@mantine/core';
 import Link from 'next/link';
 import { ContactType } from '@/server/sharedTypes';
 
 import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
+import ContactAvatar from './ContactAvatar';
 
 interface ContactsTableProps {
   contacts?: ContactType[];
@@ -16,6 +17,8 @@ export default function ContactsTable({
   onDeleteContact,
 }: ContactsTableProps) {
   const columns = [
+    { name: '', key: 'avatar', sortable: false },
+
     {
       name: 'First Name',
       key: 'name',
@@ -75,6 +78,9 @@ export default function ContactsTable({
       } ${row?.address?.state || ''} ${row?.address?.zip || ''}`;
       return (
         <Table.Tr key={row.id}>
+          <Table.Td>
+            <Avatar color="gray" radius="xl" size={50} src={row.image} />
+          </Table.Td>
           <Table.Td>{row.name}</Table.Td>
           <Table.Td>{row.surName}</Table.Td>
           <Table.Td>{row.phone}</Table.Td>
