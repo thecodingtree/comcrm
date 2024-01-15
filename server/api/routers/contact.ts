@@ -147,4 +147,31 @@ export const contactRouter = createTRPCRouter({
 
       return contactDataMapper(result);
     }),
+  updateAvatarSrc: protectedProcedure
+    .input(z.object({ id: z.string(), avatarSrc: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const coreEntityUpdateInput = {
+        meta: {
+          update: {
+            image: input.avatarSrc,
+          },
+        },
+      } as Prisma.CoreEntityUpdateInput;
+
+      const result = await updateCoreEntity(
+        ctx.prisma,
+        input.id,
+        ctx.session.user?.id || '',
+        coreEntityUpdateInput
+      );
+
+      if (!result) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `CoreEntity with ID ${input.id} not found`,
+        });
+      }
+
+      return contactDataMapper(result);
+    }),
 });

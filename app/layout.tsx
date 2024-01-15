@@ -6,6 +6,7 @@ import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { TRPCProvider } from '@/app/_trpc/TRPCProvider';
 
 import '@mantine/core/styles.css';
+import '@uploadthing/react/styles.css';
 
 import { theme } from '../theme';
 

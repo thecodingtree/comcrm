@@ -40,17 +40,19 @@ export default function EntitiyNotesTable({ entity }: { entity: string }) {
         </Table.Thead>
         <Table.Tbody>
           {data?.map((row) => rowRenderer(row))}
-          <Table.Td colSpan={2}>
-            {
-              <Stack w="50%" justify="center">
-                <AddNote
-                  onAddNote={(content) =>
-                    createNote.mutate({ entityId: entity, content })
-                  }
-                />
-              </Stack>
-            }
-          </Table.Td>
+          <Table.Tr>
+            <Table.Td colSpan={2}>
+              {
+                <Stack w="50%" justify="center">
+                  <AddNote
+                    onAddNote={(content) =>
+                      createNote.mutate({ entityId: entity, content })
+                    }
+                  />
+                </Stack>
+              }
+            </Table.Td>
+          </Table.Tr>
         </Table.Tbody>
       </Table>
     </ScrollArea>
