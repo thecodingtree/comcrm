@@ -1,6 +1,8 @@
 import '@mantine/core/styles.css';
 import React from 'react';
 import { headers } from 'next/headers';
+import { Analytics } from '@vercel/analytics/react';
+
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 
 import { TRPCProvider } from '@/app/_trpc/TRPCProvider';
@@ -34,6 +36,7 @@ export default function RootLayout({ children }: { children: any }) {
             <DashboardLayout>{children}</DashboardLayout>
           </TRPCProvider>
         </MantineProvider>
+        <Analytics />
       </body>
     </html>
   );
