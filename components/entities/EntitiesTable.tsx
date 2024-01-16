@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import {
-  ScrollArea,
   UnstyledButton,
   Group,
-  Text,
   Center,
   TextInput,
   rem,
   keys,
 } from '@mantine/core';
+
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import {
   Table,
@@ -50,9 +50,7 @@ function Th({
 }) {
   return (
     <TableHead key={thKey} className={classes.th}>
-      <Text fw={500} fz="sm">
-        {children}
-      </Text>
+      <p className="text-sm font-medium">{children}</p>
     </TableHead>
   );
 }
@@ -73,9 +71,7 @@ function ThSortable({
     <Th key={thKey}>
       <UnstyledButton onClick={onSort} className={classes.control}>
         <Group justify="space-between">
-          <Text fw={500} fz="sm">
-            {children}
-          </Text>
+          <p className="text-sm font-medium">{children}</p>
           <Center className={classes.icon}>
             <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
           </Center>
@@ -193,7 +189,11 @@ export function EntitiesTable({
             })}
           </TableRow>
         </TableHeader>
-        <TableBody>{entities.map((row) => rowRenderer(row))}</TableBody>
+        <TableBody>
+          {entities && entities?.length
+            ? entities.map((row) => rowRenderer(row))
+            : rowRenderer()}
+        </TableBody>
       </Table>
     </ScrollArea>
   );

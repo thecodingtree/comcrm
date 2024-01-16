@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Text, Textarea, Stack, Group, Paper } from '@mantine/core';
+import { Textarea, Stack, Group, Paper } from '@mantine/core';
 import { Button } from '@/components/ui/button';
 import classes from './Notes.module.css';
 
@@ -52,11 +52,9 @@ export function Note({ date, content }: NoteProps) {
     <Paper withBorder radius="md" className={classes.note}>
       <Stack>
         <Group justify="space-between">
-          <Text fz="xs" c="dimmed">
-            {getDaysSinceDateText(date)}
-          </Text>
+          <p className="text-xs text-slate-400">{getDaysSinceDateText(date)}</p>
         </Group>
-        <Text>{content}</Text>
+        <p>{content}</p>
       </Stack>
     </Paper>
   );

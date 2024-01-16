@@ -2,7 +2,6 @@ import {
   UnstyledButton,
   Group,
   Avatar,
-  Text,
   rem,
   Menu,
   useMantineTheme,
@@ -30,13 +29,9 @@ export function AccountMenu() {
             <Avatar src={user?.image} radius="xl" />
 
             <div style={{ flex: 1 }}>
-              <Text size="sm" fw={500}>
-                {user?.name}
-              </Text>
+              <p className="text-sm font-bold">{user?.name}</p>
 
-              <Text c="dimmed" size="xs">
-                {user?.email}
-              </Text>
+              <p className="text-xs text-slate-400">{user?.email}</p>
             </div>
 
             <IconChevronRight

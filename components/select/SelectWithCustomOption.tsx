@@ -1,8 +1,7 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 
 import {
   Group,
-  Text,
   Combobox,
   InputBase,
   Input,
@@ -22,14 +21,8 @@ export function SelectOptionCustom({ icon, label, value, description }: Item) {
     <Group>
       {icon}
       <div>
-        <Text fz="sm" fw={500}>
-          {label || value}
-        </Text>
-        {description && (
-          <Text fz="xs" opacity={0.6}>
-            {description}
-          </Text>
-        )}
+        <p className="text-sm font-medium">{label || value}</p>
+        {description && <p className="text-xs text-slate-400">{description}</p>}
       </div>
     </Group>
   );

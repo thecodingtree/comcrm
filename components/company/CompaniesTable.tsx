@@ -1,6 +1,6 @@
 'use client';
 
-import { Text, Space } from '@mantine/core';
+import { Space } from '@mantine/core';
 import { TableRow, TableCell } from '@/components/ui/table';
 
 import Link from 'next/link';
@@ -91,7 +91,7 @@ export default function CompaniesTable({
       return (
         <TableRow key="empty">
           <TableCell colSpan={columns.length}>
-            <Text ta="center">{'No Companies'}</Text>
+            <p className="text-center">No Companies</p>
             <Space h="lg" />
           </TableCell>
         </TableRow>
