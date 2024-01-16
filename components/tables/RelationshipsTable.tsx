@@ -2,11 +2,19 @@
 
 import Link from 'next/link';
 
-import { Table, ScrollArea, Text } from '@mantine/core';
+import { ScrollArea, Text } from '@mantine/core';
+
+import {
+  Table,
+  TableHeader,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table';
 
 import { RelationshipType } from '@/server/sharedTypes';
 
-import classes from './RelationshipsTable.module.css';
 import {
   CoreEntityType,
   RelationshipType as RelationshipTypeEnum,
@@ -24,11 +32,11 @@ function Th({
   children: React.ReactNode;
 }) {
   return (
-    <Table.Th key={thKey} className={classes.th}>
+    <TableHead key={thKey}>
       <Text fw={500} fz="sm">
         {children}
       </Text>
-    </Table.Th>
+    </TableHead>
   );
 }
 
@@ -101,12 +109,12 @@ const rowRenderer = (row: RelationshipType) => {
   const { id, type, to } = row;
 
   return (
-    <Table.Tr key={id}>
-      <Table.Td>{to.type}</Table.Td>
-      <Table.Td>{to.name}</Table.Td>
-      <Table.Td>{getRelationshipType(type)}</Table.Td>
-      <Table.Td>{getEntityLink({ entityType: to.type, id: to.id })}</Table.Td>
-    </Table.Tr>
+    <TableRow key={id}>
+      <TableCell>{to.type}</TableCell>
+      <TableCell>{to.name}</TableCell>
+      <TableCell>{getRelationshipType(type)}</TableCell>
+      <TableCell>{getEntityLink({ entityType: to.type, id: to.id })}</TableCell>
+    </TableRow>
   );
 };
 
@@ -125,27 +133,22 @@ export function RelationshipsTable({
 
   return (
     <ScrollArea>
-      <Table
-        horizontalSpacing="md"
-        verticalSpacing="xs"
-        miw={700}
-        layout="fixed"
-      >
-        <Table.Thead>
-          <Table.Tr>
+      <Table className="min-w-full">
+        <TableHeader>
+          <TableRow>
             {columns.map((column) => {
               return <Th key={column.key}>{column.name}</Th>;
             })}
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data?.map((row) => rowRenderer(row))}
           <AddRelationship
             fromEntityId={fromEntityId}
             fromEntityType={fromEntityType}
             refetch={refetch}
           />
-        </Table.Tbody>
+        </TableBody>
       </Table>
     </ScrollArea>
   );

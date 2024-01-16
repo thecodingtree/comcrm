@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import {
-  Table,
   ScrollArea,
   UnstyledButton,
   Group,
@@ -12,6 +11,15 @@ import {
   rem,
   keys,
 } from '@mantine/core';
+
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
 import {
   IconSelector,
   IconChevronDown,
@@ -41,11 +49,11 @@ function Th({
   children: React.ReactNode;
 }) {
   return (
-    <Table.Th key={thKey} className={classes.th}>
+    <TableHead key={thKey} className={classes.th}>
       <Text fw={500} fz="sm">
         {children}
       </Text>
-    </Table.Th>
+    </TableHead>
   );
 }
 
@@ -166,14 +174,9 @@ export function EntitiesTable({
           onChange={handleSearchChange}
         />
       )}
-      <Table
-        horizontalSpacing="md"
-        verticalSpacing="xs"
-        miw={700}
-        layout="fixed"
-      >
-        <Table.Thead>
-          <Table.Tr>
+      <Table className="m-w-[700px]">
+        <TableHeader>
+          <TableRow>
             {columns.map((column) => {
               return column.sortable ? (
                 <ThSortable
@@ -188,9 +191,9 @@ export function EntitiesTable({
                 <Th key={column.key}>{column.name}</Th>
               );
             })}
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{entities.map((row) => rowRenderer(row))}</Table.Tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>{entities.map((row) => rowRenderer(row))}</TableBody>
       </Table>
     </ScrollArea>
   );

@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Table, Button } from '@mantine/core';
+import { Button } from '@mantine/core';
+
+import { TableRow, TableCell } from '@/components/ui/table';
 
 import { useForceUpdate } from '@mantine/hooks';
 
@@ -56,33 +58,33 @@ export function AddRelationship({
   };
 
   return (
-    <Table.Tr key={'add'}>
-      <Table.Td>
+    <TableRow key={'add'}>
+      <TableCell>
         <EntityTypeSelect
           excludeType={fromEntityType}
           placeholder="Select Type"
           onSelect={(val) => setToEntityType(val)}
         />
-      </Table.Td>
-      <Table.Td>
+      </TableCell>
+      <TableCell>
         <EntityAutocomplete
           type={toEntityType || undefined}
           onEntitySelected={(entity) => setToEntity(entity)}
           disabled={!toEntityType}
           withAddOption={true}
         />
-      </Table.Td>
-      <Table.Td>
+      </TableCell>
+      <TableCell>
         <RelationshipTypeSelect
           onSelect={(val) => setRelationshipType(val)}
           fromType={fromEntityType}
           toType={toEntityType!}
           disabled={!toEntityType || !toEntity}
         />
-      </Table.Td>
-      <Table.Td>
+      </TableCell>
+      <TableCell>
         <Button onClick={handleAdd}>Add Relationship</Button>
-      </Table.Td>
-    </Table.Tr>
+      </TableCell>
+    </TableRow>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import { Table, Text, Space } from '@mantine/core';
+import { Text, Space } from '@mantine/core';
+import { TableRow, TableCell } from '@/components/ui/table';
 import Link from 'next/link';
 
 import { PropertyReservedAttributes, PropertyType } from '@/server/sharedTypes';
@@ -80,25 +81,25 @@ export default function PropertiesTable({
       )?.value;
       const priceStr = price ? `$${price}` : '';
       return (
-        <Table.Tr key={row.id}>
-          <Table.Td>{row.name}</Table.Td>
-          <Table.Td>{addressStr}</Table.Td>
-          <Table.Td>{sizeStr}</Table.Td>
-          <Table.Td>{priceStr}</Table.Td>
-          <Table.Td>
+        <TableRow key={row.id}>
+          <TableCell>{row.name}</TableCell>
+          <TableCell>{addressStr}</TableCell>
+          <TableCell>{sizeStr}</TableCell>
+          <TableCell>{priceStr}</TableCell>
+          <TableCell>
             <div>{deleteBtn(row.id)}</div>
             <div>{goToProperty(row.id)}</div>
-          </Table.Td>
-        </Table.Tr>
+          </TableCell>
+        </TableRow>
       );
     } else {
       return (
-        <Table.Tr key="empty">
-          <Table.Td colSpan={columns.length}>
+        <TableRow key="empty">
+          <TableCell colSpan={columns.length}>
             <Text ta="center">{'No Properties'}</Text>
             <Space h="lg" />
-          </Table.Td>
-        </Table.Tr>
+          </TableCell>
+        </TableRow>
       );
     }
   };
