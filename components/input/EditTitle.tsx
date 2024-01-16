@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Stack, Flex, Title, ActionIcon, TextInput, Box } from '@mantine/core';
+import { Stack, Flex, ActionIcon, TextInput, Box } from '@mantine/core';
 
 import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -21,7 +21,7 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
     <Stack gap="xs">
       {!isEditing ? (
         <Flex>
-          <Title fs="italic">{tmpValue ?? 'No Value'}</Title>
+          <h1 className="italic">{tmpValue ?? 'No Value'}</h1>
           <ActionIcon
             m={8}
             variant="transparent"

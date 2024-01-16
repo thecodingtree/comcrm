@@ -1,6 +1,6 @@
 'use client';
 
-import { Paper, Title, TextInput, Group } from '@mantine/core';
+import { Paper, TextInput, Group } from '@mantine/core';
 import { Button } from '@/components/ui/button';
 
 import { useForm, zodResolver } from '@mantine/form';
@@ -56,7 +56,7 @@ export default function ContactForm({
 
   return (
     <Paper withBorder={false} m={4}>
-      <Title>Quick Add: Contact</Title>
+      <h1>Quick Add: Contact</h1>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           id="name"
