@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { Grid, Avatar, Text } from '@mantine/core';
+import { Grid } from '@mantine/core';
 
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 
@@ -12,7 +12,6 @@ import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
 import { trpc } from '@/app/_trpc/client';
 import { CoreEntityType } from '@prisma/client';
 import EntitiyNotesTable from '../entities/EntityNotesTable';
-import { on } from 'events';
 
 export default function ContactDetails() {
   const params = useParams();

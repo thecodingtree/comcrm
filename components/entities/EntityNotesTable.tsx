@@ -1,5 +1,7 @@
 import { trpc } from '@/app/_trpc/client';
-import { Stack, Box, ScrollArea } from '@mantine/core';
+import { Stack, Box } from '@mantine/core';
+
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import {
   Table,

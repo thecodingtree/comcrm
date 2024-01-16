@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Text, Space, TextInput, Stack, Flex, Box } from '@mantine/core';
+import { Space, TextInput, Stack, Flex, Box } from '@mantine/core';
 
 import {
   EditButton,
@@ -46,16 +46,14 @@ export default function EditAddress({
   return (
     <Stack gap="xs">
       <Flex justify="left">
-        <Text size="md" c="dimmed">
-          {label}
-        </Text>
+        <p className="text-base text-slate-400">{label}</p>
         <Space w="lg" />
         {!isEditing && <EditButton onClick={() => setIsEditing(!isEditing)} />}
       </Flex>
       {!isEditing ? (
         <Stack gap="xs">
-          <Text fs="italic">{street}</Text>
-          <Text fs="italic">{`${city} ${state} ${zip}`}</Text>
+          <p className="italic">{street}</p>
+          <p className="italic">{`${city} ${state} ${zip}`}</p>
         </Stack>
       ) : (
         <Stack gap="xs">

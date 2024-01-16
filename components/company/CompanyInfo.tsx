@@ -1,13 +1,4 @@
-import {
-  Group,
-  Box,
-  Paper,
-  Stack,
-  Title,
-  Text,
-  Space,
-  rem,
-} from '@mantine/core';
+import { Paper, Stack, Space, rem } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
 

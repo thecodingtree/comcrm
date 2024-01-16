@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { ScrollArea, Text } from '@mantine/core';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import {
   Table,
@@ -33,9 +33,7 @@ function Th({
 }) {
   return (
     <TableHead key={thKey}>
-      <Text fw={500} fz="sm">
-        {children}
-      </Text>
+      <p className="text-sm font-medium">{children}</p>
     </TableHead>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { Text, Avatar, Space, Grid } from '@mantine/core';
+import { Avatar, Space, Grid } from '@mantine/core';
 
 import { CoreEntityType } from '@prisma/client';
 

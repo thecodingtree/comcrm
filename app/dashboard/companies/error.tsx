@@ -1,12 +1,10 @@
 'use client';
 
-import { Text } from '@mantine/core';
-
 export default function Error({ error }: { error: any }) {
   return (
     <div>
-      <Text>{'Error!'}</Text>
-      <Text>{error}</Text>
+      <span className="text-red-500">{'Error!'}</span>
+      <span className="text-red-500">{error}</span>
     </div>
   );
 }

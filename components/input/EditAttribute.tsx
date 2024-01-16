@@ -1,7 +1,3 @@
-import { useState } from 'react';
-
-import { Stack, Space, Flex, Text, TextInput, Box } from '@mantine/core';
-
 import { AttributeType } from '@/server/sharedTypes';
 
 import EditText from '@/components/input/EditText';

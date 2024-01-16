@@ -1,13 +1,12 @@
 'use client';
 
-import { Text, Space, Avatar } from '@mantine/core';
+import { Space, Avatar } from '@mantine/core';
 
 import { TableRow, TableCell } from '@/components/ui/table';
 import Link from 'next/link';
 import { ContactType } from '@/server/sharedTypes';
 
 import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
-import ContactAvatar from './ContactAvatar';
 
 interface ContactsTableProps {
   contacts?: ContactType[];
@@ -98,7 +97,7 @@ export default function ContactsTable({
       return (
         <TableRow key="empty">
           <TableCell colSpan={columns.length}>
-            <Text ta="center">{'No Contacts'}</Text>
+            <p className="text-center">No Contacts</p>
             <Space h="lg" />
           </TableCell>
         </TableRow>
