@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Textarea, Stack, Group, Paper } from '@mantine/core';
+import { Stack, Group, Paper } from '@mantine/core';
+import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import classes from './Notes.module.css';
+import { SelectOptionCustom } from '../select/SelectWithCustomOption';
 
 interface NoteProps {
   date: Date;
@@ -72,6 +74,7 @@ export function AddNote({ onAddNote }: AddNoteProps) {
     // Initially just show the edit box
     if (!showAddNote) {
       setShowAddNote(true);
+      setContent('');
       return;
     }
 
@@ -87,9 +90,6 @@ export function AddNote({ onAddNote }: AddNoteProps) {
       <Stack>
         {showAddNote && (
           <Textarea
-            autosize
-            minRows={4}
-            maxRows={8}
             placeholder="Enter Note"
             onChange={(e) => setContent(e.currentTarget.value)}
           />

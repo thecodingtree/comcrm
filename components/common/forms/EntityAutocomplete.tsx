@@ -3,10 +3,13 @@ import {
   Button,
   CloseButton,
   Combobox,
-  TextInput,
   Loader,
+  TextInput,
   useCombobox,
 } from '@mantine/core';
+
+import { Input } from '@/components/ui/input';
+
 import { useDisclosure } from '@mantine/hooks';
 
 import { trpc } from '@/app/_trpc/client';
