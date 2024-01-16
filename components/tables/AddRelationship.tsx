@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@mantine/core';
+import { Button } from '@/components/ui/button';
 
 import { TableRow, TableCell } from '@/components/ui/table';
 

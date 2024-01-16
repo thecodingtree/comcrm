@@ -1,7 +1,9 @@
 'use client';
 
 import { useDisclosure } from '@mantine/hooks';
-import { Stack, Button, Modal } from '@mantine/core';
+import { Stack, Modal } from '@mantine/core';
+
+import { Button } from '@/components/ui/button';
 
 import { trpc } from '@/app/_trpc/client';
 
@@ -26,7 +28,7 @@ export default function ContactAdd({
 
   return (
     <Stack align="center">
-      <Button onClick={open} w={400}>
+      <Button onClick={open} className="w-[400px]">
         Add Contact
       </Button>
       <Modal

@@ -4,7 +4,9 @@ import { useState } from 'react';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { TextInput, Button } from '@mantine/core';
+import { TextInput } from '@mantine/core';
+
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [title, setTitle] = useState('');

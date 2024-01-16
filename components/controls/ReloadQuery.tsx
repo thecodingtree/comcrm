@@ -1,4 +1,4 @@
-import { ActionIcon, Button } from '@mantine/core';
+import { ActionIcon } from '@mantine/core';
 import { IconReload } from '@tabler/icons-react';
 
 interface ReloadQueryProps {

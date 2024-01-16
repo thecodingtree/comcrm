@@ -5,9 +5,10 @@ import {
   Grid,
   NumberInput,
   TextInput,
-  Button,
   Group,
 } from '@mantine/core';
+
+import { Button } from '@/components/ui/button';
 
 import { useForm, zodResolver } from '@mantine/form';
 
