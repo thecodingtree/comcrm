@@ -1,6 +1,8 @@
 'use client';
 
-import { Table, Text, Space, Avatar } from '@mantine/core';
+import { Text, Space, Avatar } from '@mantine/core';
+
+import { TableRow, TableCell } from '@/components/ui/table';
 import Link from 'next/link';
 import { ContactType } from '@/server/sharedTypes';
 
@@ -77,29 +79,29 @@ export default function ContactsTable({
         row?.address?.city || ''
       } ${row?.address?.state || ''} ${row?.address?.zip || ''}`;
       return (
-        <Table.Tr key={row.id}>
-          <Table.Td>
+        <TableRow key={row.id}>
+          <TableCell>
             <Avatar color="gray" radius="xl" size={50} src={row.image} />
-          </Table.Td>
-          <Table.Td>{row.name}</Table.Td>
-          <Table.Td>{row.surName}</Table.Td>
-          <Table.Td>{row.phone}</Table.Td>
-          <Table.Td>{row.email}</Table.Td>
-          <Table.Td>{addressStr}</Table.Td>
-          <Table.Td>
+          </TableCell>
+          <TableCell>{row.name}</TableCell>
+          <TableCell>{row.surName}</TableCell>
+          <TableCell>{row.phone}</TableCell>
+          <TableCell>{row.email}</TableCell>
+          <TableCell>{addressStr}</TableCell>
+          <TableCell>
             <div>{deleteBtn(row.id)}</div>
             <div>{goToContact(row.id)}</div>
-          </Table.Td>
-        </Table.Tr>
+          </TableCell>
+        </TableRow>
       );
     } else {
       return (
-        <Table.Tr key="empty">
-          <Table.Td colSpan={columns.length}>
+        <TableRow key="empty">
+          <TableCell colSpan={columns.length}>
             <Text ta="center">{'No Contacts'}</Text>
             <Space h="lg" />
-          </Table.Td>
-        </Table.Tr>
+          </TableCell>
+        </TableRow>
       );
     }
   };
