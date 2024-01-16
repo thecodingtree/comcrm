@@ -32,6 +32,7 @@ tooling:
     cmd: npm
   npx:
     service: app
+    dir: /app
     cmd: npx
   prisma:
     service: app
