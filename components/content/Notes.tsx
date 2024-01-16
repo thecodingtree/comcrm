@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Text, Textarea, Stack, Group, Paper, Button } from '@mantine/core';
+import { Text, Textarea, Stack, Group, Paper } from '@mantine/core';
+import { Button } from '@/components/ui/button';
 import classes from './Notes.module.css';
 
 interface NoteProps {
@@ -95,7 +96,7 @@ export function AddNote({ onAddNote }: AddNoteProps) {
             onChange={(e) => setContent(e.currentTarget.value)}
           />
         )}
-        <Button fullWidth onClick={handleAddNote}>
+        <Button className="w-full" onClick={handleAddNote}>
           {showAddNote ? 'Submit' : 'Add Note'}
         </Button>
       </Stack>

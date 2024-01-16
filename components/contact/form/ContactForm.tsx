@@ -1,6 +1,8 @@
 'use client';
 
-import { Paper, Title, TextInput, Button, Group } from '@mantine/core';
+import { Paper, Title, TextInput, Group } from '@mantine/core';
+import { Button } from '@/components/ui/button';
+
 import { useForm, zodResolver } from '@mantine/form';
 
 import { z } from 'zod';
