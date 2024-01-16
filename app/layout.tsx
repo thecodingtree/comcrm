@@ -1,6 +1,7 @@
 import '@mantine/core/styles.css';
 import React from 'react';
 import { headers } from 'next/headers';
+import { Inter as FontSans } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
@@ -21,6 +22,13 @@ export const metadata = {
   description: 'COMCRM - The Modern CRM for Real Estate Agents',
 };
 
+import { cn } from '@/lib/utils';
+
+export const fontSans = FontSans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
+
 export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang="en">
@@ -32,7 +40,12 @@ export default function RootLayout({ children }: { children: any }) {
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
       </head>
-      <body>
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          fontSans.variable
+        )}
+      >
         <MantineProvider theme={theme}>
           <TRPCProvider headers={headers()}>
             <DashboardLayout>{children}</DashboardLayout>
