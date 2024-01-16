@@ -10,6 +10,8 @@ import { TRPCProvider } from '@/app/_trpc/TRPCProvider';
 import '@mantine/core/styles.css';
 import '@uploadthing/react/styles.css';
 
+import '@/app/globals.css';
+
 import { theme } from '../theme';
 
 import DashboardLayout from '@/components/layouts/DashboardLayout';
