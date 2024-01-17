@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Stack, Flex, ActionIcon, TextInput, Box } from '@mantine/core';
+import { Flex, ActionIcon, TextInput, Box } from '@mantine/core';
 
 import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -18,7 +18,7 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
   };
 
   return (
-    <Stack gap="xs">
+    <div className="flex flex-col gap-1">
       {!isEditing ? (
         <Flex>
           <h1 className="italic">{tmpValue ?? 'No Value'}</h1>
@@ -64,6 +64,6 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
           </Box>
         )}
       </Flex>
-    </Stack>
+    </div>
   );
 }

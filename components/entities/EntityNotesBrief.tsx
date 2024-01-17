@@ -1,5 +1,3 @@
-import { Stack } from '@mantine/core';
-
 import { Note, AddNote } from '@/components/content/Notes';
 
 import { trpc } from '@/app/_trpc/client';
@@ -20,7 +18,7 @@ export default function EntityNotesBrief({
   if (!entityId) return null;
 
   return (
-    <Stack justify="flex-start">
+    <div className="flex flex-col justify-center">
       {getNotesForEntity?.data?.map((note, index) => (
         <Note
           key={`notes-${index}`}
@@ -31,6 +29,6 @@ export default function EntityNotesBrief({
       <AddNote
         onAddNote={(content) => createNote.mutate({ entityId, content })}
       />
-    </Stack>
+    </div>
   );
 }

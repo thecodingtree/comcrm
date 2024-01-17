@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Stack, Group, Paper } from '@mantine/core';
+import { Group, Paper } from '@mantine/core';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import classes from './Notes.module.css';
@@ -52,12 +52,12 @@ const getDaysSinceDateText = (date: Date): string => {
 export function Note({ date, content }: NoteProps) {
   return (
     <Paper withBorder radius="md" className={classes.note}>
-      <Stack>
+      <div className="flex flex-col gap-2">
         <Group justify="space-between">
           <p className="text-xs text-slate-400">{getDaysSinceDateText(date)}</p>
         </Group>
         <p>{content}</p>
-      </Stack>
+      </div>
     </Paper>
   );
 }
@@ -87,7 +87,7 @@ export function AddNote({ onAddNote }: AddNoteProps) {
 
   return (
     <Paper radius="md" className={classes.note}>
-      <Stack>
+      <div className="flex flex-col gap-2">
         {showAddNote && (
           <Textarea
             placeholder="Enter Note"
@@ -97,7 +97,7 @@ export function AddNote({ onAddNote }: AddNoteProps) {
         <Button className="w-full" onClick={handleAddNote}>
           {showAddNote ? 'Submit' : 'Add Note'}
         </Button>
-      </Stack>
+      </div>
     </Paper>
   );
 }

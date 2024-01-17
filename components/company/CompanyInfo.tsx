@@ -1,4 +1,4 @@
-import { Paper, Stack, Space, rem } from '@mantine/core';
+import { Paper, Space, rem } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
 
@@ -24,7 +24,7 @@ export default function CompanyInfo({ companyId }: CompanyCardProps) {
 
   return (
     <Paper p="sm" maw={rem(600)}>
-      <Stack gap="sm">
+      <div className="flex flex-col items-start gap-2">
         {data?.name && (
           <EditTitle
             initValue={data?.name}
@@ -123,7 +123,7 @@ export default function CompanyInfo({ companyId }: CompanyCardProps) {
             })
           }
         />
-      </Stack>
+      </div>
     </Paper>
   );
 }
