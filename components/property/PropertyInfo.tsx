@@ -1,4 +1,4 @@
-import { Paper, Stack, Space, rem } from '@mantine/core';
+import { Paper, Space, rem } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
 
@@ -19,7 +19,7 @@ export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
 
   return (
     <Paper p="sm" maw={rem(500)}>
-      <Stack gap="sm">
+      <div className="flex flex-col gap-2">
         <EditTitle
           initValue={data?.name}
           onChange={(name) =>
@@ -108,7 +108,7 @@ export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
             });
           }}
         />
-      </Stack>
+      </div>
     </Paper>
   );
 }

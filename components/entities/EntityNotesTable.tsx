@@ -1,5 +1,4 @@
 import { trpc } from '@/app/_trpc/client';
-import { Stack, Box } from '@mantine/core';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -49,13 +48,13 @@ export default function EntitiyNotesTable({ entity }: { entity: string }) {
           <TableRow>
             <TableCell colSpan={2}>
               {
-                <Stack w="50%" justify="center">
+                <div className="flex flex-col w-[50%] justify-center">
                   <AddNote
                     onAddNote={(content) =>
                       createNote.mutate({ entityId: entity, content })
                     }
                   />
-                </Stack>
+                </div>
               }
             </TableCell>
           </TableRow>

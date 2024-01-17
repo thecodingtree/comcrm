@@ -3,7 +3,7 @@
 import { trpc } from '@/app/_trpc/client';
 
 import { useDisclosure } from '@mantine/hooks';
-import { Stack, Modal } from '@mantine/core';
+import { Modal } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 
@@ -28,7 +28,7 @@ export default function CompanyAdd({
     createCompany.mutate(buildCompanyMutatePayload({ values }));
 
   return (
-    <Stack align="center">
+    <div className="flex flex-col items-center">
       <Button onClick={open} className="w-[400px]">
         Add Company
       </Button>
@@ -44,6 +44,6 @@ export default function CompanyAdd({
           submitting={createCompany.isLoading}
         />
       </Modal>
-    </Stack>
+    </div>
   );
 }

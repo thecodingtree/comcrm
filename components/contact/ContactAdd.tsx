@@ -1,7 +1,7 @@
 'use client';
 
 import { useDisclosure } from '@mantine/hooks';
-import { Stack, Modal } from '@mantine/core';
+import { Modal } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 
@@ -27,7 +27,7 @@ export default function ContactAdd({
     createContact.mutate(buildContactMutatePayload({ values }));
 
   return (
-    <Stack align="center">
+    <div className="flex flex-col items-center">
       <Button onClick={open} className="w-[400px]">
         Add Contact
       </Button>
@@ -43,6 +43,6 @@ export default function ContactAdd({
           submitting={createContact.isLoading}
         />
       </Modal>
-    </Stack>
+    </div>
   );
 }

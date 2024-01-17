@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Stack, Space, Flex, TextInput, Box } from '@mantine/core';
+import { Space, Flex, TextInput, Box } from '@mantine/core';
 
 import {
   EditButton,
@@ -27,7 +27,7 @@ export default function EditText({
   };
 
   return (
-    <Stack gap="xs">
+    <div className="flex flex-col gap-1">
       <Flex justify="left">
         <p className="text-base text-slate-400">{label}</p>
         <Space w="lg" />
@@ -57,6 +57,6 @@ export default function EditText({
           onChange={(e) => handleChange(e)}
         />
       )}
-    </Stack>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Stack, Space, Paper, rem } from '@mantine/core';
+import { Space, Paper, rem } from '@mantine/core';
 
 import { trpc } from '@/app/_trpc/client';
 
@@ -32,7 +32,7 @@ export default function ContactInfo({ contactId }: { contactId?: string }) {
   return (
     !isLoading && (
       <Paper p="sm" maw={rem(500)}>
-        <Stack gap="sm">
+        <div className="flex flex-col gap-2">
           <EditTitle initValue={fullName} onChange={handleNameChange} />
           <Space h="xs" />
           <EditText
@@ -86,7 +86,7 @@ export default function ContactInfo({ contactId }: { contactId?: string }) {
               })
             }
           />
-        </Stack>
+        </div>
       </Paper>
     )
   );

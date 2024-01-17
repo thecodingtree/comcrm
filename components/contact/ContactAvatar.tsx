@@ -1,4 +1,4 @@
-import { Avatar, Stack, ActionIcon, Popover } from '@mantine/core';
+import { Avatar, ActionIcon, Popover } from '@mantine/core';
 import { useDisclosure, useClickOutside } from '@mantine/hooks';
 
 import { IconPencil } from '@tabler/icons-react';
@@ -16,7 +16,7 @@ export default function ContactAvatar({
   const ref = useClickOutside(() => close());
 
   return (
-    <Stack align="center">
+    <div className="flex flex-col items-center">
       <Avatar color="blue" radius="xl" size={150} src={avatarSrc} />
       <Popover
         width={275}
@@ -55,6 +55,6 @@ export default function ContactAvatar({
           />
         </Popover.Dropdown>
       </Popover>
-    </Stack>
+    </div>
   );
 }
