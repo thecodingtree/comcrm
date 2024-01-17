@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import { Container } from '@mantine/core';
 import Navbar from '@/components/navbar/Navbar';
 import { useDisclosure } from '@mantine/hooks';
 import { AppShell, Burger } from '@mantine/core';
@@ -31,7 +30,7 @@ export default function DashboardLayout({ children }: { children: any }) {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Container fluid>{children}</Container>
+          <div className="container mx-auto pt-4 ">{children}</div>
         </AppShell.Main>
       </AppShell>
     </SessionProvider>
