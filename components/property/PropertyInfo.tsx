@@ -1,5 +1,3 @@
-import { Paper, Space, rem } from '@mantine/core';
-
 import { trpc } from '@/app/_trpc/client';
 
 import EditText from '@/components/input/EditText';
@@ -18,7 +16,7 @@ export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
     trpc.attributes.updateOrCreateAttribute.useMutation();
 
   return (
-    <Paper p="sm" maw={rem(500)}>
+    <div className="p-2">
       <div className="flex flex-col gap-2">
         <EditTitle
           initValue={data?.name}
@@ -26,7 +24,6 @@ export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
             updateProperty.mutate({ id: propertyId!, name: name || undefined })
           }
         />
-        <Space h="xs" />
         <EditAddress
           label="address"
           address={data?.address}
@@ -109,6 +106,6 @@ export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
           }}
         />
       </div>
-    </Paper>
+    </div>
   );
 }

@@ -1,11 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Group, Paper } from '@mantine/core';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import classes from './Notes.module.css';
-import { SelectOptionCustom } from '../select/SelectWithCustomOption';
 
 interface NoteProps {
   date: Date;
@@ -51,14 +48,12 @@ const getDaysSinceDateText = (date: Date): string => {
 
 export function Note({ date, content }: NoteProps) {
   return (
-    <Paper withBorder radius="md" className={classes.note}>
+    <div className="border border-slate-200 rounded-sm p-2 m-2">
       <div className="flex flex-col gap-2">
-        <Group justify="space-between">
-          <p className="text-xs text-slate-400">{getDaysSinceDateText(date)}</p>
-        </Group>
+        <p className="text-xs text-slate-400">{getDaysSinceDateText(date)}</p>
         <p>{content}</p>
       </div>
-    </Paper>
+    </div>
   );
 }
 
@@ -86,7 +81,7 @@ export function AddNote({ onAddNote }: AddNoteProps) {
   };
 
   return (
-    <Paper radius="md" className={classes.note}>
+    <div className="m-4">
       <div className="flex flex-col gap-2">
         {showAddNote && (
           <Textarea
@@ -98,6 +93,6 @@ export function AddNote({ onAddNote }: AddNoteProps) {
           {showAddNote ? 'Submit' : 'Add Note'}
         </Button>
       </div>
-    </Paper>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Flex, ActionIcon, TextInput, Box } from '@mantine/core';
+import { ActionIcon, TextInput } from '@mantine/core';
 
 import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -20,7 +20,7 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
   return (
     <div className="flex flex-col gap-1">
       {!isEditing ? (
-        <Flex>
+        <div className="flex flex-row">
           <h1 className="italic">{tmpValue ?? 'No Value'}</h1>
           <ActionIcon
             m={8}
@@ -30,7 +30,7 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
           >
             <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
           </ActionIcon>
-        </Flex>
+        </div>
       ) : (
         <TextInput
           placeholder="name"
@@ -38,9 +38,9 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
           onChange={(e) => handleChange(e)}
         />
       )}
-      <Flex justify="space-between">
+      <div className="flex justify-between">
         {isEditing && (
-          <Box>
+          <div>
             <ActionIcon
               variant="transparent"
               color="gray"
@@ -61,9 +61,9 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
             >
               <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
             </ActionIcon>
-          </Box>
+          </div>
         )}
-      </Flex>
+      </div>
     </div>
   );
 }

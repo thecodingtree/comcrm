@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { Space, Grid, Avatar } from '@mantine/core';
+import { Grid, Avatar } from '@mantine/core';
 
 import { CoreEntityType } from '@prisma/client';
 
@@ -40,12 +40,6 @@ export default function PropertyDetail() {
       </Grid.Col>
       <Grid.Col span={{ base: 12, lg: 5 }}>
         <EntityNotesBrief entityId={propertyId} />
-      </Grid.Col>
-      <Grid.Col span={12}>
-        <Space h="md" />
-      </Grid.Col>
-      <Grid.Col span={12}>
-        <Space h="md" />
       </Grid.Col>
       <Grid.Col span={12}>
         <RelationshipsTable

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import {
-  Group,
   Combobox,
   InputBase,
   Input,
@@ -18,13 +17,13 @@ export type Item = {
 
 export function SelectOptionCustom({ icon, label, value, description }: Item) {
   return (
-    <Group>
+    <div className="flex flex-row justify-start gap-2">
       {icon}
       <div>
         <p className="text-sm font-medium">{label || value}</p>
         {description && <p className="text-xs text-slate-400">{description}</p>}
       </div>
-    </Group>
+    </div>
   );
 }
 

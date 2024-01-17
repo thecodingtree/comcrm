@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  Paper,
-  Title,
-  Grid,
-  NumberInput,
-  TextInput,
-  Group,
-} from '@mantine/core';
+import { Grid, NumberInput, TextInput } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 
@@ -56,8 +49,8 @@ export default function PropertyForm({
   });
 
   return (
-    <Paper withBorder={false} m={4}>
-      <Title>Quick Add: Property</Title>
+    <div className="m-2">
+      <h1>Quick Add: Property</h1>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           id="name"
@@ -140,12 +133,12 @@ export default function PropertyForm({
           hideControls
           {...form.getInputProps('price')}
         />
-        <Group justify="center" mt="md">
+        <div className="flex flex-col justify-center mt-2">
           <Button type="submit" disabled={submitting}>
             Add Property
           </Button>
-        </Group>
+        </div>
       </form>
-    </Paper>
+    </div>
   );
 }
