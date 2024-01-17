@@ -1,5 +1,3 @@
-import { Space, Paper, rem } from '@mantine/core';
-
 import { trpc } from '@/app/_trpc/client';
 
 import EditText from '@/components/input/EditText';
@@ -31,63 +29,60 @@ export default function ContactInfo({ contactId }: { contactId?: string }) {
 
   return (
     !isLoading && (
-      <Paper p="sm" maw={rem(500)}>
-        <div className="flex flex-col gap-2">
-          <EditTitle initValue={fullName} onChange={handleNameChange} />
-          <Space h="xs" />
-          <EditText
-            label="phone"
-            initValue={data?.phone}
-            onChange={(phone) =>
-              updateContact.mutate({
-                id: contactId!,
-                phone: phone || undefined,
-              })
-            }
-          />
-          <EditAttribute
-            label="alt phone"
-            initAttr={data?.attributes?.find(
-              (attr) => attr.name === ContactReservedAttributes.ALT_PHONE
-            )}
-            reservedName={ContactReservedAttributes.ALT_PHONE}
-            onChange={(attr) => {
-              updateOrCreateAttribute.mutate({
-                id: attr?.id,
-                name: attr?.name!,
-                value: attr?.value!,
-                entityId: contactId!,
-              });
-            }}
-          />
+      <div className="flex flex-col gap-2">
+        <EditTitle initValue={fullName} onChange={handleNameChange} />
+        <EditText
+          label="phone"
+          initValue={data?.phone}
+          onChange={(phone) =>
+            updateContact.mutate({
+              id: contactId!,
+              phone: phone || undefined,
+            })
+          }
+        />
+        <EditAttribute
+          label="alt phone"
+          initAttr={data?.attributes?.find(
+            (attr) => attr.name === ContactReservedAttributes.ALT_PHONE
+          )}
+          reservedName={ContactReservedAttributes.ALT_PHONE}
+          onChange={(attr) => {
+            updateOrCreateAttribute.mutate({
+              id: attr?.id,
+              name: attr?.name!,
+              value: attr?.value!,
+              entityId: contactId!,
+            });
+          }}
+        />
 
-          <EditText
-            label="email"
-            initValue={data?.email}
-            onChange={(email) =>
-              updateContact.mutate({
-                id: contactId!,
-                email: email || undefined,
-              })
-            }
-          />
-          <EditAddress
-            label="address"
-            address={data?.address}
-            onChange={(address) =>
-              updateContact.mutate({
-                id: contactId!,
-                address: {
-                  street: address?.street,
-                  city: address?.city,
-                  state: address?.state,
-                  zip: address?.zip,
-                },
-              })
-            }
-          />
-        </div>
-      </Paper>
+        <EditText
+          label="email"
+          initValue={data?.email}
+          onChange={(email) =>
+            updateContact.mutate({
+              id: contactId!,
+              email: email || undefined,
+            })
+          }
+        />
+        <EditAddress
+          label="address"
+          address={data?.address}
+          onChange={(address) =>
+            updateContact.mutate({
+              id: contactId!,
+              address: {
+                street: address?.street,
+                city: address?.city,
+                state: address?.state,
+                zip: address?.zip,
+              },
+            })
+          }
+        />
+      </div>
     )
   );
 }

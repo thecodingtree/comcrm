@@ -1,6 +1,5 @@
 import {
   UnstyledButton,
-  Group,
   Avatar,
   rem,
   Menu,
@@ -25,7 +24,7 @@ export function AccountMenu() {
     >
       <Menu.Target>
         <UnstyledButton className={classes.user}>
-          <Group>
+          <div className="flex flex-row gap-2">
             <Avatar src={user?.image} radius="xl" />
 
             <div style={{ flex: 1 }}>
@@ -38,7 +37,7 @@ export function AccountMenu() {
               style={{ width: rem(14), height: rem(14) }}
               stroke={1.5}
             />
-          </Group>
+          </div>
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
