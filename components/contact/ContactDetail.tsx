@@ -2,8 +2,6 @@
 
 import { useParams } from 'next/navigation';
 
-import { Grid } from '@mantine/core';
-
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 
 import ContactInfo from './ContactInfo';
@@ -35,28 +33,28 @@ export default function ContactDetails() {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <Grid>
-      <Grid.Col span={{ base: 12, lg: 2 }}>
+    <div className="grid grid-cols-3">
+      <div>
         <ContactAvatar
           avatarSrc={data?.image}
           onUpdated={handleAvatarImgUpdate}
         />
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+      </div>
+      <div>
         <ContactInfo contactId={contactId} />
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+      </div>
+      <div>
         <EntityNotesBrief entityId={contactId} />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <RelationshipsTable
           fromEntityId={contactId!}
           fromEntityType={CoreEntityType.CONTACT}
         />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <EntitiyNotesTable entity={contactId!} />
-      </Grid.Col>
-    </Grid>
+      </div>
+    </div>
   );
 }

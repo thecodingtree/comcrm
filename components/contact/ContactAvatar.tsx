@@ -16,7 +16,7 @@ export default function ContactAvatar({
   const ref = useClickOutside(() => close());
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-start">
       <Avatar color="blue" radius="xl" size={150} src={avatarSrc} />
       <Popover
         width={275}

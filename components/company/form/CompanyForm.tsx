@@ -1,5 +1,5 @@
 'use client';
-import { Grid, NumberInput, TextInput } from '@mantine/core';
+import { NumberInput, TextInput } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 
@@ -88,8 +88,8 @@ export default function CompaniesForm({
           hideControls
           {...form.getInputProps('size')}
         />
-        <Grid>
-          <Grid.Col span={12}>
+        <div className="grid grid-cols-1">
+          <div>
             <TextInput
               id="street"
               name="street"
@@ -98,8 +98,8 @@ export default function CompaniesForm({
               placeholder="Street"
               {...form.getInputProps('street')}
             />
-          </Grid.Col>
-          <Grid.Col span={4}>
+          </div>
+          <div>
             <TextInput
               id="city"
               name="city"
@@ -107,8 +107,8 @@ export default function CompaniesForm({
               placeholder="City"
               {...form.getInputProps('city')}
             />
-          </Grid.Col>
-          <Grid.Col span={4}>
+          </div>
+          <div>
             <TextInput
               id="state"
               name="state"
@@ -116,8 +116,8 @@ export default function CompaniesForm({
               placeholder="State"
               {...form.getInputProps('state')}
             />
-          </Grid.Col>
-          <Grid.Col span={4}>
+          </div>
+          <div>
             <TextInput
               id="zip"
               name="zip"
@@ -125,8 +125,8 @@ export default function CompaniesForm({
               placeholder="Zip"
               {...form.getInputProps('zip')}
             />
-          </Grid.Col>
-        </Grid>
+          </div>
+        </div>
         <div className="flex flex-col justify-center mt-2">
           <Button type="submit" disabled={submitting}>
             Add Company
