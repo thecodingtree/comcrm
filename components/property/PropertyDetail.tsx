@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { Avatar } from '@mantine/core';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import { CoreEntityType } from '@prisma/client';
 
@@ -13,6 +13,7 @@ import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 import { trpc } from '@/app/_trpc/client';
 import EntityNotesTable from '@/components/entities/EntityNotesTable';
+import { IconProperty } from '../common/icons';
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -26,13 +27,11 @@ export default function PropertyDetail() {
   return (
     <div className="grid grid-cols-3">
       <div>
-        <Avatar
-          color="blue"
-          radius="xl"
-          size={150}
-          src={getProperty.data?.image}
-        >
-          <IconBuilding size={75} />
+        <Avatar className="min-w-40 min-h-40">
+          <AvatarImage src={getProperty?.data?.image} />
+          <AvatarFallback className="w-full">
+            <IconProperty size={64} />
+          </AvatarFallback>
         </Avatar>
       </div>
       <div>

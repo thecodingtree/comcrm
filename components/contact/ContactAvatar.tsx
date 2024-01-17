@@ -1,9 +1,12 @@
-import { Avatar, ActionIcon, Popover } from '@mantine/core';
+import { ActionIcon, Popover } from '@mantine/core';
 import { useDisclosure, useClickOutside } from '@mantine/hooks';
+
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import { IconPencil } from '@tabler/icons-react';
 
 import { UploadDropzone } from '@/utils/uploadthing';
+import { IconContact } from '../common/icons';
 
 export default function ContactAvatar({
   avatarSrc,
@@ -17,7 +20,12 @@ export default function ContactAvatar({
 
   return (
     <div className="flex flex-col items-start">
-      <Avatar color="blue" radius="xl" size={150} src={avatarSrc} />
+      <Avatar className="min-w-40 min-h-40">
+        <AvatarImage src={avatarSrc} />
+        <AvatarFallback>
+          <IconContact size={64} />
+        </AvatarFallback>
+      </Avatar>
       <Popover
         width={275}
         position="bottom"

@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar } from '@mantine/core';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import { TableRow, TableCell } from '@/components/ui/table';
 import Link from 'next/link';
@@ -80,7 +80,10 @@ export default function ContactsTable({
       return (
         <TableRow key={row.id}>
           <TableCell>
-            <Avatar color="gray" radius="xl" size={50} src={row.image} />
+            <Avatar>
+              <AvatarFallback>{`${row?.name[0]}${row?.surName[0]}`}</AvatarFallback>
+              <AvatarImage src={row.image} />
+            </Avatar>
           </TableCell>
           <TableCell>{row.name}</TableCell>
           <TableCell>{row.surName}</TableCell>

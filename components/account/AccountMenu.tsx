@@ -1,10 +1,5 @@
-import {
-  UnstyledButton,
-  Avatar,
-  rem,
-  Menu,
-  useMantineTheme,
-} from '@mantine/core';
+import { UnstyledButton, rem, Menu, useMantineTheme } from '@mantine/core';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { IconChevronRight, IconLogout } from '@tabler/icons-react';
 
 import useUser from '@/hooks/useUser';
@@ -25,7 +20,10 @@ export function AccountMenu() {
       <Menu.Target>
         <UnstyledButton className={classes.user}>
           <div className="flex flex-row gap-2">
-            <Avatar src={user?.image} radius="xl" />
+            <Avatar>
+              <AvatarImage src={user?.image} />
+              <AvatarFallback>{`${user?.name[0]}`}</AvatarFallback>
+            </Avatar>
 
             <div style={{ flex: 1 }}>
               <p className="text-sm font-bold">{user?.name}</p>
