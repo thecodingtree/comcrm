@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { Grid, Avatar } from '@mantine/core';
+import { Avatar } from '@mantine/core';
 
 import { CoreEntityType } from '@prisma/client';
 
@@ -24,8 +24,8 @@ export default function PropertyDetail() {
   if (getProperty.isLoading) return <p>Loading...</p>;
 
   return (
-    <Grid>
-      <Grid.Col span={{ base: 12, lg: 2 }}>
+    <div className="grid grid-cols-3">
+      <div>
         <Avatar
           color="blue"
           radius="xl"
@@ -34,22 +34,22 @@ export default function PropertyDetail() {
         >
           <IconBuilding size={75} />
         </Avatar>
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+      </div>
+      <div>
         <PropertyInfo propertyId={propertyId} />
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+      </div>
+      <div>
         <EntityNotesBrief entityId={propertyId} />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <RelationshipsTable
           fromEntityId={propertyId!}
           fromEntityType={CoreEntityType.PROPERTY}
         />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <EntityNotesTable entity={propertyId!} />
-      </Grid.Col>
-    </Grid>
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { Grid, NumberInput, TextInput } from '@mantine/core';
+import { NumberInput, TextInput } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 
@@ -61,45 +61,40 @@ export default function PropertyForm({
           withAsterisk
           {...form.getInputProps('name')}
         />
-        <Grid>
-          <Grid.Col span={12}>
-            <TextInput
-              id="street"
-              name="street"
-              label="Street"
-              mt="lg"
-              placeholder="Street"
-              {...form.getInputProps('street')}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <TextInput
-              id="city"
-              name="city"
-              label="City"
-              placeholder="City"
-              {...form.getInputProps('city')}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <TextInput
-              id="state"
-              name="state"
-              label="State"
-              placeholder="State"
-              {...form.getInputProps('state')}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <TextInput
-              id="zip"
-              name="zip"
-              label="Zip"
-              placeholder="Zip"
-              {...form.getInputProps('zip')}
-            />
-          </Grid.Col>
-        </Grid>
+
+        <TextInput
+          id="street"
+          name="street"
+          label="Street"
+          mt="lg"
+          placeholder="Street"
+          {...form.getInputProps('street')}
+        />
+
+        <TextInput
+          id="city"
+          name="city"
+          label="City"
+          placeholder="City"
+          {...form.getInputProps('city')}
+        />
+
+        <TextInput
+          id="state"
+          name="state"
+          label="State"
+          placeholder="State"
+          {...form.getInputProps('state')}
+        />
+
+        <TextInput
+          id="zip"
+          name="zip"
+          label="Zip"
+          placeholder="Zip"
+          {...form.getInputProps('zip')}
+        />
+
         <TextInput
           id="suite"
           name="suite"

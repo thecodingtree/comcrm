@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { Avatar, Grid } from '@mantine/core';
+import { Avatar } from '@mantine/core';
 
 import { CoreEntityType } from '@prisma/client';
 
@@ -23,25 +23,25 @@ export default function CompanyDetails() {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <Grid>
-      <Grid.Col span={{ base: 12, lg: 2 }}>
+    <div className="grid grid-cols-3">
+      <div>
         <Avatar color="blue" radius="xl" size={150} src={data?.image} />
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+      </div>
+      <div>
         <CompanyInfo companyId={companyId} />
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+      </div>
+      <div>
         <EntityNotesBrief entityId={companyId} />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <RelationshipsTable
           fromEntityId={companyId!}
           fromEntityType={CoreEntityType.COMPANY}
         />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <EntitiyNotesTable entity={companyId!} />
-      </Grid.Col>
-    </Grid>
+      </div>
+    </div>
   );
 }
