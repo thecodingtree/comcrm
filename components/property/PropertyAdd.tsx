@@ -1,48 +1,22 @@
 'use client';
 
-import { useDisclosure } from '@mantine/hooks';
-import { Modal } from '@mantine/core';
-import { Button } from '@/components/ui/button';
-
-import { trpc } from '@/app/_trpc/client';
+import EntityAddDialog from '@/components/entities/EntityAddDialog';
 
 import { PropertyType } from '@/server/sharedTypes';
-
-import PropertyForm, { PropertyFormValues } from './form/PropertyForm';
-import { buildPropertyMutatePayload } from './utils';
+import { CoreEntityType } from '@prisma/client';
 
 export default function PropertyAdd({
   onAdded,
 }: {
   onAdded?: (property: PropertyType) => void;
 }) {
-  const createProperty = trpc.property.createProperty.useMutation({
-    onSettled: () => close(),
-    onSuccess: (data) => onAdded && onAdded(data),
-  });
-
-  const [opened, { open, close }] = useDisclosure(false);
-
-  const submitHandler = (values: PropertyFormValues) =>
-    createProperty.mutate(buildPropertyMutatePayload({ values }));
-
   return (
     <div className="flex flex-col items-center">
-      <Button onClick={open} className="w-[400px]">
-        Add Property
-      </Button>
-      <Modal
-        opened={opened}
-        onClose={close}
-        size="lg"
-        centered
-        closeOnClickOutside={false}
-      >
-        <PropertyForm
-          onSubmit={submitHandler}
-          submitting={createProperty.isLoading}
-        />
-      </Modal>
+      <EntityAddDialog
+        triggerLabel="Add Property"
+        entityType={CoreEntityType.PROPERTY}
+        onAdded={onAdded}
+      />
     </div>
   );
 }

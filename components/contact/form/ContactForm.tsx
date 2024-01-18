@@ -56,7 +56,6 @@ export default function ContactForm({
 
   return (
     <div className="m-2">
-      <h1>Quick Add: Contact</h1>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           id="name"

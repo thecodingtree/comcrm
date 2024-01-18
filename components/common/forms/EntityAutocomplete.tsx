@@ -3,12 +3,11 @@ import {
   Button,
   CloseButton,
   Combobox,
-  Loader,
   TextInput,
   useCombobox,
 } from '@mantine/core';
 
-import { Input } from '@/components/ui/input';
+import EntityAddDialog from '@/components/entities/EntityAddDialog';
 
 import { useDisclosure } from '@mantine/hooks';
 
@@ -20,8 +19,6 @@ import { SelectOptionCustom } from '@/components/select/SelectWithCustomOption';
 import { useDebouncedValue } from '@mantine/hooks';
 
 import { CoreEntityType } from '@prisma/client';
-
-import EntityAddModal from '@/components/entities/EntityAddModal';
 
 export function EntityAutocomplete({
   type,
@@ -75,9 +72,12 @@ export function EntityAutocomplete({
     ) : (
       withAddOption && (
         <Combobox.Option value={'add_entity'} key={'add_entity'}>
-          <Button w="100%" onClick={open}>
-            Add {searchQuery}
-          </Button>
+          <EntityAddDialog
+            defaultName={value!}
+            triggerLabel={`Add ${searchQuery ?? ''}`}
+            entityType={type!}
+            onAdded={(entity) => setEntity(entity)}
+          />
         </Combobox.Option>
       )
     );
@@ -91,7 +91,8 @@ export function EntityAutocomplete({
 
   const inputRightSection = () => {
     if (isLoading && !disabled) {
-      return <Loader size={18} />;
+      // TODO: ADD LOADER HERE
+      return 'L';
     }
 
     if (entity) {
@@ -146,13 +147,6 @@ export function EntityAutocomplete({
       >
         {options(items || [])}
       </Combobox.Dropdown>
-      <EntityAddModal
-        name={value!}
-        entityType={type!}
-        onAdded={(entity) => setEntity(entity)}
-        opened={opened}
-        close={close}
-      />
     </Combobox>
   );
 }
