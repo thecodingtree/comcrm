@@ -8,7 +8,7 @@ import { useForceUpdate } from '@mantine/hooks';
 import { CoreEntityType, RelationshipType } from '@prisma/client';
 
 import { EntityTypeSelect } from '@/components/select/EntityTypeSelect';
-import { EntityAutocomplete } from '@/components/common/forms/EntityAutocomplete';
+import { EntityAutocomplete } from '@/components/entities/EntityAutocomplete';
 import { RelationshipTypeSelect } from '@/components/select/RelationshipTypeSelect';
 import { trpc } from '@/app/_trpc/client';
 import { EntitySearchResult } from '@/server/sharedTypes';

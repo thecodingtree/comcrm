@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import {
-  Button,
-  CloseButton,
-  Combobox,
-  TextInput,
-  useCombobox,
-} from '@mantine/core';
+import React, { useState, useEffect } from 'react';
+import { Combobox, useCombobox } from '@mantine/core';
+
+import { IconX } from '@tabler/icons-react';
+
+import Loader from '@/components/common/Loader';
+
+import IconInput from '@/components/controls/IconInput';
+
+import { IconButton } from '../controls/Buttons';
 
 import EntityAddDialog from '@/components/entities/EntityAddDialog';
-
-import { useDisclosure } from '@mantine/hooks';
 
 import { trpc } from '@/app/_trpc/client';
 
@@ -37,7 +37,6 @@ export function EntityAutocomplete({
   const [value, setValue] = useState<string | null>(null);
   const [searchQuery] = useDebouncedValue(value, 200);
   const [entity, setEntity] = useState<EntitySearchResult | null>(null);
-  const [opened, { open, close }] = useDisclosure(false);
 
   const { data, isLoading } = trpc.relationship.getEntitiesForSearch.useQuery(
     {
@@ -89,19 +88,17 @@ export function EntityAutocomplete({
     }
   }, [onEntitySelected, entity]);
 
-  const inputRightSection = () => {
+  const inputRightSection = (): React.ReactNode => {
     if (isLoading && !disabled) {
-      // TODO: ADD LOADER HERE
-      return 'L';
+      return <Loader />;
     }
 
     if (entity) {
       return (
-        <CloseButton
-          size="sm"
-          onMouseDown={(event) => event.preventDefault()}
+        <IconButton
+          className="w-full h-full p-0 m-0"
           onClick={() => clearValues()}
-          aria-label="Clear value"
+          icon={<IconX style={{ width: '90%', height: '90%' }} stroke={1} />}
         />
       );
     }
@@ -120,7 +117,7 @@ export function EntityAutocomplete({
       disabled={disabled}
     >
       <Combobox.Target>
-        <TextInput
+        <IconInput
           placeholder="Search entities"
           value={entity?.name || (value ?? '')}
           onChange={(event) => {
@@ -134,10 +131,9 @@ export function EntityAutocomplete({
             combobox.openDropdown();
           }}
           onBlur={() => combobox.closeDropdown()}
-          rightSectionPointerEvents={entity === null ? 'none' : 'all'}
-          multiline
           disabled={disabled}
-          rightSection={inputRightSection()}
+          iconClickable={entity !== null}
+          icon={inputRightSection()}
         />
       </Combobox.Target>
 
