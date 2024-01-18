@@ -1,5 +1,6 @@
-import { ActionIcon } from '@mantine/core';
 import { IconReload } from '@tabler/icons-react';
+
+import { IconButton } from './Buttons';
 
 interface ReloadQueryProps {
   reload: () => void;
@@ -8,13 +9,12 @@ interface ReloadQueryProps {
 export default function ReloadQuery({ reload }: ReloadQueryProps) {
   return (
     <div>
-      <ActionIcon
+      <IconButton
         onClick={() => reload()}
-        variant="default"
-        aria-label="Settings"
-      >
-        <IconReload style={{ width: '70%', height: '70%' }} stroke={1.5} />
-      </ActionIcon>
+        icon={
+          <IconReload style={{ width: '70%', height: '70%' }} stroke={1.5} />
+        }
+      />
     </div>
   );
 }

@@ -1,8 +1,14 @@
 import { useState } from 'react';
 
-import { ActionIcon, TextInput } from '@mantine/core';
+import { TextInput } from '@mantine/core';
 
 import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
+
+import {
+  EditButton,
+  DeleteButton,
+  ConfirmButton,
+} from '@/components/controls/Buttons';
 
 interface EditTitleProps {
   initValue?: string | null;
@@ -22,14 +28,7 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
       {!isEditing ? (
         <div className="flex flex-row">
           <h1 className="italic">{tmpValue ?? 'No Value'}</h1>
-          <ActionIcon
-            m={8}
-            variant="transparent"
-            color="gray"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
-          </ActionIcon>
+          <EditButton onClick={() => setIsEditing(!isEditing)} />
         </div>
       ) : (
         <TextInput
@@ -41,9 +40,7 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
       <div className="flex justify-between">
         {isEditing && (
           <div>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
+            <ConfirmButton
               onClick={() => {
                 setIsEditing(!isEditing);
 
@@ -51,16 +48,9 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
                   onChange(tmpValue);
                 }
               }}
-            >
-              <IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
+            />
+
+            <DeleteButton onClick={() => setIsEditing(!isEditing)} />
           </div>
         )}
       </div>
