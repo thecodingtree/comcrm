@@ -1,32 +1,47 @@
-import { useRouter } from 'next/navigation';
-import { ActionIcon } from '@mantine/core';
-import {
-  IconPencil,
-  IconX,
-  IconCheck,
-  IconArrowNarrowLeft,
-} from '@tabler/icons-react';
+import { Button } from '@/components/ui/button';
+import { IconPencil, IconX, IconCheck } from '@tabler/icons-react';
+
+export function IconButton({
+  onClick,
+  icon,
+}: {
+  onClick?: () => void;
+  icon: React.ReactNode;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      className="p-0 hover:bg-transparent"
+      onClick={onClick}
+    >
+      {icon}
+    </Button>
+  );
+}
 
 export function EditButton({ onClick }: { onClick?: () => void }) {
   return (
-    <ActionIcon variant="transparent" color="gray" onClick={onClick}>
-      <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
-    </ActionIcon>
+    <IconButton
+      onClick={onClick}
+      icon={<IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />}
+    />
   );
 }
 
 export function DeleteButton({ onClick }: { onClick?: () => void }) {
   return (
-    <ActionIcon variant="transparent" color="gray" onClick={onClick}>
-      <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
-    </ActionIcon>
+    <IconButton
+      onClick={onClick}
+      icon={<IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />}
+    />
   );
 }
 
 export function ConfirmButton({ onClick }: { onClick?: () => void }) {
   return (
-    <ActionIcon variant="transparent" color="gray" onClick={onClick}>
-      <IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />
-    </ActionIcon>
+    <IconButton
+      onClick={onClick}
+      icon={<IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />}
+    />
   );
 }

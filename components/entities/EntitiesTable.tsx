@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { UnstyledButton, Center, TextInput, rem, keys } from '@mantine/core';
+import { TextInput, rem, keys } from '@mantine/core';
 
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import {
@@ -62,14 +63,12 @@ function ThSortable({
     : IconSelector;
   return (
     <Th key={thKey}>
-      <UnstyledButton onClick={onSort} className={classes.control}>
-        <div className="flex flex-row justify-between">
-          <p className="text-sm font-medium">{children}</p>
-          <Center className={classes.icon}>
-            <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </Center>
+      <Button onClick={onSort} variant="ghost" className="w-full">
+        <div className=" flex flex-row w-full items-start justify-between">
+          <span>{children}</span>
+          <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
         </div>
-      </UnstyledButton>
+      </Button>
     </Th>
   );
 }

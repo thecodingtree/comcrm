@@ -1,10 +1,11 @@
-import { UnstyledButton, rem, Menu, useMantineTheme } from '@mantine/core';
+import { rem, Menu, useMantineTheme } from '@mantine/core';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { IconChevronRight, IconLogout } from '@tabler/icons-react';
 
 import useUser from '@/hooks/useUser';
 
 import classes from './AccountMenu.module.css';
+import { Button } from '../ui/button';
 
 export function AccountMenu() {
   const theme = useMantineTheme();
@@ -18,25 +19,23 @@ export function AccountMenu() {
       withinPortal
     >
       <Menu.Target>
-        <UnstyledButton className={classes.user}>
-          <div className="flex flex-row gap-2">
-            <Avatar>
-              <AvatarImage src={user?.image} />
-              <AvatarFallback>{`${user?.name[0]}`}</AvatarFallback>
-            </Avatar>
+        <div className="flex flex-row gap-2 cursor-pointer">
+          <Avatar>
+            <AvatarImage src={user?.image} />
+            <AvatarFallback>{`${user?.name[0]}`}</AvatarFallback>
+          </Avatar>
 
-            <div style={{ flex: 1 }}>
-              <p className="text-sm font-bold">{user?.name}</p>
+          <div style={{ flex: 1 }}>
+            <p className="text-sm font-bold">{user?.name}</p>
 
-              <p className="text-xs text-slate-400">{user?.email}</p>
-            </div>
-
-            <IconChevronRight
-              style={{ width: rem(14), height: rem(14) }}
-              stroke={1.5}
-            />
+            <p className="text-xs text-slate-400">{user?.email}</p>
           </div>
-        </UnstyledButton>
+
+          <IconChevronRight
+            style={{ width: rem(14), height: rem(14) }}
+            stroke={1.5}
+          />
+        </div>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
