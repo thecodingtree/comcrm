@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { TextInput } from '@mantine/core';
+import { Input } from '@/components/ui/input';
 
 import {
   EditButton,
@@ -50,7 +50,7 @@ export default function EditText({
       {!isEditing ? (
         <p className="italic">{tmpValue ?? 'No Value'}</p>
       ) : (
-        <TextInput
+        <Input
           placeholder={label ?? ''}
           value={tmpValue ?? ''}
           onChange={(e) => handleChange(e)}

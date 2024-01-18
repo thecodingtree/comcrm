@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { TextInput } from '@mantine/core';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 import {
   EditButton,
@@ -57,23 +58,27 @@ export default function EditAddress({
         </div>
       ) : (
         <div className="flex flex-col gap-1">
-          <TextInput
-            label="street"
+          <Label htmlFor="street">street</Label>
+          <Input
+            id="street"
             defaultValue={street}
             onChange={(e) => setStreet(e.currentTarget.value)}
           />
-          <TextInput
-            label="city"
+          <Label htmlFor="city">city</Label>
+          <Input
+            id="city"
             defaultValue={city}
             onChange={(e) => setCity(e.currentTarget.value)}
           />
-          <TextInput
-            label="state"
+          <Label htmlFor="state">state</Label>
+          <Input
+            id="state"
             defaultValue={state}
             onChange={(e) => setState(e.currentTarget.value)}
           />
-          <TextInput
-            label="zip"
+          <Label htmlFor="zip">zip</Label>
+          <Input
+            id="zip"
             defaultValue={zip}
             onChange={(e) => setZip(e.currentTarget.value)}
           />
