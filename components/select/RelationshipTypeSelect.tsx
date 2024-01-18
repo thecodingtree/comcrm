@@ -1,5 +1,15 @@
+import { useState } from 'react';
 import { CoreEntityType, RelationshipType } from '@prisma/client';
-import { SelectWithCustomOption } from './SelectWithCustomOption';
+
+import { IconChevronDown } from '@tabler/icons-react';
+
+import { Button } from '@/components/ui/button';
+import { Command, CommandGroup, CommandItem } from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 const getRelationshipsForTypes = (
   from: keyof typeof CoreEntityType,
@@ -131,8 +141,11 @@ export function RelationshipTypeSelect({
   disabled?: boolean;
   fromType: keyof typeof CoreEntityType;
   toType: keyof typeof CoreEntityType;
-  onSelect: (value: RelationshipType) => void;
+  onSelect: (value?: RelationshipType) => void;
 }) {
+  const [value, setValue] = useState<RelationshipType | undefined>(undefined);
+  const [open, setOpen] = useState(false);
+
   const relationshipTypeItems = getRelationshipsForTypes(fromType, toType).map(
     (item) => ({
       value: item.key,
@@ -140,12 +153,62 @@ export function RelationshipTypeSelect({
     })
   );
 
+  const clearValue = () => {
+    setValue(undefined);
+
+    if (onSelect) {
+      onSelect(undefined);
+    }
+  };
+
   return (
-    <SelectWithCustomOption
-      items={relationshipTypeItems}
-      placeholder={'Relationship Type'}
-      onSelect={(val) => onSelect(val as RelationshipType)}
-      disabled={disabled}
-    />
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          disabled={disabled}
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {value
+            ? relationshipTypeItems?.find(
+                (relationshipTypeItems) =>
+                  relationshipTypeItems?.value === value
+              )?.label
+            : placeholder || 'Pick value'}
+          <IconChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-56 p-0">
+        <Command>
+          <CommandGroup>
+            {relationshipTypeItems.map((item) => (
+              <CommandItem
+                key={item.value}
+                value={item.value}
+                onSelect={(currentValue) => {
+                  // For some reason, currentValue is coverted to lowercase string? This is a workaround.
+                  const selValue =
+                    currentValue.toUpperCase() as RelationshipType;
+
+                  if (selValue !== value) {
+                    setValue(selValue);
+                  }
+
+                  setOpen(false);
+
+                  if (onSelect) {
+                    onSelect(selValue);
+                  }
+                }}
+              >
+                <div className="flex flex-row gap-1">{item.label}</div>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
