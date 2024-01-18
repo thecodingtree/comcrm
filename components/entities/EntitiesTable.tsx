@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { TextInput, rem, keys } from '@mantine/core';
+import { rem, keys } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -148,20 +148,7 @@ export function EntitiesTable({
 
   return (
     <ScrollArea>
-      {showSearch && (
-        <TextInput
-          placeholder="Search by any field"
-          mb="md"
-          leftSection={
-            <IconSearch
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-          value={search}
-          onChange={handleSearchChange}
-        />
-      )}
+      {showSearch && <div>{'Search!'}</div>}
       <Table className="m-w-[700px]">
         <TableHeader>
           <TableRow>

@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-import { TextInput } from '@mantine/core';
-
-import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
+import { Input } from '@/components/ui/input';
 
 import {
   EditButton,
@@ -31,7 +29,7 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
           <EditButton onClick={() => setIsEditing(!isEditing)} />
         </div>
       ) : (
-        <TextInput
+        <Input
           placeholder="name"
           value={tmpValue ?? ''}
           onChange={(e) => handleChange(e)}
