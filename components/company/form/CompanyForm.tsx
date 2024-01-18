@@ -49,7 +49,6 @@ export default function CompaniesForm({
 
   return (
     <div className="m-2">
-      <h1>Quick Add: Company</h1>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           id="name"

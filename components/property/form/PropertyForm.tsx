@@ -50,7 +50,6 @@ export default function PropertyForm({
 
   return (
     <div className="m-2">
-      <h1>Quick Add: Property</h1>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           id="name"
