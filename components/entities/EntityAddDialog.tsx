@@ -85,7 +85,7 @@ export default function EntityAddDialog({
 
   return (
     <Dialog open={opened} onOpenChange={setOpened}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>{triggerLabel}</Button>
       </DialogTrigger>
       <DialogContent>{AddForm(defaultName)}</DialogContent>

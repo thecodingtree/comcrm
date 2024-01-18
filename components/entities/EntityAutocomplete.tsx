@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Combobox, useCombobox } from '@mantine/core';
+import React, { useState } from 'react';
 
-import { IconX } from '@tabler/icons-react';
+import { IconSearch, IconChevronDown } from '@tabler/icons-react';
 
 import Loader from '@/components/common/Loader';
 
+import { Button } from '@/components/ui/button';
 import IconInput from '@/components/controls/IconInput';
-
-import { IconButton } from '../controls/Buttons';
 
 import EntityAddDialog from '@/components/entities/EntityAddDialog';
 
@@ -15,134 +13,129 @@ import { trpc } from '@/app/_trpc/client';
 
 import { EntitySearchResult } from '@/server/sharedTypes';
 
-import { SelectOptionCustom } from '@/components/select/SelectWithCustomOption';
-import { useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedState } from '@mantine/hooks';
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 
 import { CoreEntityType } from '@prisma/client';
+
+const EntityList = ({
+  entities,
+  onEntitySelected,
+}: {
+  entities?: EntitySearchResult[];
+  onEntitySelected: (id: string) => void;
+}) => {
+  return (
+    <CommandList>
+      <CommandGroup>
+        {entities?.map((entity) => (
+          <CommandItem
+            key={entity.id}
+            value={entity.id}
+            onSelect={onEntitySelected}
+          >
+            {entity.name}
+          </CommandItem>
+        ))}
+      </CommandGroup>
+    </CommandList>
+  );
+};
 
 export function EntityAutocomplete({
   type,
   disabled = false,
   onEntitySelected,
-  withAddOption = false,
 }: {
   type?: CoreEntityType;
   disabled?: boolean;
   onEntitySelected?: (entity: EntitySearchResult) => void;
   withAddOption?: boolean;
 }) {
-  const combobox = useCombobox({
-    onDropdownClose: () => combobox.resetSelectedOption(),
-  });
-  const [value, setValue] = useState<string | null>(null);
-  const [searchQuery] = useDebouncedValue(value, 200);
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useDebouncedState('', 200);
   const [entity, setEntity] = useState<EntitySearchResult | null>(null);
 
-  const { data, isLoading } = trpc.relationship.getEntitiesForSearch.useQuery(
-    {
-      filter: searchQuery ? { name: searchQuery! } : undefined,
-      type,
-    },
-    { trpc: { abortOnUnmount: true } }
-  );
-
-  const clearValues = () => {
-    setValue(null);
-    setEntity(null);
-  };
-
-  const items = data?.map((item) => ({
-    value: item.id,
-    label: item.name,
-    description: item.type,
-  }));
-
-  const options = (
-    items: { value: string; label: string; description: CoreEntityType }[]
-  ) => {
-    const resultOptions = items?.map((item) => (
-      <Combobox.Option value={item.value} key={item.value}>
-        <SelectOptionCustom {...item} />
-      </Combobox.Option>
-    ));
-
-    return resultOptions?.length ? (
-      <Combobox.Options>{resultOptions}</Combobox.Options>
-    ) : (
-      withAddOption && (
-        <Combobox.Option value={'add_entity'} key={'add_entity'}>
-          <EntityAddDialog
-            defaultName={value!}
-            triggerLabel={`Add ${searchQuery ?? ''}`}
-            entityType={type!}
-            onAdded={(entity) => setEntity(entity)}
-          />
-        </Combobox.Option>
-      )
+  const { data, isLoading, refetch } =
+    trpc.relationship.getEntitiesForSearch.useQuery(
+      {
+        filter: searchQuery ? { name: searchQuery! } : undefined,
+        type,
+      },
+      {
+        trpc: { abortOnUnmount: true },
+        refetchOnMount: false,
+      }
     );
-  };
 
-  useEffect(() => {
-    if (entity && onEntitySelected) {
+  const onEntitySelectedHandler = (id: string) => {
+    const entity = data?.find((entity) => entity.id === id)!;
+
+    setEntity(entity);
+    setOpen(false);
+
+    if (onEntitySelected) {
       onEntitySelected(entity);
     }
-  }, [onEntitySelected, entity]);
-
-  const inputRightSection = (): React.ReactNode => {
-    if (isLoading && !disabled) {
-      return <Loader />;
-    }
-
-    if (entity) {
-      return (
-        <IconButton
-          className="w-full h-full p-0 m-0"
-          onClick={() => clearValues()}
-          icon={<IconX style={{ width: '90%', height: '90%' }} stroke={1} />}
-        />
-      );
-    }
-
-    return null;
   };
 
   return (
-    <Combobox
-      onOptionSubmit={(optionValue) => {
-        setEntity(data?.find((item) => item.id === optionValue) || null);
-        combobox.closeDropdown();
-      }}
-      withinPortal={true}
-      store={combobox}
-      disabled={disabled}
-    >
-      <Combobox.Target>
-        <IconInput
-          placeholder="Search entities"
-          value={entity?.name || (value ?? '')}
-          onChange={(event) => {
-            setValue(event.currentTarget.value);
-            setEntity(null);
-            combobox.resetSelectedOption();
-            combobox.openDropdown();
-          }}
-          onClick={() => combobox.openDropdown()}
-          onFocus={() => {
-            combobox.openDropdown();
-          }}
-          onBlur={() => combobox.closeDropdown()}
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
           disabled={disabled}
-          iconClickable={entity !== null}
-          icon={inputRightSection()}
-        />
-      </Combobox.Target>
+        >
+          {entity ? entity?.name : 'Select entity...'}
+          <IconChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
 
-      <Combobox.Dropdown
-        hidden={(value?.length || 0) === 0 || isLoading || entity !== null}
-        onReset={() => setEntity(null)}
-      >
-        {options(items || [])}
-      </Combobox.Dropdown>
-    </Combobox>
+      <PopoverContent>
+        <Command>
+          <IconInput
+            onChange={(e) => setSearchQuery(e.currentTarget.value)}
+            placeholder="Search entities..."
+            icon={isLoading ? <Loader /> : <IconSearch />}
+          />
+          {!isLoading &&
+            (data && data?.length ? (
+              <EntityList
+                entities={data}
+                onEntitySelected={onEntitySelectedHandler}
+              />
+            ) : (
+              <EntityAddDialog
+                entityType={type!}
+                triggerLabel={`Add ${searchQuery ? searchQuery : 'New Enity'}`}
+                defaultName={searchQuery ?? ''}
+                onAdded={(data) => {
+                  setEntity(data);
+                  setOpen(false);
+
+                  if (onEntitySelected) {
+                    onEntitySelected(data);
+                  }
+                }}
+              />
+            ))}
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
