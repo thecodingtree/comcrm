@@ -1,11 +1,8 @@
-import { rem, Menu, useMantineTheme } from '@mantine/core';
+import { Menu, useMantineTheme } from '@mantine/core';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { IconChevronRight, IconLogout } from '@tabler/icons-react';
 
 import useUser from '@/hooks/useUser';
-
-import classes from './AccountMenu.module.css';
-import { Button } from '../ui/button';
 
 export function AccountMenu() {
   const theme = useMantineTheme();
@@ -31,20 +28,13 @@ export function AccountMenu() {
             <p className="text-xs text-slate-400">{user?.email}</p>
           </div>
 
-          <IconChevronRight
-            style={{ width: rem(14), height: rem(14) }}
-            stroke={1.5}
-          />
+          <IconChevronRight size={24} stroke={1.5} />
         </div>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
           leftSection={
-            <IconLogout
-              style={{ width: rem(16), height: rem(16) }}
-              color={theme.colors.blue[6]}
-              stroke={1.5}
-            />
+            <IconLogout size={24} color={theme.colors.blue[6]} stroke={1.5} />
           }
           onClick={() => signOut()}
         >
