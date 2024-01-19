@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { rem, keys } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -18,12 +17,9 @@ import {
   IconSelector,
   IconChevronDown,
   IconChevronUp,
-  IconSearch,
 } from '@tabler/icons-react';
 
 import { ContactType, PropertyType, CompanyType } from '@/server/sharedTypes';
-
-import classes from './EntitiesTable.module.css';
 
 type RowData = CompanyType | ContactType | PropertyType;
 
@@ -43,7 +39,7 @@ function Th({
   children: React.ReactNode;
 }) {
   return (
-    <TableHead key={thKey} className={classes.th}>
+    <TableHead key={thKey}>
       <p className="text-sm font-medium">{children}</p>
     </TableHead>
   );
@@ -66,7 +62,7 @@ function ThSortable({
       <Button onClick={onSort} variant="ghost" className="w-full">
         <div className=" flex flex-row w-full items-start justify-between">
           <span>{children}</span>
-          <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+          <Icon size={24} stroke={1.5} />
         </div>
       </Button>
     </Th>
@@ -76,9 +72,7 @@ function ThSortable({
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) =>
-      item[key] ? item[key]?.toString().toLowerCase().includes(query) : false
-    )
+    item.name ? item.name.toLowerCase().includes(query) : false
   );
 }
 
