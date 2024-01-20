@@ -1,21 +1,22 @@
-import { Menu, useMantineTheme } from '@mantine/core';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { IconChevronRight, IconLogout } from '@tabler/icons-react';
+
+import {
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from '@/components/ui/navigation-menu';
 
 import useUser from '@/hooks/useUser';
 
 export function AccountMenu() {
-  const theme = useMantineTheme();
   const { user, signOut } = useUser();
 
   return (
-    <Menu
-      transitionProps={{ transition: 'pop-top-right' }}
-      position="top-end"
-      width={220}
-      withinPortal
-    >
-      <Menu.Target>
+    <NavigationMenuItem className="absolute bottom-0">
+      <NavigationMenuTrigger>
+        {' '}
         <div className="flex flex-row gap-2 cursor-pointer">
           <Avatar>
             <AvatarImage src={user?.image} />
@@ -30,17 +31,12 @@ export function AccountMenu() {
 
           <IconChevronRight size={24} stroke={1.5} />
         </div>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item
-          leftSection={
-            <IconLogout size={24} color={theme.colors.blue[6]} stroke={1.5} />
-          }
-          onClick={() => signOut()}
-        >
-          Sign Out
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+      </NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <NavigationMenuLink onClick={() => signOut()}>
+          Signout
+        </NavigationMenuLink>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
   );
 }

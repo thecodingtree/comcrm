@@ -4,7 +4,6 @@ import React from 'react';
 
 import Navbar from '@/components/navbar/Navbar';
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Burger } from '@mantine/core';
 import { SessionProvider } from 'next-auth/react';
 
 export default function DashboardLayout({ children }: { children: any }) {
@@ -12,27 +11,11 @@ export default function DashboardLayout({ children }: { children: any }) {
 
   return (
     <SessionProvider>
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{
-          width: 300,
-          breakpoint: 'sm',
-          collapsed: { mobile: !opened },
-        }}
-      >
-        <AppShell.Header>
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <div>Logo</div>
-        </AppShell.Header>
+      <div className="flex flex-row">
+        <Navbar />
 
-        <AppShell.Navbar>
-          <Navbar />
-        </AppShell.Navbar>
-
-        <AppShell.Main>
-          <div className="container mx-auto pt-4 ">{children}</div>
-        </AppShell.Main>
-      </AppShell>
+        <main className="container mx-auto p-4 min-h-screen">{children}</main>
+      </div>
     </SessionProvider>
   );
 }
