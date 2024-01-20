@@ -15,7 +15,10 @@ import '@/app/globals.css';
 
 import { theme } from '../theme';
 
-import DashboardLayout from '@/components/layouts/DashboardLayout';
+//import DashboardLayout from '@/components/layouts/DashboardLayout';
+
+import Header from '@/components/common/Header';
+import Footer from '@/components/common/Footer';
 
 export const metadata = {
   title: 'COMCRM - The Modern CRM for Real Estate Agents',
@@ -48,7 +51,9 @@ export default function RootLayout({ children }: { children: any }) {
       >
         <MantineProvider theme={theme}>
           <TRPCProvider headers={headers()}>
-            <DashboardLayout>{children}</DashboardLayout>
+            <Header />
+            {children}
+            <Footer />
           </TRPCProvider>
         </MantineProvider>
         <Analytics />
