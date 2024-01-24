@@ -2,16 +2,17 @@
 
 import { useParams } from 'next/navigation';
 
-import { Text, Avatar, Space, Grid } from '@mantine/core';
-
 import { CoreEntityType } from '@prisma/client';
 
 import { trpc } from '@/app/_trpc/client';
+
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import CompanyInfo from './CompanyInfo';
 import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 import EntitiyNotesTable from '../entities/EntityNotesTable';
+import { IconCompany } from '../common/icons';
 
 export default function CompanyDetails() {
   const params = useParams();
@@ -23,31 +24,30 @@ export default function CompanyDetails() {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <Grid>
-      <Grid.Col span={{ base: 12, lg: 2 }}>
-        <Avatar color="blue" radius="xl" size={150} src={data?.image} />
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+    <div className="grid grid-cols-3">
+      <div>
+        <Avatar className="min-w-40 min-h-40">
+          <AvatarImage src={data?.image} />
+          <AvatarFallback className="w-full">
+            <IconCompany size={64} />
+          </AvatarFallback>
+        </Avatar>
+      </div>
+      <div>
         <CompanyInfo companyId={companyId} />
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, lg: 5 }}>
+      </div>
+      <div>
         <EntityNotesBrief entityId={companyId} />
-      </Grid.Col>
-      <Grid.Col span={12}>
-        <Space h="md" />
-      </Grid.Col>
-      <Grid.Col span={12}>
-        <Space h="md" />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <RelationshipsTable
           fromEntityId={companyId!}
           fromEntityType={CoreEntityType.COMPANY}
         />
-      </Grid.Col>
-      <Grid.Col span={12}>
+      </div>
+      <div className="col-span-3">
         <EntitiyNotesTable entity={companyId!} />
-      </Grid.Col>
-    </Grid>
+      </div>
+    </div>
   );
 }

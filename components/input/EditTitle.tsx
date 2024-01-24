@@ -1,8 +1,12 @@
 import { useState } from 'react';
 
-import { Stack, Flex, Title, ActionIcon, TextInput, Box } from '@mantine/core';
+import { Input } from '@/components/ui/input';
 
-import { IconPencil, IconCheck, IconX } from '@tabler/icons-react';
+import {
+  EditButton,
+  DeleteButton,
+  ConfirmButton,
+} from '@/components/controls/Buttons';
 
 interface EditTitleProps {
   initValue?: string | null;
@@ -18,32 +22,23 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
   };
 
   return (
-    <Stack gap="xs">
+    <div className="flex flex-col gap-1">
       {!isEditing ? (
-        <Flex>
-          <Title fs="italic">{tmpValue ?? 'No Value'}</Title>
-          <ActionIcon
-            m={8}
-            variant="transparent"
-            color="gray"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
-          </ActionIcon>
-        </Flex>
+        <div className="flex flex-row">
+          <h1 className="italic">{tmpValue ?? 'No Value'}</h1>
+          <EditButton onClick={() => setIsEditing(!isEditing)} />
+        </div>
       ) : (
-        <TextInput
+        <Input
           placeholder="name"
           value={tmpValue ?? ''}
           onChange={(e) => handleChange(e)}
         />
       )}
-      <Flex justify="space-between">
+      <div className="flex justify-between">
         {isEditing && (
-          <Box>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
+          <div>
+            <ConfirmButton
               onClick={() => {
                 setIsEditing(!isEditing);
 
@@ -51,19 +46,12 @@ export default function EditText({ initValue, onChange }: EditTitleProps) {
                   onChange(tmpValue);
                 }
               }}
-            >
-              <IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon
-              variant="transparent"
-              color="gray"
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>
-          </Box>
+            />
+
+            <DeleteButton onClick={() => setIsEditing(!isEditing)} />
+          </div>
         )}
-      </Flex>
-    </Stack>
+      </div>
+    </div>
   );
 }

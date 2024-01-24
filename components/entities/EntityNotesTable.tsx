@@ -1,5 +1,15 @@
 import { trpc } from '@/app/_trpc/client';
-import { Table, Stack, Box, ScrollArea } from '@mantine/core';
+
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+import {
+  Table,
+  TableHeader,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table';
 
 import { AddNote } from '../content/Notes';
 
@@ -17,43 +27,38 @@ export default function EntitiyNotesTable({ entity }: { entity: string }) {
   const rowRenderer = (row: NoteType) => {
     const date = new Date(row.createdAt);
     return (
-      <Table.Tr key={row.id}>
-        <Table.Td>{`${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`}</Table.Td>
-        <Table.Td>{row.content}</Table.Td>
-      </Table.Tr>
+      <TableRow key={row.id}>
+        <TableCell>{`${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`}</TableCell>
+        <TableCell>{row.content}</TableCell>
+      </TableRow>
     );
   };
 
   return (
     <ScrollArea>
-      <Table
-        horizontalSpacing="md"
-        verticalSpacing="xs"
-        miw={700}
-        layout="fixed"
-      >
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Date</Table.Th>
-            <Table.Th>Content</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
+      <Table className="min-w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Date</TableHead>
+            <TableHead>Content</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data?.map((row) => rowRenderer(row))}
-          <Table.Tr>
-            <Table.Td colSpan={2}>
+          <TableRow>
+            <TableCell colSpan={2}>
               {
-                <Stack w="50%" justify="center">
+                <div className="flex flex-col w-[50%] justify-center">
                   <AddNote
                     onAddNote={(content) =>
                       createNote.mutate({ entityId: entity, content })
                     }
                   />
-                </Stack>
+                </div>
               }
-            </Table.Td>
-          </Table.Tr>
-        </Table.Tbody>
+            </TableCell>
+          </TableRow>
+        </TableBody>
       </Table>
     </ScrollArea>
   );

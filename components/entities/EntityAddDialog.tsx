@@ -1,6 +1,10 @@
 'use client';
 
-import { Modal } from '@mantine/core';
+import { useState } from 'react';
+
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+
+import { Button } from '@/components/ui/button';
 
 import { CompanyFormValues } from '@/components/company/form/CompanyForm';
 import CompanyForm from '@/components/company/form/CompanyForm';
@@ -17,31 +21,31 @@ import { buildPropertyMutatePayload } from '@/components/property/utils';
 import { trpc } from '@/app/_trpc/client';
 import { CoreEntityType } from '@prisma/client';
 
-export default function EntityAddModal({
-  name,
+export default function EntityAddDialog({
+  triggerLabel,
+  defaultName,
   entityType,
-  opened = false,
-  close,
   onAdded,
 }: {
-  name?: string;
+  triggerLabel?: string;
+  defaultName?: string;
   entityType: CoreEntityType;
-  opened?: boolean;
-  close: () => void;
   onAdded?: (data: any) => void;
 }) {
+  const [opened, setOpened] = useState(false);
+
   const createCompany = trpc.company.createCompany.useMutation({
-    onSettled: () => close(),
+    onSettled: () => setOpened(false),
     onSuccess: (data) => onAdded && onAdded(data),
   });
 
   const createContact = trpc.contact.createContact.useMutation({
-    onSettled: () => close(),
+    onSettled: () => setOpened(false),
     onSuccess: (data) => onAdded && onAdded(data),
   });
 
   const createProperty = trpc.property.createProperty.useMutation({
-    onSettled: () => close(),
+    onSettled: () => setOpened(false),
     onSuccess: (data) => onAdded && onAdded(data),
   });
 
@@ -80,14 +84,11 @@ export default function EntityAddModal({
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={close}
-      size="lg"
-      centered
-      closeOnClickOutside={false}
-    >
-      {AddForm(name)}
-    </Modal>
+    <Dialog open={opened} onOpenChange={setOpened}>
+      <DialogTrigger asChild>
+        <Button>{triggerLabel}</Button>
+      </DialogTrigger>
+      <DialogContent>{AddForm(defaultName)}</DialogContent>
+    </Dialog>
   );
 }
