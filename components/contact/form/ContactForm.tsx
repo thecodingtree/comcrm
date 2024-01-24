@@ -1,7 +1,20 @@
 'use client';
 
-import { Paper, Title, TextInput, Button, Group } from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
+import { Button } from '@/components/ui/button';
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+
+import { Input } from '@/components/ui/input';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
 
@@ -25,7 +38,7 @@ export default function ContactForm({
   submitting,
 }: {
   name?: string;
-  onSubmit?: (values: ContactFormValues) => void;
+  onSubmit: (values: ContactFormValues) => void;
   submitting?: boolean;
 }) {
   const handleSubmit = (values: ContactFormValues) => {
@@ -41,69 +54,99 @@ export default function ContactForm({
     return { name, surName };
   };
 
-  const form = useForm({
-    initialValues: {
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
       name: splitNames(name)?.name || '',
       surName: splitNames(name)?.surName || '',
       phone: '',
       alt_phone: '',
       email: '',
     },
-    validate: zodResolver(schema),
   });
 
   return (
-    <Paper withBorder={false} m={4}>
-      <Title>Quick Add: Contact</Title>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput
-          id="name"
-          name="name"
-          label="First Name"
-          placeholder="First Name"
-          mt="lg"
-          withAsterisk
-          {...form.getInputProps('name')}
-        />
-        <TextInput
-          id="surName"
-          name="surName"
-          label="Last Name"
-          placeholder="Last Name"
-          mt="lg"
-          withAsterisk
-          {...form.getInputProps('surName')}
-        />
-        <TextInput
-          id="phone"
-          name="phone"
-          label="Phone"
-          placeholder="Phone"
-          mt="lg"
-          {...form.getInputProps('phone')}
-        />
-        <TextInput
-          id="alt_phone"
-          name="alt_phone"
-          label="Alt Phone"
-          placeholder="Alt Phone"
-          mt="lg"
-          {...form.getInputProps('alt_phone')}
-        />
-        <TextInput
-          id="email"
-          name="email"
-          label="Email"
-          placeholder="Email"
-          mt="lg"
-          {...form.getInputProps('email')}
-        />
-        <Group justify="center" mt="md">
-          <Button type="submit" disabled={submitting}>
-            Add Contact
-          </Button>
-        </Group>
-      </form>
-    </Paper>
+    <div className="m-2">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Required. Must be at least 1 character."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="surName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Required. Must be at least 1 character."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input placeholder="(XXX) XXX-XXXX" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="alt_phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Alt. Phone</FormLabel>
+                <FormControl>
+                  <Input placeholder="(XXX) XXX-XXXX" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="email@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-col justify-center mt-2">
+            <Button type="submit" disabled={submitting}>
+              Add Contact
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

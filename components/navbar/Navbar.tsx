@@ -5,7 +5,13 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-import classes from './Navbar.module.css';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
 
 import { AccountMenu } from '@/components/account/AccountMenu';
 
@@ -31,27 +37,39 @@ export default function Navbar() {
   const [active, setActive] = useState(getActiveFromPath(pathName || ''));
 
   const links = data.map((item) => (
-    <Link
-      className={classes.link}
-      data-active={item.label === active || undefined}
-      href={item.link}
-      key={item.label}
-      onClick={() => {
-        setActive(item.label);
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </Link>
+    <NavigationMenuItem key={item.label}>
+      <Link
+        className=""
+        data-active={item.label === active || undefined}
+        href={item.link}
+        key={item.label}
+        legacyBehavior
+        passHref
+      >
+        <NavigationMenuLink
+          onClick={() => {
+            setActive(item.label);
+          }}
+          className={navigationMenuTriggerStyle()}
+        >
+          <item.icon size={24} stroke={1.5} />
+          <span>{item.label}</span>
+        </NavigationMenuLink>
+      </Link>
+    </NavigationMenuItem>
   ));
 
   return (
-    <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>{links}</div>
-
-      <div className={classes.footer}>
+    <aside className="w-64 h-screen bg-slate-50">
+      <NavigationMenu
+        orientation="vertical"
+        className=" max-w-full h-full justify-start"
+      >
+        <NavigationMenuList className="top-0 flex-col w-full">
+          {links}
+        </NavigationMenuList>
         <AccountMenu />
-      </div>
-    </nav>
+      </NavigationMenu>
+    </aside>
   );
 }

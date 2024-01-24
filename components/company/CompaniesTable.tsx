@@ -1,6 +1,7 @@
 'use client';
 
-import { Table, Text, Space } from '@mantine/core';
+import { TableRow, TableCell } from '@/components/ui/table';
+
 import Link from 'next/link';
 
 import { CompanyReservedAttributes, CompanyType } from '@/server/sharedTypes';
@@ -74,25 +75,25 @@ export default function CompaniesTable({
         (attr) => attr.name === CompanyReservedAttributes.SIZE
       )?.value;
       return (
-        <Table.Tr key={row.name}>
-          <Table.Td>{row.name}</Table.Td>
-          <Table.Td>{size}</Table.Td>
-          <Table.Td>{website}</Table.Td>
-          <Table.Td>{row.phone}</Table.Td>
-          <Table.Td>
+        <TableRow key={row.name}>
+          <TableCell>{row.name}</TableCell>
+          <TableCell>{size}</TableCell>
+          <TableCell>{website}</TableCell>
+          <TableCell>{row.phone}</TableCell>
+          <TableCell>
             <div>{deleteBtn(row.id)}</div>
             <div>{goToCompany(row.id)}</div>
-          </Table.Td>
-        </Table.Tr>
+          </TableCell>
+        </TableRow>
       );
     } else {
       return (
-        <Table.Tr key="empty">
-          <Table.Td colSpan={columns.length}>
-            <Text ta="center">{'No Companies'}</Text>
-            <Space h="lg" />
-          </Table.Td>
-        </Table.Tr>
+        <TableRow key="empty">
+          <TableCell colSpan={columns.length}>
+            <p className="text-center">No Companies</p>
+            <div className="min-h-4" />
+          </TableCell>
+        </TableRow>
       );
     }
   };

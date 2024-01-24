@@ -1,7 +1,5 @@
 'use client';
 
-import { Space } from '@mantine/core';
-
 import PropertiesTable from '@/components/property/PropertiesTable';
 import PropertyAdd from '@/components/property/PropertyAdd';
 import ReloadQuery from '../controls/ReloadQuery';
@@ -29,7 +27,7 @@ export default function PropertiesPage() {
         onDeleteProperty={deletePropertyHandler}
       />
       <ReloadQuery reload={refetch} />
-      <Space h="lg" />
+      <div className="min-h-4" />
       <PropertyAdd onAdded={() => refetch()} />
     </div>
   );

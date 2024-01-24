@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { Text, Space, TextInput, Stack, Flex, Box } from '@mantine/core';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 import {
   EditButton,
@@ -44,47 +45,49 @@ export default function EditAddress({
   };
 
   return (
-    <Stack gap="xs">
-      <Flex justify="left">
-        <Text size="md" c="dimmed">
-          {label}
-        </Text>
-        <Space w="lg" />
+    <div className="flex flex-col gap-1">
+      <div className="flex justify-start gap-4">
+        <p className="text-base text-slate-400">{label}</p>
+
         {!isEditing && <EditButton onClick={() => setIsEditing(!isEditing)} />}
-      </Flex>
+      </div>
       {!isEditing ? (
-        <Stack gap="xs">
-          <Text fs="italic">{street}</Text>
-          <Text fs="italic">{`${city} ${state} ${zip}`}</Text>
-        </Stack>
+        <div className="flex flex-col gap-1">
+          <p className="italic">{street}</p>
+          <p className="italic">{`${city} ${state} ${zip}`}</p>
+        </div>
       ) : (
-        <Stack gap="xs">
-          <TextInput
-            label="street"
+        <div className="flex flex-col gap-1">
+          <Label htmlFor="street">street</Label>
+          <Input
+            id="street"
             defaultValue={street}
             onChange={(e) => setStreet(e.currentTarget.value)}
           />
-          <TextInput
-            label="city"
+          <Label htmlFor="city">city</Label>
+          <Input
+            id="city"
             defaultValue={city}
             onChange={(e) => setCity(e.currentTarget.value)}
           />
-          <TextInput
-            label="state"
+          <Label htmlFor="state">state</Label>
+          <Input
+            id="state"
             defaultValue={state}
             onChange={(e) => setState(e.currentTarget.value)}
           />
-          <TextInput
-            label="zip"
+          <Label htmlFor="zip">zip</Label>
+          <Input
+            id="zip"
             defaultValue={zip}
             onChange={(e) => setZip(e.currentTarget.value)}
           />
-          <Box>
+          <div>
             <ConfirmButton onClick={() => handleApply()} />
             <DeleteButton onClick={() => setIsEditing(!isEditing)} />
-          </Box>
-        </Stack>
+          </div>
+        </div>
       )}
-    </Stack>
+    </div>
   );
 }

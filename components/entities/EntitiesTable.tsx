@@ -1,27 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+
 import {
   Table,
-  ScrollArea,
-  UnstyledButton,
-  Group,
-  Text,
-  Center,
-  TextInput,
-  rem,
-  keys,
-} from '@mantine/core';
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
 import {
   IconSelector,
   IconChevronDown,
   IconChevronUp,
-  IconSearch,
 } from '@tabler/icons-react';
 
 import { ContactType, PropertyType, CompanyType } from '@/server/sharedTypes';
-
-import classes from './EntitiesTable.module.css';
 
 type RowData = CompanyType | ContactType | PropertyType;
 
@@ -41,11 +39,9 @@ function Th({
   children: React.ReactNode;
 }) {
   return (
-    <Table.Th key={thKey} className={classes.th}>
-      <Text fw={500} fz="sm">
-        {children}
-      </Text>
-    </Table.Th>
+    <TableHead key={thKey}>
+      <p className="text-sm font-medium">{children}</p>
+    </TableHead>
   );
 }
 
@@ -63,16 +59,12 @@ function ThSortable({
     : IconSelector;
   return (
     <Th key={thKey}>
-      <UnstyledButton onClick={onSort} className={classes.control}>
-        <Group justify="space-between">
-          <Text fw={500} fz="sm">
-            {children}
-          </Text>
-          <Center className={classes.icon}>
-            <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </Center>
-        </Group>
-      </UnstyledButton>
+      <Button onClick={onSort} variant="ghost" className="w-full">
+        <div className=" flex flex-row w-full items-start justify-between">
+          <span>{children}</span>
+          <Icon size={24} stroke={1.5} />
+        </div>
+      </Button>
     </Th>
   );
 }
@@ -80,9 +72,7 @@ function ThSortable({
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) =>
-      item[key] ? item[key]?.toString().toLowerCase().includes(query) : false
-    )
+    item.name ? item.name.toLowerCase().includes(query) : false
   );
 }
 
@@ -152,28 +142,10 @@ export function EntitiesTable({
 
   return (
     <ScrollArea>
-      {showSearch && (
-        <TextInput
-          placeholder="Search by any field"
-          mb="md"
-          leftSection={
-            <IconSearch
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-          value={search}
-          onChange={handleSearchChange}
-        />
-      )}
-      <Table
-        horizontalSpacing="md"
-        verticalSpacing="xs"
-        miw={700}
-        layout="fixed"
-      >
-        <Table.Thead>
-          <Table.Tr>
+      {showSearch && <div>{'Search!'}</div>}
+      <Table className="m-w-[700px]">
+        <TableHeader>
+          <TableRow>
             {columns.map((column) => {
               return column.sortable ? (
                 <ThSortable
@@ -188,9 +160,13 @@ export function EntitiesTable({
                 <Th key={column.key}>{column.name}</Th>
               );
             })}
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{entities.map((row) => rowRenderer(row))}</Table.Tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {entities && entities?.length
+            ? entities.map((row) => rowRenderer(row))
+            : rowRenderer()}
+        </TableBody>
       </Table>
     </ScrollArea>
   );
