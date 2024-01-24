@@ -3,8 +3,6 @@ import { Button } from '@/components/ui/button';
 
 import { TableRow, TableCell } from '@/components/ui/table';
 
-import { useForceUpdate } from '@mantine/hooks';
-
 import { CoreEntityType, RelationshipType } from '@prisma/client';
 
 import { EntityTypeSelect } from '@/components/select/EntityTypeSelect';
@@ -32,8 +30,6 @@ export function AddRelationship({
     RelationshipType | undefined
   >(undefined);
 
-  const forceUpdate = useForceUpdate();
-
   const addRelationship = trpc.relationship.addRelationship.useMutation({
     onSettled: (data) => {
       if (refetch) refetch();
@@ -53,8 +49,6 @@ export function AddRelationship({
     setToEntityType(undefined);
     setToEntity(undefined);
     setRelationshipType(undefined);
-
-    forceUpdate();
   };
 
   return (
