@@ -1,6 +1,6 @@
 'use client';
 
-import { Table } from '@mantine/core';
+import { TableRow, TableCell } from '@/components/ui/table';
 
 import { ContactType, PropertyType, CompanyType } from '@/server/sharedTypes';
 
@@ -34,11 +34,11 @@ export default function LinkedEntitiesTable({
   const rowRenderer = (row: CompanyType | PropertyType) => {
     const addressStr = `${row?.address?.street} ${row?.address?.city} ${row?.address?.state} ${row?.address?.zip}`;
     return (
-      <Table.Tr key={row.name}>
-        <Table.Td>{row.name}</Table.Td>
-        <Table.Td>{addressStr}</Table.Td>
-        <Table.Td>Actions</Table.Td>
-      </Table.Tr>
+      <TableRow key={row.name}>
+        <TableCell>{row.name}</TableCell>
+        <TableCell>{addressStr}</TableCell>
+        <TableCell>Actions</TableCell>
+      </TableRow>
     );
   };
 

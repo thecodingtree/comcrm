@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Text, Textarea, Stack, Group, Paper, Button } from '@mantine/core';
-import classes from './Notes.module.css';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
 interface NoteProps {
   date: Date;
@@ -48,16 +48,12 @@ const getDaysSinceDateText = (date: Date): string => {
 
 export function Note({ date, content }: NoteProps) {
   return (
-    <Paper withBorder radius="md" className={classes.note}>
-      <Stack>
-        <Group justify="space-between">
-          <Text fz="xs" c="dimmed">
-            {getDaysSinceDateText(date)}
-          </Text>
-        </Group>
-        <Text>{content}</Text>
-      </Stack>
-    </Paper>
+    <div className="border border-slate-200 rounded-sm p-2 m-2">
+      <div className="flex flex-col gap-2">
+        <p className="text-xs text-slate-400">{getDaysSinceDateText(date)}</p>
+        <p>{content}</p>
+      </div>
+    </div>
   );
 }
 
@@ -73,6 +69,7 @@ export function AddNote({ onAddNote }: AddNoteProps) {
     // Initially just show the edit box
     if (!showAddNote) {
       setShowAddNote(true);
+      setContent('');
       return;
     }
 
@@ -84,21 +81,18 @@ export function AddNote({ onAddNote }: AddNoteProps) {
   };
 
   return (
-    <Paper radius="md" className={classes.note}>
-      <Stack>
+    <div className="m-4">
+      <div className="flex flex-col gap-2">
         {showAddNote && (
           <Textarea
-            autosize
-            minRows={4}
-            maxRows={8}
             placeholder="Enter Note"
             onChange={(e) => setContent(e.currentTarget.value)}
           />
         )}
-        <Button fullWidth onClick={handleAddNote}>
+        <Button className="w-full" onClick={handleAddNote}>
           {showAddNote ? 'Submit' : 'Add Note'}
         </Button>
-      </Stack>
-    </Paper>
+      </div>
+    </div>
   );
 }

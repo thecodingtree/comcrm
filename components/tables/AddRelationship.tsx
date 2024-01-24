@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Table, Button } from '@mantine/core';
+import { Button } from '@/components/ui/button';
 
-import { useForceUpdate } from '@mantine/hooks';
+import { TableRow, TableCell } from '@/components/ui/table';
 
 import { CoreEntityType, RelationshipType } from '@prisma/client';
 
 import { EntityTypeSelect } from '@/components/select/EntityTypeSelect';
-import { EntityAutocomplete } from '@/components/common/forms/EntityAutocomplete';
+import { EntityAutocomplete } from '@/components/entities/EntityAutocomplete';
 import { RelationshipTypeSelect } from '@/components/select/RelationshipTypeSelect';
 import { trpc } from '@/app/_trpc/client';
 import { EntitySearchResult } from '@/server/sharedTypes';
@@ -30,8 +30,6 @@ export function AddRelationship({
     RelationshipType | undefined
   >(undefined);
 
-  const forceUpdate = useForceUpdate();
-
   const addRelationship = trpc.relationship.addRelationship.useMutation({
     onSettled: (data) => {
       if (refetch) refetch();
@@ -51,38 +49,36 @@ export function AddRelationship({
     setToEntityType(undefined);
     setToEntity(undefined);
     setRelationshipType(undefined);
-
-    forceUpdate();
   };
 
   return (
-    <Table.Tr key={'add'}>
-      <Table.Td>
+    <TableRow key={'add'}>
+      <TableCell>
         <EntityTypeSelect
           excludeType={fromEntityType}
           placeholder="Select Type"
           onSelect={(val) => setToEntityType(val)}
         />
-      </Table.Td>
-      <Table.Td>
+      </TableCell>
+      <TableCell>
         <EntityAutocomplete
           type={toEntityType || undefined}
           onEntitySelected={(entity) => setToEntity(entity)}
           disabled={!toEntityType}
           withAddOption={true}
         />
-      </Table.Td>
-      <Table.Td>
+      </TableCell>
+      <TableCell>
         <RelationshipTypeSelect
           onSelect={(val) => setRelationshipType(val)}
           fromType={fromEntityType}
           toType={toEntityType!}
           disabled={!toEntityType || !toEntity}
         />
-      </Table.Td>
-      <Table.Td>
+      </TableCell>
+      <TableCell>
         <Button onClick={handleAdd}>Add Relationship</Button>
-      </Table.Td>
-    </Table.Tr>
+      </TableCell>
+    </TableRow>
   );
 }

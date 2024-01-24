@@ -1,7 +1,5 @@
 'use client';
 
-import { Space } from '@mantine/core';
-
 import { trpc } from '@/app/_trpc/client';
 
 import ContactsTable from '@/components/contact/ContactsTable';
@@ -29,7 +27,7 @@ export default function ContactsPage() {
     <div>
       <ContactsTable contacts={data} onDeleteContact={deleteContactHandler} />
       <ReloadQuery reload={refetch} />
-      <Space h="lg" />
+      <div className="min-h-4" />
       <ContactAdd onAdded={() => refetch()} />
     </div>
   );

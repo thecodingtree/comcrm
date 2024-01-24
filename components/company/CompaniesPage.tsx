@@ -1,13 +1,10 @@
 'use client';
 
-import { Space, Box } from '@mantine/core';
-
 import { trpc } from '@/app/_trpc/client';
 
 import CompaniesTable from '@/components/company/CompaniesTable';
 import CompanyAdd from '@/components/company/CompanyAdd';
 import ReloadQuery from '@/components/controls/ReloadQuery';
-import { CompanyType } from '@/server/sharedTypes';
 
 export default function CompaniesPage() {
   const { data, refetch } = trpc.company.getCompanies.useQuery();
@@ -30,10 +27,8 @@ export default function CompaniesPage() {
     <div>
       <CompaniesTable companies={data} onDeleteCompany={deleteCompanyHandler} />
       <ReloadQuery reload={refetch} />
-      <Space h="lg" />
-      <Box w={'100%'}>
-        <CompanyAdd onAdded={() => refetch()} />
-      </Box>
+      <div className="min-h-4" />
+      <CompanyAdd onAdded={() => refetch()} />
     </div>
   );
 }
