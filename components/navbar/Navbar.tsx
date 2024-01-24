@@ -7,13 +7,9 @@ import Link from 'next/link';
 
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 
@@ -47,13 +43,15 @@ export default function Navbar() {
         data-active={item.label === active || undefined}
         href={item.link}
         key={item.label}
-        onClick={() => {
-          setActive(item.label);
-        }}
         legacyBehavior
         passHref
       >
-        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+        <NavigationMenuLink
+          onClick={() => {
+            setActive(item.label);
+          }}
+          className={navigationMenuTriggerStyle()}
+        >
           <item.icon size={24} stroke={1.5} />
           <span>{item.label}</span>
         </NavigationMenuLink>

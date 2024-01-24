@@ -13,7 +13,7 @@ import { trpc } from '@/app/_trpc/client';
 
 import { EntitySearchResult } from '@/server/sharedTypes';
 
-import { useDebouncedState } from '@mantine/hooks';
+import { useDebouncedState } from '@/lib/hooks';
 
 import {
   Popover,
