@@ -1,9 +1,20 @@
 'use client';
-import { NumberInput, TextInput } from '@mantine/core';
 
 import { Button } from '@/components/ui/button';
 
-import { useForm, zodResolver } from '@mantine/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+
+import { Input } from '@/components/ui/input';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
 
@@ -11,7 +22,7 @@ const schema = z.object({
   name: z.string().min(1, { message: 'Company Name is required' }),
   phone: z.string().optional(),
   website: z.string().optional(),
-  size: z.number().optional(),
+  size: z.coerce.number().positive().int().max(1000000).optional(),
   street: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -26,15 +37,12 @@ export default function CompaniesForm({
   submitting,
 }: {
   name?: string;
-  onSubmit?: (values: CompanyFormValues) => void;
+  onSubmit: (values: CompanyFormValues) => void;
   submitting?: boolean;
 }) {
-  const handleSubmit = (values: any) => {
-    onSubmit && onSubmit(values);
-  };
-
-  const form = useForm({
-    initialValues: {
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
       name: name || '',
       phone: '',
       website: '',
@@ -44,94 +52,137 @@ export default function CompaniesForm({
       state: '',
       zip: '',
     },
-    validate: zodResolver(schema),
   });
 
   return (
     <div className="m-2">
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput
-          id="name"
-          name="name"
-          label="Name"
-          placeholder="Name"
-          mt="lg"
-          withAsterisk
-          {...form.getInputProps('name')}
-        />
-        <TextInput
-          id="phone"
-          name="phone"
-          label="Phone"
-          placeholder="Phone"
-          mt="lg"
-          {...form.getInputProps('phone')}
-        />
-        <TextInput
-          id="website"
-          name="website"
-          label="Website"
-          placeholder="Website"
-          mt="lg"
-          {...form.getInputProps('website')}
-        />
-        <NumberInput
-          id="size"
-          name="size"
-          label="Employees"
-          placeholder="Number of Employees"
-          mt="lg"
-          allowLeadingZeros={false}
-          allowNegative={false}
-          allowDecimal={false}
-          hideControls
-          {...form.getInputProps('size')}
-        />
-        <div className="grid grid-cols-1">
-          <div>
-            <TextInput
-              id="street"
-              name="street"
-              label="Street"
-              mt="lg"
-              placeholder="Street"
-              {...form.getInputProps('street')}
-            />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Required. Must be at least 1 character."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input placeholder="(XXX) XXX-XXXX" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="website"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Website</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://company.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="size"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Employees</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="e.g. 500" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid grid-cols-1 gap-2">
+            <div>
+              <FormField
+                control={form.control}
+                name="street"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Street</FormLabel>
+                    <FormControl>
+                      <Input placeholder="123 main street" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Example City" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>State</FormLabel>
+                    <FormControl>
+                      <Input placeholder="KY" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="zip"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Zip</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="12345" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <div>
-            <TextInput
-              id="city"
-              name="city"
-              label="City"
-              placeholder="City"
-              {...form.getInputProps('city')}
-            />
+          <div className="flex flex-col justify-center mt-2">
+            <Button type="submit" disabled={submitting}>
+              Add Company
+            </Button>
           </div>
-          <div>
-            <TextInput
-              id="state"
-              name="state"
-              label="State"
-              placeholder="State"
-              {...form.getInputProps('state')}
-            />
-          </div>
-          <div>
-            <TextInput
-              id="zip"
-              name="zip"
-              label="Zip"
-              placeholder="Zip"
-              {...form.getInputProps('zip')}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col justify-center mt-2">
-          <Button type="submit" disabled={submitting}>
-            Add Company
-          </Button>
-        </div>
-      </form>
+        </form>
+      </Form>
     </div>
   );
 }

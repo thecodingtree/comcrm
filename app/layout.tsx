@@ -1,21 +1,13 @@
-import '@mantine/core/styles.css';
 import React from 'react';
 import { headers } from 'next/headers';
 import { Inter as FontSans } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 
-import { MantineProvider, ColorSchemeScript } from '@mantine/core';
-
 import { TRPCProvider } from '@/app/_trpc/TRPCProvider';
 
-import '@mantine/core/styles.css';
 import '@uploadthing/react/styles.css';
 
 import '@/app/globals.css';
-
-import { theme } from '../theme';
-
-//import DashboardLayout from '@/components/layouts/DashboardLayout';
 
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
@@ -36,7 +28,6 @@ export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"
@@ -49,13 +40,11 @@ export default function RootLayout({ children }: { children: any }) {
           fontSans.variable
         )}
       >
-        <MantineProvider theme={theme}>
-          <TRPCProvider headers={headers()}>
-            <Header />
-            {children}
-            <Footer />
-          </TRPCProvider>
-        </MantineProvider>
+        <TRPCProvider headers={headers()}>
+          <Header />
+          {children}
+          <Footer />
+        </TRPCProvider>
         <Analytics />
       </body>
     </html>
