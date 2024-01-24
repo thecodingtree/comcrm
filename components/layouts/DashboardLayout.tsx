@@ -13,7 +13,6 @@ export default function DashboardLayout({ children }: { children: any }) {
     <SessionProvider>
       <div className="flex flex-row">
         <Navbar />
-
         <main className="container mx-auto p-4 min-h-screen">{children}</main>
       </div>
     </SessionProvider>
