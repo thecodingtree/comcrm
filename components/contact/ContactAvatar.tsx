@@ -1,9 +1,15 @@
-import { Avatar, Stack, ActionIcon, Popover } from '@mantine/core';
-import { useDisclosure, useClickOutside } from '@mantine/hooks';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
+
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import { IconPencil } from '@tabler/icons-react';
 
 import { UploadDropzone } from '@/utils/uploadthing';
+import { IconContact } from '../common/icons';
 
 export default function ContactAvatar({
   avatarSrc,
@@ -12,32 +18,19 @@ export default function ContactAvatar({
   avatarSrc?: string;
   onUpdated?: (res: any) => void;
 }) {
-  const [opened, { open, close }] = useDisclosure(false);
-  const ref = useClickOutside(() => close());
-
   return (
-    <Stack align="center">
-      <Avatar color="blue" radius="xl" size={150} src={avatarSrc} />
-      <Popover
-        width={275}
-        position="bottom"
-        withArrow
-        shadow="md"
-        opened={opened}
-        trapFocus
-        closeOnClickOutside
-      >
-        <Popover.Target>
-          <ActionIcon
-            variant="filled"
-            size="lg"
-            aria-label="Change Avatar Image"
-            onClick={open}
-          >
-            <IconPencil style={{ width: '100%', height: '70%' }} stroke={1.5} />
-          </ActionIcon>
-        </Popover.Target>
-        <Popover.Dropdown ref={ref}>
+    <div className="flex flex-col items-start">
+      <Avatar className="min-w-40 min-h-40">
+        <AvatarImage src={avatarSrc} />
+        <AvatarFallback>
+          <IconContact size={64} />
+        </AvatarFallback>
+      </Avatar>
+      <Popover>
+        <PopoverTrigger>
+          <IconPencil style={{ width: '100%', height: '70%' }} stroke={1.5} />
+        </PopoverTrigger>
+        <PopoverContent>
           <UploadDropzone
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
@@ -53,8 +46,8 @@ export default function ContactAvatar({
             }}
             config={{ mode: 'manual' }}
           />
-        </Popover.Dropdown>
+        </PopoverContent>
       </Popover>
-    </Stack>
+    </div>
   );
 }

@@ -1,65 +1,42 @@
-import {
-  UnstyledButton,
-  Group,
-  Avatar,
-  Text,
-  rem,
-  Menu,
-  useMantineTheme,
-} from '@mantine/core';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { IconChevronRight, IconLogout } from '@tabler/icons-react';
+
+import {
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from '@/components/ui/navigation-menu';
 
 import useUser from '@/hooks/useUser';
 
-import classes from './AccountMenu.module.css';
-
 export function AccountMenu() {
-  const theme = useMantineTheme();
   const { user, signOut } = useUser();
 
   return (
-    <Menu
-      transitionProps={{ transition: 'pop-top-right' }}
-      position="top-end"
-      width={220}
-      withinPortal
-    >
-      <Menu.Target>
-        <UnstyledButton className={classes.user}>
-          <Group>
-            <Avatar src={user?.image} radius="xl" />
+    <NavigationMenuItem className="absolute bottom-0">
+      <NavigationMenuTrigger>
+        {' '}
+        <div className="flex flex-row gap-2 cursor-pointer">
+          <Avatar>
+            <AvatarImage src={user?.image} />
+            <AvatarFallback>{`${user?.name[0]}`}</AvatarFallback>
+          </Avatar>
 
-            <div style={{ flex: 1 }}>
-              <Text size="sm" fw={500}>
-                {user?.name}
-              </Text>
+          <div style={{ flex: 1 }}>
+            <p className="text-sm font-bold">{user?.name}</p>
 
-              <Text c="dimmed" size="xs">
-                {user?.email}
-              </Text>
-            </div>
+            <p className="text-xs text-slate-400">{user?.email}</p>
+          </div>
 
-            <IconChevronRight
-              style={{ width: rem(14), height: rem(14) }}
-              stroke={1.5}
-            />
-          </Group>
-        </UnstyledButton>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item
-          leftSection={
-            <IconLogout
-              style={{ width: rem(16), height: rem(16) }}
-              color={theme.colors.blue[6]}
-              stroke={1.5}
-            />
-          }
-          onClick={() => signOut()}
-        >
-          Sign Out
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+          <IconChevronRight size={24} stroke={1.5} />
+        </div>
+      </NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <NavigationMenuLink onClick={() => signOut()}>
+          Signout
+        </NavigationMenuLink>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
   );
 }

@@ -1,16 +1,19 @@
 'use client';
 
 import {
-  Paper,
-  Title,
-  Grid,
-  NumberInput,
-  TextInput,
-  Button,
-  Group,
-} from '@mantine/core';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-import { useForm, zodResolver } from '@mantine/form';
+import { Button } from '@/components/ui/button';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
 
@@ -21,8 +24,8 @@ const schema = z.object({
   state: z.string().optional(),
   zip: z.string().optional(),
   suite: z.string().optional(),
-  size: z.number().optional(),
-  price: z.number().optional(),
+  size: z.coerce.number().positive().int().max(1000000).optional(),
+  price: z.coerce.number().positive().optional(),
 });
 
 export type PropertyFormValues = z.infer<typeof schema>;
@@ -33,15 +36,12 @@ export default function PropertyForm({
   submitting,
 }: {
   name?: string;
-  onSubmit?: (values: PropertyFormValues) => void;
+  onSubmit: (values: PropertyFormValues) => void;
   submitting?: boolean;
 }) {
-  const handleSubmit = (values: PropertyFormValues) => {
-    onSubmit && onSubmit(values);
-  };
-
-  const form = useForm({
-    initialValues: {
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
       name: name || '',
       street: '',
       city: '',
@@ -51,100 +51,126 @@ export default function PropertyForm({
       size: undefined,
       price: undefined,
     },
-    validate: zodResolver(schema),
   });
 
   return (
-    <Paper withBorder={false} m={4}>
-      <Title>Quick Add: Property</Title>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput
-          id="name"
-          name="name"
-          label="Property Name"
-          placeholder="Property Name"
-          mt="lg"
-          withAsterisk
-          {...form.getInputProps('name')}
-        />
-        <Grid>
-          <Grid.Col span={12}>
-            <TextInput
-              id="street"
-              name="street"
-              label="Street"
-              mt="lg"
-              placeholder="Street"
-              {...form.getInputProps('street')}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <TextInput
-              id="city"
-              name="city"
-              label="City"
-              placeholder="City"
-              {...form.getInputProps('city')}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <TextInput
-              id="state"
-              name="state"
-              label="State"
-              placeholder="State"
-              {...form.getInputProps('state')}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <TextInput
-              id="zip"
-              name="zip"
-              label="Zip"
-              placeholder="Zip"
-              {...form.getInputProps('zip')}
-            />
-          </Grid.Col>
-        </Grid>
-        <TextInput
-          id="suite"
-          name="suite"
-          label="Suite"
-          placeholder="Suite"
-          mt="lg"
-          {...form.getInputProps('suite')}
-        />
-        <NumberInput
-          id="size"
-          name="size"
-          label="Size (sqft)"
-          placeholder="Size (sqft)"
-          mt="lg"
-          allowLeadingZeros={false}
-          allowNegative={false}
-          decimalScale={0}
-          hideControls
-          {...form.getInputProps('size')}
-        />
-        <NumberInput
-          id="price"
-          name="price"
-          label="Price"
-          placeholder="Price"
-          mt="lg"
-          allowLeadingZeros={false}
-          allowNegative={false}
-          decimalScale={2}
-          fixedDecimalScale={true}
-          hideControls
-          {...form.getInputProps('price')}
-        />
-        <Group justify="center" mt="md">
-          <Button type="submit" disabled={submitting}>
-            Add Property
-          </Button>
-        </Group>
-      </form>
-    </Paper>
+    <div className="m-2">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Property Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Required. Must be at least 1 character."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="street"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Street</FormLabel>
+                <FormControl>
+                  <Input placeholder="123 Main Street" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>City</FormLabel>
+                <FormControl>
+                  <Input placeholder="City" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="state"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>State</FormLabel>
+                <FormControl>
+                  <Input placeholder="State" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="zip"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Zip</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Zip" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="suite"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Suite</FormLabel>
+                <FormControl>
+                  <Input placeholder="Suite" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="size"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Size (sqft)</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="1200" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input placeholder="$500,000" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-col justify-center mt-2">
+            <Button type="submit" disabled={submitting}>
+              Add Property
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

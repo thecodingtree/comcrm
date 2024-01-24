@@ -4,7 +4,10 @@ import { useState } from 'react';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { TextInput, Button } from '@mantine/core';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [title, setTitle] = useState('');
@@ -19,13 +22,12 @@ export default function Home() {
     <div>
       <h1>Dashboard - Home</h1>
       {/* {JSON.stringify(getTodos.data)} */}
-      {JSON.stringify(getTodosAuthed)}
-      <TextInput
-        label="title"
-        onChange={(e) => setTitle(e.currentTarget.value)}
-      />
-      <TextInput
-        label="description"
+      <p>{JSON.stringify(getTodosAuthed)}</p>
+      <Label htmlFor="title">title</Label>
+      <Input id="title" onChange={(e) => setTitle(e.currentTarget.value)} />
+      <Label htmlFor="description">description</Label>
+      <Input
+        id="description"
         onChange={(e) => setDescription(e.currentTarget.value)}
       />
       <Button onClick={() => addTodo.mutate({ title, description })}>
