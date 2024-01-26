@@ -46,6 +46,13 @@ model User {
   sessions      Session[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
+
+  // everyone can signup, and user profile is also publicly readable
+  @@allow('create,read', true)
+
+  // only the user can update or delete their own profile
+  @@allow('update,delete', auth() == this)
+
 }
 
 model VerificationToken {
@@ -76,6 +83,12 @@ model CoreEntity {
   notes             Note[]
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
+
+  // everyone can create a new entity
+  @@allow('create', true)
+
+  // only the user can read,update,delete their own entities
+  @@allow('update,delete,read', auth() == user)
 }
 
 model Attributes {
@@ -86,6 +99,8 @@ model Attributes {
   entityId  String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  @@allow('create,update,delete,read', auth() == entity.user)
 }
 
 model MetaData {
@@ -101,6 +116,9 @@ model MetaData {
   updatedAt    DateTime    @updatedAt
   CoreEntity   CoreEntity? @relation(fields: [CoreEntityId], references: [id], onDelete: Cascade)
   CoreEntityId String?     @unique
+
+  // only the user who owns the entity can read,update,delete their own metadata
+  @@allow('all', auth() == CoreEntity.user)
 }
 
 model Address {
@@ -113,6 +131,9 @@ model Address {
   updatedAt DateTime  @updatedAt
   meta      MetaData? @relation(fields: [metaId], references: [id], onDelete: Cascade)
   metaId    String?   @unique
+
+  // only the user who owns the entity can read,update,delete their own address
+  @@allow('all', auth() == meta.CoreEntity.user)
 }
 
 model Note {
@@ -122,6 +143,9 @@ model Note {
   updatedAt DateTime   @updatedAt
   entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
   entityId  String
+
+  // only the user who owns the entity can read,update,delete their own notes
+  @@allow('all', auth() == entity.user)
 }
 
 model Relationship {
@@ -130,11 +154,14 @@ model Relationship {
   from         CoreEntity       @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
   fromEntityId String
   to           CoreEntity       @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
-  toEntityId   String
+  toEntityId   String @allow('update', auth() == to.user) // a user can only link to entities they own
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([fromEntityId, toEntityId])
+
+  // only the user who owns the entity can read,update,delete their own relationships
+  @@allow('all', auth() == from.user)
 }
 
 enum RelationshipType {

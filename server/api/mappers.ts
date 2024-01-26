@@ -1,4 +1,4 @@
-import { CoreEntityResult } from '../../db';
+import { CoreEntityResult } from '../db';
 import { ContactType, CompanyType, PropertyType } from '@/server/sharedTypes';
 
 export const contactDataMapper = (entity: CoreEntityResult): ContactType => {

@@ -3,7 +3,7 @@ import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/server/db';
 
 const providers = [
   GitHubProvider({
@@ -21,7 +21,7 @@ const providers = [
 ];
 
 export const authOptions: NextAuthOptions = {
-  debug: true,
+  debug: true, // TODO: Remove this in production
   session: {
     strategy: 'jwt',
   },
@@ -38,5 +38,5 @@ export const authOptions: NextAuthOptions = {
     },
   },
   providers,
-  adapter: PrismaAdapter(new PrismaClient()),
+  adapter: PrismaAdapter(prisma),
 };

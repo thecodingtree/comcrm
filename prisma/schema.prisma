@@ -57,6 +57,8 @@ model Session {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+/// @@allow('create,read', true)
+/// @@allow('update,delete', auth() == this)
 model User {
     id String @id() @default(uuid()) @map("_id")
     email String @unique()
@@ -78,6 +80,8 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+/// @@allow('create', true)
+/// @@allow('update,delete,read', auth() == user)
 model CoreEntity {
     id String @id() @default(uuid()) @map("_id")
     type CoreEntityType
@@ -94,6 +98,7 @@ model CoreEntity {
     updatedAt DateTime @updatedAt()
 }
 
+/// @@allow('create,update,delete,read', auth() == entity.user)
 model Attributes {
     id String @id() @default(uuid()) @map("_id")
     name String
@@ -104,6 +109,7 @@ model Attributes {
     updatedAt DateTime @updatedAt()
 }
 
+/// @@allow('all', auth() == CoreEntity.user)
 model MetaData {
     id String @id() @default(uuid()) @map("_id")
     name String
@@ -119,6 +125,7 @@ model MetaData {
     CoreEntityId String? @unique()
 }
 
+/// @@allow('all', auth() == meta.CoreEntity.user)
 model Address {
     id String @id() @default(uuid()) @map("_id")
     street String?
@@ -131,6 +138,7 @@ model Address {
     metaId String? @unique()
 }
 
+/// @@allow('all', auth() == entity.user)
 model Note {
     id String @id() @default(uuid()) @map("_id")
     content String
@@ -140,12 +148,14 @@ model Note {
     entityId String
 }
 
+/// @@allow('all', auth() == from.user)
 model Relationship {
     id String @id() @default(uuid()) @map("_id")
     type RelationshipType
     from CoreEntity @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
     fromEntityId String
     to CoreEntity @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
+    /// @allow('update', auth() == to.user)
     toEntityId String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()

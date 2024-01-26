@@ -17,7 +17,7 @@ import {
   updateCoreEntity,
   deleteCoreEntity,
   CoreEntityResult,
-} from '@/db';
+} from '@/server/db';
 import { contactDataMapper } from '@/server/api/mappers';
 
 const CreateContactInput = z.object({
@@ -76,7 +76,7 @@ export const contactRouter = createTRPCRouter({
       const result = await getOwnedCoreEntity(
         ctx.prisma,
         input,
-        ctx?.session?.user?.id
+        ctx?.session?.user?.id,
       );
 
       return result ? contactDataMapper(result) : null;
@@ -120,7 +120,7 @@ export const contactRouter = createTRPCRouter({
         ctx.prisma,
         input.id,
         ctx.session.user?.id || '',
-        coreEntityUpdateInput
+        coreEntityUpdateInput,
       );
 
       if (!result) {
@@ -138,7 +138,7 @@ export const contactRouter = createTRPCRouter({
       const result = await deleteCoreEntity(
         ctx.prisma,
         input,
-        ctx.session.user?.id!!
+        ctx.session.user?.id!!,
       );
 
       if (!result) {
@@ -162,7 +162,7 @@ export const contactRouter = createTRPCRouter({
         ctx.prisma,
         input.id,
         ctx.session.user?.id || '',
-        coreEntityUpdateInput
+        coreEntityUpdateInput,
       );
 
       if (!result) {
