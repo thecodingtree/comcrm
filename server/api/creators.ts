@@ -1,6 +1,6 @@
 import { Prisma, CoreEntityType, PrismaClient } from '@prisma/client';
 
-import { createCoreEntity } from '@/db';
+import { createCoreEntity } from '@/server/db';
 
 import { CreateContactInputType } from '@/server/api/routers/contact';
 import { CreateCompanyInputType } from '@/server/api/routers/company';

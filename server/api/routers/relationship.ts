@@ -1,10 +1,10 @@
-import { RelationshipResult, relationshipInclude } from '@/db';
+import { RelationshipResult, relationshipInclude } from '@/server/db';
 import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import {
   CoreEntityType,
   RelationshipType as PrismaRelationshipType,
 } from '@prisma/client';
-import { getOwnedCoreEntities } from '@/db';
+import { getOwnedCoreEntities } from '@/server/db';
 import {
   RelationshipType,
   EntityFilterInput,
@@ -51,7 +51,7 @@ export const relationshipRouter = createTRPCRouter({
           filter: EntityFilterInput.optional(),
           type: z.nativeEnum(CoreEntityType).optional(),
         })
-        .optional()
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
       if (!input?.filter) return [];
@@ -81,7 +81,7 @@ export const relationshipRouter = createTRPCRouter({
         fromEntityId: z.string(),
         toEntityId: z.string(),
         type: z.nativeEnum(PrismaRelationshipType),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.prisma.relationship.create({

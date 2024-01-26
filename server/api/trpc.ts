@@ -12,9 +12,9 @@ import { type NextRequest } from 'next/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
-import { PrismaClient } from '@prisma/client';
+import { getZenstackPrisma } from '@/zenstack/utils';
 
 /**
  * 1. CONTEXT
@@ -23,10 +23,6 @@ import { PrismaClient } from '@prisma/client';
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
-
-interface CreateContextOptions {
-  headers: Headers;
-}
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -38,15 +34,14 @@ interface CreateContextOptions {
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
-  const session = await getServerSession(authOptions);
+// export const createInnerTRPCContext = async (req: NextRequest, res:NextResponse) => {
 
-  return {
-    session,
-    headers: opts.headers,
-    prisma: new PrismaClient(),
-  };
-};
+//   return {
+//     session,
+//     headers: opts.headers,
+//     prisma: getZenstackPrisma(session),
+//   };
+// };
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -54,12 +49,15 @@ export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: { req: NextRequest }) => {
-  // Fetch stuff that depends on the request
+export const createTRPCContext = async (req: NextRequest) => {
+  const session = await getServerSession(authOptions);
 
-  return await createInnerTRPCContext({
-    headers: opts.req.headers,
-  });
+  // Fetch stuff that depends on the request
+  return {
+    session,
+    headers: req.headers,
+    prisma: getZenstackPrisma(session),
+  };
 };
 
 /**

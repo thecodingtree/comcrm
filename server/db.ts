@@ -2,7 +2,7 @@ import { Prisma, PrismaClient, CoreEntityType } from '@prisma/client';
 
 import { EntityFilterType } from '@/server/sharedTypes';
 
-//const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 const coreEntityInclude = Prisma.validator<Prisma.CoreEntityInclude>()({
   meta: { include: { address: true } },
@@ -82,7 +82,7 @@ export const getOwnedCoreEntities = async ({
 export const getOwnedCoreEntity = async (
   db: PrismaClient,
   id: string,
-  withUserId: string
+  withUserId: string,
 ): Promise<CoreEntityResult | null> => {
   if (!withUserId) {
     return null;
@@ -103,9 +103,9 @@ export const getOwnedCoreEntity = async (
 // CRUD operations
 export const createCoreEntity = (
   db: PrismaClient,
-  data: Prisma.CoreEntityCreateInput
+  data: Prisma.CoreEntityCreateInput,
 ) =>
-  db.coreEntity.create({
+  prisma.coreEntity.create({
     data,
     include: coreEntityInclude,
   });
@@ -114,7 +114,7 @@ export const updateCoreEntity = (
   db: PrismaClient,
   id: string,
   user: string,
-  data: Prisma.CoreEntityUpdateInput
+  data: Prisma.CoreEntityUpdateInput,
 ) =>
   db.coreEntity.update({
     include: coreEntityInclude,

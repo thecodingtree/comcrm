@@ -16,7 +16,7 @@ import {
   CoreEntityResult,
   deleteCoreEntity,
   updateCoreEntity,
-} from '@/db';
+} from '@/server/db';
 import { companyDataMapper } from '@/server/api/mappers';
 import { companyCreator } from '@/server/api/creators';
 
@@ -73,7 +73,7 @@ export const companyRouter = createTRPCRouter({
       const result = await getOwnedCoreEntity(
         ctx.prisma,
         input,
-        ctx?.session?.user?.id
+        ctx?.session?.user?.id,
       );
 
       return result ? companyDataMapper(result) : null;
@@ -116,7 +116,7 @@ export const companyRouter = createTRPCRouter({
         ctx.prisma,
         input.id,
         ctx.session.user?.id || '',
-        coreEntityUpdateInput
+        coreEntityUpdateInput,
       );
 
       if (!result) {
@@ -134,7 +134,7 @@ export const companyRouter = createTRPCRouter({
       const result = await deleteCoreEntity(
         ctx.prisma,
         input,
-        ctx.session.user?.id!!
+        ctx.session.user?.id!!,
       );
 
       if (!result) {
