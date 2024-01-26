@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import { CoreEntityResult } from '../../db';
 import { ContactType, CompanyType, PropertyType } from '@/server/sharedTypes';
 
