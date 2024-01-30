@@ -9,12 +9,14 @@
 
 import { initTRPC, TRPCError } from '@trpc/server';
 import { type NextRequest } from 'next/server';
+import type { Session } from 'next-auth';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { getZenstackPrisma } from '@/zenstack/utils';
+import { get } from 'http';
 
 /**
  * 1. CONTEXT
@@ -23,6 +25,10 @@ import { getZenstackPrisma } from '@/zenstack/utils';
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
+type CreateContextOptions = {
+  session: Session | null;
+  headers: Headers;
+};
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -34,14 +40,13 @@ import { getZenstackPrisma } from '@/zenstack/utils';
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-// export const createInnerTRPCContext = async (req: NextRequest, res:NextResponse) => {
-
-//   return {
-//     session,
-//     headers: opts.headers,
-//     prisma: getZenstackPrisma(session),
-//   };
-// };
+export const createInnerTRPCContext = (opts: CreateContextOptions) => {
+  return {
+    session: opts.session,
+    heaers: opts.headers,
+    prisma: getZenstackPrisma(opts.session),
+  };
+};
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -50,14 +55,13 @@ import { getZenstackPrisma } from '@/zenstack/utils';
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = async (req: NextRequest) => {
+  // Get the session from the server using the unstable_getServerSession wrapper function
   const session = await getServerSession(authOptions);
 
-  // Fetch stuff that depends on the request
-  return {
+  return createInnerTRPCContext({
     session,
     headers: req.headers,
-    prisma: getZenstackPrisma(session),
-  };
+  });
 };
 
 /**
