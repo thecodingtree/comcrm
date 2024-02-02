@@ -17,6 +17,12 @@ export type NoteType = {
   updatedAt: Date;
 };
 
+export const NotesFilterInput = z.object({
+  entityId: z.string().optional(),
+});
+
+export type NotesFilterType = z.infer<typeof NotesFilterInput>;
+
 export type AttributeType = {
   id?: string;
   name: string;
@@ -33,6 +39,19 @@ export type AddressType = {
   zip?: string;
 };
 
+export const AddressInput = z.object({
+  street: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zip: z.string().optional(),
+});
+
+export const AttributeInput = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  value: z.string(),
+});
+
 export type ContactType = {
   id: string;
   type: CoreEntityType;
@@ -48,6 +67,31 @@ export type ContactType = {
   updatedAt: Date;
 };
 
+export const CreateContactInput = z.object({
+  name: z.string(),
+  surName: z.string(),
+  phone: z.string().optional(),
+  email: z.string().email().optional().or(z.literal('')),
+  address: z.optional(AddressInput),
+  attributes: z.optional(z.array(AttributeInput)),
+  linkedEntity: z.optional(z.string()),
+});
+
+export type CreateContactInputType = z.infer<typeof CreateContactInput>;
+
+export const UpdateContactInput = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  surName: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.optional(AddressInput),
+  attributes: z.optional(z.array(AttributeInput)),
+  linkedEntity: z.optional(z.string()),
+});
+
+export type UpdateContactInputType = z.infer<typeof UpdateContactInput>;
+
 export type PropertyType = {
   id: string;
   type: CoreEntityType;
@@ -61,6 +105,27 @@ export type PropertyType = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export const CreatePropertyInput = z.object({
+  name: z.string(),
+  address: z.optional(AddressInput),
+  attributes: z.optional(z.array(AttributeInput)),
+  linkedEntity: z.optional(z.string()),
+});
+
+export type CreatePropertyInputType = z.infer<typeof CreatePropertyInput>;
+
+export const UpdatePropertyInput = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.optional(AddressInput),
+  attributes: z.optional(z.array(AttributeInput)),
+  linkedEntity: z.optional(z.string()),
+});
+
+export type UpdatePropertyInputType = z.infer<typeof UpdatePropertyInput>;
 
 export type CompanyType = {
   id: string;
@@ -76,6 +141,29 @@ export type CompanyType = {
   updatedAt: Date;
 };
 
+export const CreateCompanyInput = z.object({
+  name: z.string(),
+  phone: z.string().optional(),
+  email: z.string().email().optional().or(z.literal('')),
+  address: z.optional(AddressInput),
+  attributes: z.optional(z.array(AttributeInput)),
+  linkedEntity: z.optional(z.string()),
+});
+
+export type CreateCompanyInputType = z.infer<typeof CreateCompanyInput>;
+
+export const UpdateCompanyInput = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.optional(AddressInput),
+  attributes: z.optional(z.array(AttributeInput)),
+  linkedEntity: z.optional(z.string()),
+});
+
+export type UpdateCompanyInputType = z.infer<typeof UpdateCompanyInput>;
+
 export type RelationshipType = {
   id: string;
   from: { id: string; name: string; type: string };
@@ -86,19 +174,6 @@ export type RelationshipType = {
 };
 
 export type RelationshipTypeEnum = PrismaRelationshipType;
-
-export const AddressInput = z.object({
-  street: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zip: z.string().optional(),
-});
-
-export const AttributeInput = z.object({
-  id: z.string().optional(),
-  name: z.string(),
-  value: z.string(),
-});
 
 export const EntityFilterInput = z.object({
   id: z.string().optional(),

@@ -1,6 +1,8 @@
 import { CompanyFormValues } from './form/CompanyForm';
-import { CompanyReservedAttributes } from '@/server/sharedTypes';
-import { CreateCompanyInputType } from '@/server/api/routers/company';
+import {
+  CompanyReservedAttributes,
+  CreateCompanyInputType,
+} from '@/server/sharedTypes';
 
 export const buildCompanyMutatePayload = ({
   values,

@@ -1,6 +1,8 @@
 import { PropertyFormValues } from './form/PropertyForm';
-import { PropertyReservedAttributes } from '@/server/sharedTypes';
-import { CreatePropertyInputType } from '@/server/api/routers/property';
+import {
+  PropertyReservedAttributes,
+  CreatePropertyInputType,
+} from '@/server/sharedTypes';
 
 export function buildPropertyMutatePayload({
   values,

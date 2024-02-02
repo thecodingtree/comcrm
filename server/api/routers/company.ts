@@ -5,53 +5,29 @@ import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 
 import {
-  AddressInput,
-  AttributeInput,
   EntityFilterInput,
+  CreateCompanyInput,
+  UpdateCompanyInput,
 } from '@/server/sharedTypes';
 
 import {
-  getOwnedCoreEntities,
-  getOwnedCoreEntity,
+  getCoreEntities,
+  getCoreEntity,
   CoreEntityResult,
   deleteCoreEntity,
   updateCoreEntity,
-} from '@/server/db';
+} from '@/server/coreEntities';
 import { companyDataMapper } from '@/server/api/mappers';
 import { companyCreator } from '@/server/api/creators';
-
-const CreateCompanyInput = z.object({
-  name: z.string(),
-  phone: z.string().optional(),
-  email: z.string().email().optional().or(z.literal('')),
-  address: z.optional(AddressInput),
-  attributes: z.optional(z.array(AttributeInput)),
-  linkedEntity: z.optional(z.string()),
-});
-
-export type CreateCompanyInputType = z.infer<typeof CreateCompanyInput>;
-
-const UpdateCompanyInput = z.object({
-  id: z.string(),
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  email: z.string().email().optional(),
-  address: z.optional(AddressInput),
-  attributes: z.optional(z.array(AttributeInput)),
-  linkedEntity: z.optional(z.string()),
-});
-
-export type UpdateCompanyInputType = z.infer<typeof UpdateCompanyInput>;
 
 export const companyRouter = createTRPCRouter({
   getCompanies: protectedProcedure
     .input(z.object({ filter: EntityFilterInput }).optional())
     .query(async ({ ctx, input }) => {
-      const result = await getOwnedCoreEntities({
+      const result = await getCoreEntities({
         db: ctx.prisma,
         entityType: CoreEntityType.COMPANY,
         filter: input?.filter,
-        withUserId: ctx.session.user.id,
       });
 
       const results = result.map((entity: CoreEntityResult) => {
@@ -66,28 +42,13 @@ export const companyRouter = createTRPCRouter({
         return null;
       }
 
-      if (!ctx.session.user.id) {
-        return null;
-      }
-
-      const result = await getOwnedCoreEntity(
-        ctx.prisma,
-        input,
-        ctx?.session?.user?.id,
-      );
+      const result = await getCoreEntity({ db: ctx.prisma, id: input });
 
       return result ? companyDataMapper(result) : null;
     }),
   createCompany: protectedProcedure
     .input(CreateCompanyInput)
     .mutation(({ ctx, input }) => {
-      if (!ctx.session.user.id) {
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message: 'You must be logged in to create a company',
-        });
-      }
-
       return companyCreator({
         db: ctx.prisma,
         data: input,
@@ -112,12 +73,11 @@ export const companyRouter = createTRPCRouter({
         },
       } as Prisma.CoreEntityUpdateInput;
 
-      const result = await updateCoreEntity(
-        ctx.prisma,
-        input.id,
-        ctx.session.user?.id || '',
-        coreEntityUpdateInput,
-      );
+      const result = await updateCoreEntity({
+        db: ctx.prisma,
+        id: input.id,
+        data: coreEntityUpdateInput,
+      });
 
       if (!result) {
         throw new TRPCError({
@@ -131,11 +91,10 @@ export const companyRouter = createTRPCRouter({
   deleteCompany: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const result = await deleteCoreEntity(
-        ctx.prisma,
-        input,
-        ctx.session.user?.id!!,
-      );
+      const result = await deleteCoreEntity({
+        db: ctx.prisma,
+        id: input,
+      });
 
       if (!result) {
         throw new Error(`CoreEntity with ID ${input} not found`);
