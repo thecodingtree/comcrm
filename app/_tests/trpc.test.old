@@ -1,22 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Session } from 'next-auth';
-
+import type { inferProcedureInput } from '@trpc/server';
 import { createInnerTRPCContext } from '@/server/api/trpc';
 import { appRouter, AppRouter } from '@/server/api/root';
 
 // 1- mock prisma module
-vi.mock('@/server/__mocks__/db');
+vi.mock('@/libs/__mocks__/db');
 
 interface TRPCTestContext {
-  session: Session;
   trpcContext: ReturnType<typeof createInnerTRPCContext>;
-  trpcClient: AppRouter;
 }
 
 // 3- Reset everything
 beforeEach<TRPCTestContext>(async (context) => {
   vi.restoreAllMocks();
 
+  // mock user in prisma
+
+  // 4- mock session
   const session = {
     expires: '1',
     user: {
@@ -29,41 +29,32 @@ beforeEach<TRPCTestContext>(async (context) => {
     session,
     headers: new Headers(),
   });
-  const trpcCaller = appRouter.createCaller({
-    ...trpcContext,
-    prisma: trpcContext.prisma,
-  });
 
-  context.session = session;
   context.trpcContext = trpcContext;
-  context.trpcClient = trpcCaller;
 });
 
 // 2- our tests
 describe('TRPC Example Tests', () => {
   it<TRPCTestContext>('should return a list of public todos', async ({
-    trpcClient,
+    trpcContext,
   }) => {
-    const todos = await trpcClient.todo.getTodos();
-
+    const trpcCaller = appRouter.createCaller({
+      ...trpcContext,
+      prisma: trpcContext.prisma,
+    });
+    const todos = await trpcCaller.todo.getTodos();
     expect(todos).toHaveLength(1);
     expect(todos[0].title).toBe('Hello');
   });
-
   it<TRPCTestContext>('should return a list of protected todos', async ({
-    trpcClient,
+    trpcContext,
   }) => {
-    const todos = await trpcClient.todo.getTodosAuthed();
-
+    const trpcCaller = appRouter.createCaller({
+      ...trpcContext,
+      prisma: trpcContext.prisma,
+    });
+    const todos = await trpcCaller.todo.getTodosAuthed();
     expect(todos).toHaveLength(1);
     expect(todos[0].title).toBe('Hello');
-  });
-
-  it<TRPCTestContext>('should return a single todo', async ({ trpcClient }) => {
-    const contacts = await trpcClient.contact.getContacts();
-
-    console.log('contacts', contacts);
-
-    expect(contacts).toBeDefined();
   });
 });

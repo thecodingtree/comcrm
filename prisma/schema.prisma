@@ -80,7 +80,7 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-/// @@allow('create', true)
+/// @@allow('create', auth() != null)
 /// @@allow('update,delete,read', auth() == user)
 model CoreEntity {
     id String @id() @default(uuid()) @map("_id")

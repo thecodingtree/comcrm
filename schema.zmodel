@@ -85,7 +85,7 @@ model CoreEntity {
   updatedAt         DateTime       @updatedAt
 
   // everyone can create a new entity
-  @@allow('create', true)
+  @@allow('create', auth() != null)
 
   // only the user can read,update,delete their own entities
   @@allow('update,delete,read', auth() == user)

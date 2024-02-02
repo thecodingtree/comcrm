@@ -16,7 +16,8 @@ import { ZodError } from 'zod';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { getZenstackPrisma } from '@/zenstack/utils';
-import { get } from 'http';
+
+import prisma from '@/prisma/client';
 
 /**
  * 1. CONTEXT
@@ -44,7 +45,7 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     heaers: opts.headers,
-    prisma: getZenstackPrisma(opts.session),
+    prisma: getZenstackPrisma(prisma, opts.session),
   };
 };
 
