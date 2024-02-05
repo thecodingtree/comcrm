@@ -5,55 +5,29 @@ import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 
 import {
-  AddressInput,
-  AttributeInput,
   EntityFilterInput,
+  CreateContactInput,
+  UpdateContactInput,
 } from '@/server/sharedTypes';
 import { contactCreator } from '@/server/api/creators';
 
 import {
-  getOwnedCoreEntities,
-  getOwnedCoreEntity,
+  getCoreEntities,
+  getCoreEntity,
   updateCoreEntity,
   deleteCoreEntity,
   CoreEntityResult,
-} from '@/db';
+} from '@/server/coreEntities';
 import { contactDataMapper } from '@/server/api/mappers';
-
-const CreateContactInput = z.object({
-  name: z.string(),
-  surName: z.string(),
-  phone: z.string().optional(),
-  email: z.string().email().optional().or(z.literal('')),
-  address: z.optional(AddressInput),
-  attributes: z.optional(z.array(AttributeInput)),
-  linkedEntity: z.optional(z.string()),
-});
-
-export type CreateContactInputType = z.infer<typeof CreateContactInput>;
-
-const UpdateContactInput = z.object({
-  id: z.string(),
-  name: z.string().optional(),
-  surName: z.string().optional(),
-  phone: z.string().optional(),
-  email: z.string().email().optional(),
-  address: z.optional(AddressInput),
-  attributes: z.optional(z.array(AttributeInput)),
-  linkedEntity: z.optional(z.string()),
-});
-
-export type UpdateContactInputType = z.infer<typeof UpdateContactInput>;
 
 export const contactRouter = createTRPCRouter({
   getContacts: protectedProcedure
     .input(z.object({ filter: EntityFilterInput }).optional())
     .query(async ({ ctx, input }) => {
-      const result = await getOwnedCoreEntities({
+      const result = await getCoreEntities({
         db: ctx.prisma,
         entityType: CoreEntityType.CONTACT,
         filter: input?.filter,
-        withUserId: ctx.session.user.id,
       });
 
       const results = result.map((entity: CoreEntityResult) => {
@@ -69,34 +43,19 @@ export const contactRouter = createTRPCRouter({
         return null;
       }
 
-      if (!ctx.session.user.id) {
-        return null;
-      }
-
-      const result = await getOwnedCoreEntity(
-        ctx.prisma,
-        input,
-        ctx?.session?.user?.id
-      );
+      const result = await getCoreEntity({ db: ctx.prisma, id: input });
 
       return result ? contactDataMapper(result) : null;
     }),
   createContact: protectedProcedure
     .input(CreateContactInput)
-    .mutation(({ ctx, input }) => {
-      if (!ctx.session.user.id) {
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message: 'You must be logged in to create a contact',
-        });
-      }
-
-      return contactCreator({
+    .mutation(({ ctx, input }) =>
+      contactCreator({
         db: ctx.prisma,
         data: input,
         user: ctx.session.user.id,
-      });
-    }),
+      }),
+    ),
   updateContact: protectedProcedure
     .input(UpdateContactInput)
     .mutation(async ({ ctx, input }) => {
@@ -116,12 +75,11 @@ export const contactRouter = createTRPCRouter({
         },
       } as Prisma.CoreEntityUpdateInput;
 
-      const result = await updateCoreEntity(
-        ctx.prisma,
-        input.id,
-        ctx.session.user?.id || '',
-        coreEntityUpdateInput
-      );
+      const result = await updateCoreEntity({
+        db: ctx.prisma,
+        id: input.id,
+        data: coreEntityUpdateInput,
+      });
 
       if (!result) {
         throw new TRPCError({
@@ -135,11 +93,10 @@ export const contactRouter = createTRPCRouter({
   deleteContact: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const result = await deleteCoreEntity(
-        ctx.prisma,
-        input,
-        ctx.session.user?.id!!
-      );
+      const result = await deleteCoreEntity({
+        db: ctx.prisma,
+        id: input,
+      });
 
       if (!result) {
         throw new Error(`CoreEntity with ID ${input} not found`);
@@ -158,12 +115,11 @@ export const contactRouter = createTRPCRouter({
         },
       } as Prisma.CoreEntityUpdateInput;
 
-      const result = await updateCoreEntity(
-        ctx.prisma,
-        input.id,
-        ctx.session.user?.id || '',
-        coreEntityUpdateInput
-      );
+      const result = await updateCoreEntity({
+        db: ctx.prisma,
+        id: input.id,
+        data: coreEntityUpdateInput,
+      });
 
       if (!result) {
         throw new TRPCError({

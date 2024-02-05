@@ -35,10 +35,13 @@ export default function ContactDetails() {
   return (
     <div className="grid grid-cols-3">
       <div>
-        <ContactAvatar
-          avatarSrc={data?.image}
-          onUpdated={handleAvatarImgUpdate}
-        />
+        <div>
+          <ContactAvatar
+            avatarSrc={data?.image}
+            onUpdated={handleAvatarImgUpdate}
+          />
+        </div>
+        <div>Owner: {data?.owner}</div>
       </div>
       <div>
         <ContactInfo contactId={contactId} />

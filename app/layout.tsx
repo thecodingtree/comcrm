@@ -17,7 +17,7 @@ export const metadata = {
   description: 'COMCRM - The Modern CRM for Real Estate Agents',
 };
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/libs/utils';
 
 export const fontSans = FontSans({
   subsets: ['latin'],
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: any }) {
       <body
         className={cn(
           'min-h-screen bg-background font-sans antialiased',
-          fontSans.variable
+          fontSans.variable,
         )}
       >
         <TRPCProvider headers={headers()}>

@@ -4,8 +4,8 @@ import { contactRouter } from '@/server/api/routers/contact';
 import { companyRouter } from '@/server/api/routers/company';
 import { propertyRouter } from '@/server/api/routers/property';
 import { createTRPCRouter } from '@/server/api/trpc';
-import { attributesRouter } from './routers/attributes';
-import { relationshipRouter } from './routers/relationship';
+import { attributesRouter } from './attributes';
+import { relationshipRouter } from './relationship';
 /**
  * This is the primary router for your server.
  *
