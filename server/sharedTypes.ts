@@ -62,7 +62,7 @@ export type ContactType = {
   address?: AddressType;
   image?: string;
   attributes: AttributeType[];
-  user?: string;
+  owner?: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -101,7 +101,7 @@ export type PropertyType = {
   address?: AddressType;
   attributes: AttributeType[];
   image?: string;
-  user?: string;
+  owner?: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -136,7 +136,7 @@ export type CompanyType = {
   address?: AddressType;
   attributes: AttributeType[];
   image?: string;
-  user?: string;
+  owner?: string;
   createdAt: Date;
   updatedAt: Date;
 };

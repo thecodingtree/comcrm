@@ -36,7 +36,8 @@ describe('DB Example Tests', () => {
     testMock.coreEntity.create.mockResolvedValue({
       id: '1',
       type: 'PROPERTY',
-      userId: '1',
+      ownerId: '1',
+      teamId: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

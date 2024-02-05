@@ -2,7 +2,7 @@ import { CoreEntityResult } from '@/server/coreEntities';
 import { ContactType, CompanyType, PropertyType } from '@/server/sharedTypes';
 
 export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
-  const { id, meta, attributes, user, createdAt, updatedAt } = entity;
+  const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
   return {
     id,
     name: meta?.name!,
@@ -12,14 +12,14 @@ export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
     email: meta?.email,
     phone: meta?.phone,
     attributes,
-    user: user?.id ?? '',
+    owner: owner?.email ?? '',
     createdAt,
     updatedAt,
   } as ContactType;
 };
 
 export const companyDataMapper = (entity: CoreEntityResult): CompanyType => {
-  const { id, meta, attributes, user, createdAt, updatedAt } = entity;
+  const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
   return {
     id,
     name: meta?.name!,
@@ -27,14 +27,14 @@ export const companyDataMapper = (entity: CoreEntityResult): CompanyType => {
     phone: meta?.phone || undefined,
     email: meta?.email || undefined,
     attributes,
-    user: user?.id ?? '',
+    owner: owner?.email ?? '',
     createdAt,
     updatedAt,
   } as CompanyType;
 };
 
 export const propertyDataMapper = (entity: CoreEntityResult): PropertyType => {
-  const { id, meta, attributes, user, createdAt, updatedAt } = entity;
+  const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
   return {
     id,
     name: meta?.name,
@@ -42,7 +42,7 @@ export const propertyDataMapper = (entity: CoreEntityResult): PropertyType => {
     phone: meta?.phone,
     email: meta?.email,
     attributes,
-    user: user?.id ?? '',
+    owner: owner?.email ?? '',
     createdAt,
     updatedAt,
   } as PropertyType;

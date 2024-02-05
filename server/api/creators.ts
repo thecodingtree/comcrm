@@ -47,14 +47,7 @@ export const contactCreator = async ({
       },
     },
     attributes: attributes ? { create: attributes } : undefined,
-    userId: user ? user : null,
-    linkedEntities: linkedEntity
-      ? {
-          connect: {
-            id: linkedEntity,
-          },
-        }
-      : undefined,
+    ownerId: user ? user : null,
   } as Prisma.CoreEntityCreateInput;
 
   const result = await createCoreEntity({ db, data: contactCreateInput });
@@ -90,14 +83,7 @@ export const companyCreator = async ({
     attributes: {
       create: attributes,
     },
-    userId: user ? user : null,
-    linkedEntities: linkedEntity
-      ? {
-          connect: {
-            id: linkedEntity,
-          },
-        }
-      : undefined,
+    ownerId: user ? user : null,
   } as Prisma.CoreEntityCreateInput;
 
   const result = await createCoreEntity({ db, data: coreEntityCreateInput });
@@ -131,14 +117,7 @@ export const propertyCreator = async ({
     attributes: {
       create: attributes,
     },
-    userId: user ? user : null,
-    linkedEntities: linkedEntity
-      ? {
-          connect: {
-            id: linkedEntity,
-          },
-        }
-      : undefined,
+    ownerId: user ? user : null,
   } as Prisma.CoreEntityCreateInput;
 
   const result = await createCoreEntity({ db, data: coreEntityCreateInput });

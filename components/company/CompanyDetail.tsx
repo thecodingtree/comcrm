@@ -26,12 +26,15 @@ export default function CompanyDetails() {
   return (
     <div className="grid grid-cols-3">
       <div>
-        <Avatar className="min-w-40 min-h-40">
-          <AvatarImage src={data?.image} />
-          <AvatarFallback className="w-full">
-            <IconCompany size={64} />
-          </AvatarFallback>
-        </Avatar>
+        <div>
+          <Avatar className="min-w-40 min-h-40">
+            <AvatarImage src={data?.image} />
+            <AvatarFallback className="w-full">
+              <IconCompany size={64} />
+            </AvatarFallback>
+          </Avatar>
+        </div>
+        <div>Owner: {data?.owner}</div>
       </div>
       <div>
         <CompanyInfo companyId={companyId} />

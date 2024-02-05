@@ -27,12 +27,15 @@ export default function PropertyDetail() {
   return (
     <div className="grid grid-cols-3">
       <div>
-        <Avatar className="min-w-40 min-h-40">
-          <AvatarImage src={getProperty?.data?.image} />
-          <AvatarFallback className="w-full">
-            <IconProperty size={64} />
-          </AvatarFallback>
-        </Avatar>
+        <div>
+          <Avatar className="min-w-40 min-h-40">
+            <AvatarImage src={getProperty?.data?.image} />
+            <AvatarFallback className="w-full">
+              <IconProperty size={64} />
+            </AvatarFallback>
+          </Avatar>
+        </div>
+        <div>Owner: {getProperty?.data?.owner}</div>
       </div>
       <div>
         <PropertyInfo propertyId={propertyId} />
