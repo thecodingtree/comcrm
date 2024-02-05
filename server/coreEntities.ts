@@ -2,26 +2,14 @@ import { Prisma, PrismaClient, CoreEntityType } from '@prisma/client';
 
 import { EntityFilterType } from '@/server/sharedTypes';
 
-//const prisma = new PrismaClient();
-
 const coreEntityInclude = Prisma.validator<Prisma.CoreEntityInclude>()({
   meta: { include: { address: true } },
   attributes: true,
-  user: true,
+  owner: true,
 });
 
 export type CoreEntityResult = Prisma.CoreEntityGetPayload<{
   include: typeof coreEntityInclude;
-}>;
-
-export const relationshipInclude =
-  Prisma.validator<Prisma.RelationshipInclude>()({
-    from: { include: { meta: true } },
-    to: { include: { meta: true } },
-  });
-
-export type RelationshipResult = Prisma.RelationshipGetPayload<{
-  include: typeof relationshipInclude;
 }>;
 
 const buildCoreEntitiesORFilters = (filter?: EntityFilterType) => {
@@ -29,11 +17,11 @@ const buildCoreEntitiesORFilters = (filter?: EntityFilterType) => {
 
   if (filter?.id) {
     filterORs.push({
-      relatedEntities: filter?.id ? { some: { id: filter.id } } : undefined,
+      relationshipsFrom: filter?.id ? { some: { id: filter.id } } : undefined,
     });
 
     filterORs.push({
-      linkedEntities: filter?.id ? { some: { id: filter.id } } : undefined,
+      relationshipsTo: filter?.id ? { some: { id: filter.id } } : undefined,
     });
   }
 
@@ -52,26 +40,20 @@ const buildCoreEntitiesORFilters = (filter?: EntityFilterType) => {
   return filterORs.length > 0 ? filterORs : undefined;
 };
 
-export const getOwnedCoreEntities = async ({
+export const getCoreEntities = ({
   db,
   entityType,
   filter,
-  withUserId,
 }: {
   db: PrismaClient;
   entityType?: CoreEntityType;
   filter?: EntityFilterType;
   withUserId?: string;
 }): Promise<CoreEntityResult[]> => {
-  if (!withUserId) {
-    return [];
-  }
-
-  const results = await db.coreEntity.findMany({
+  const results = db.coreEntity.findMany({
     include: coreEntityInclude,
     where: {
       type: entityType,
-      userId: withUserId,
       OR: buildCoreEntitiesORFilters(filter),
     },
   });
@@ -79,53 +61,57 @@ export const getOwnedCoreEntities = async ({
   return results;
 };
 
-export const getOwnedCoreEntity = async (
-  db: PrismaClient,
-  id: string,
-  withUserId: string
-): Promise<CoreEntityResult | null> => {
-  if (!withUserId) {
-    return null;
-  }
-
-  const result = await db.coreEntity.findUnique({
+export const getCoreEntity = ({
+  db,
+  id,
+}: {
+  db: PrismaClient;
+  id: string;
+}): Promise<CoreEntityResult | null> => {
+  const result = db.coreEntity.findUnique({
     include: coreEntityInclude,
-    where: { id, userId: withUserId },
+    where: { id },
   });
-
-  if (!result) {
-    throw new Error(`CoreEntity with ID ${id} not found`);
-  }
 
   return result;
 };
 
 // CRUD operations
-export const createCoreEntity = (
-  db: PrismaClient,
-  data: Prisma.CoreEntityCreateInput
-) =>
+export const createCoreEntity = ({
+  db,
+  data,
+}: {
+  db: PrismaClient;
+  data: Prisma.CoreEntityCreateInput;
+}) =>
   db.coreEntity.create({
     data,
     include: coreEntityInclude,
   });
 
-export const updateCoreEntity = (
-  db: PrismaClient,
-  id: string,
-  user: string,
-  data: Prisma.CoreEntityUpdateInput
-) =>
+export const updateCoreEntity = ({
+  db,
+  id,
+  data,
+}: {
+  db: PrismaClient;
+  id: string;
+  data: Prisma.CoreEntityUpdateInput;
+}) =>
   db.coreEntity.update({
     include: coreEntityInclude,
-    where: { id, userId: user },
+    where: { id },
     data,
   });
 
-export const deleteCoreEntity = (db: PrismaClient, id: string, user: string) =>
+export const deleteCoreEntity = ({
+  db,
+  id,
+}: {
+  db: PrismaClient;
+  id: string;
+}) =>
   db.coreEntity.delete({
     include: coreEntityInclude,
-    where: { id, userId: user },
+    where: { id },
   });
-
-export const getNoteForEntity = async (entityId: string) => {};
