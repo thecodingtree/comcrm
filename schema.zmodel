@@ -36,7 +36,7 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(uuid()) @map("_id")
+  id            String       @id @default(cuid()) @map("_id")
   email         String       @unique
   emailVerified DateTime?
   name          String?
@@ -44,6 +44,7 @@ model User {
   entities      CoreEntity[]
   accounts      Account[]
   sessions      Session[]
+  teams         TeamUser[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
@@ -63,6 +64,35 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  entities  CoreEntity[]
+  members   TeamUser[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model TeamUser {
+  id        Int   @id @default(autoincrement())
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  role      TeamRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teamId, userId])
+}
+
 enum CoreEntityType {
   PROPERTY
   CONTACT
@@ -70,29 +100,36 @@ enum CoreEntityType {
 }
 
 model CoreEntity {
-  id                String         @id @default(uuid()) @map("_id")
+  id                String         @id @default(cuid()) @map("_id")
   type              CoreEntityType
-  user              User?          @relation(fields: [userId], references: [id])
-  userId            String?
-  linkedEntities    CoreEntity[]   @relation("CoreEntityToCoreEntity")
-  relatedEntities   CoreEntity[]   @relation("CoreEntityToCoreEntity")
+  owner              User?          @relation(fields: [ownerId], references: [id])
+  ownerId            String?
   relationshipsFrom Relationship[] @relation("RelationshipFrom")
   relationshipsTo   Relationship[] @relation("RelationshipTo")
+  team             Team? @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId            String?
   attributes        Attributes[]
   meta              MetaData?
   notes             Note[]
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 
-  // everyone can create a new entity
-  @@allow('create', auth() != null)
+  // can be read by owner or space members (only if not private)
+    @@allow('read', owner == auth() || team.members?[user == auth()] )
 
-  // only the user can read,update,delete their own entities
-  @@allow('update,delete,read', auth() == user)
+    // when create, owner must be set to current user, and user must be in the space
+    @@allow('create', owner == auth())
+
+    // when update, owner must be set to current user, and user must be in the space
+    // update is not allowed to change owner
+    @@allow('update', owner == auth() && team.members?[user == auth()] && future().owner == owner)
+
+    // can be deleted by owner
+    @@allow('delete', owner == auth())
 }
 
 model Attributes {
-  id        String     @id @default(uuid()) @map("_id")
+  id        String     @id @default(cuid()) @map("_id")
   name      String
   value     String
   entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
@@ -100,11 +137,15 @@ model Attributes {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
-  @@allow('create,update,delete,read', auth() == entity.user)
+  // can be read by owner or space members (only if not private)
+  @@allow('read', entity.owner == auth() || entity.team.members?[user == auth()] )
+
+  // only the user who owns the entity can read,update,delete their own attributes
+  @@allow('create,update,delete', auth() == entity.owner)
 }
 
 model MetaData {
-  id           String      @id @default(uuid()) @map("_id")
+  id           Int      @id @default(autoincrement()) @map("_id")
   name         String
   surName      String?
   image        String?
@@ -114,15 +155,18 @@ model MetaData {
   addressId    String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-  CoreEntity   CoreEntity? @relation(fields: [CoreEntityId], references: [id], onDelete: Cascade)
-  CoreEntityId String?     @unique
+  entity   CoreEntity? @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId String?     @unique
+
+  // can be read by owner or space members (only if not private)
+  @@allow('read', entity.owner == auth() || entity.team.members?[user == auth()] )
 
   // only the user who owns the entity can read,update,delete their own metadata
-  @@allow('all', auth() == CoreEntity.user)
+  @@allow('create,update,delete', auth() == entity.owner)
 }
 
 model Address {
-  id        String    @id @default(uuid()) @map("_id")
+  id        Int    @id @default(autoincrement()) @map("_id")
   street    String?
   city      String?
   state     String?
@@ -130,38 +174,46 @@ model Address {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   meta      MetaData? @relation(fields: [metaId], references: [id], onDelete: Cascade)
-  metaId    String?   @unique
+  metaId    Int?   @unique
+
+  // can be read by owner or space members (only if not private)
+  @@allow('read', meta.entity.owner == auth() || meta.entity.team.members?[user == auth()] )
 
   // only the user who owns the entity can read,update,delete their own address
-  @@allow('all', auth() == meta.CoreEntity.user)
+  @@allow('create,update,delete', auth() == meta.entity.owner)
 }
 
 model Note {
-  id        String     @id @default(uuid()) @map("_id")
+  id        String     @id @default(cuid()) @map("_id")
   content   String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
   entityId  String
 
+  // can be read by owner or space members (only if not private) and team members can create notes on entities
+  @@allow('create,read', entity.owner == auth() || entity.team.members?[user == auth()] )
+
   // only the user who owns the entity can read,update,delete their own notes
-  @@allow('all', auth() == entity.user)
+  @@allow('delete,update', auth() == entity.owner)
 }
 
 model Relationship {
-  id           String           @id @default(uuid()) @map("_id")
+  id           String           @id @default(cuid()) @map("_id")
   type         RelationshipType
   from         CoreEntity       @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
   fromEntityId String
   to           CoreEntity       @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
-  toEntityId   String @allow('update', auth() == to.user) // a user can only link to entities they own
+  toEntityId   String @allow('update', auth() == to.owner) // a user can only link to entities they own
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([fromEntityId, toEntityId])
 
+  @@allow('read', from.owner == auth() || from.team.members?[user == auth()] )
+
   // only the user who owns the entity can read,update,delete their own relationships
-  @@allow('all', auth() == from.user)
+  @@allow('create,update,delete', auth() == from.owner)
 }
 
 enum RelationshipType {

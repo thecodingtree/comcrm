@@ -5,7 +5,7 @@ import { EntityFilterType } from '@/server/sharedTypes';
 const coreEntityInclude = Prisma.validator<Prisma.CoreEntityInclude>()({
   meta: { include: { address: true } },
   attributes: true,
-  user: true,
+  owner: true,
 });
 
 export type CoreEntityResult = Prisma.CoreEntityGetPayload<{
@@ -17,11 +17,11 @@ const buildCoreEntitiesORFilters = (filter?: EntityFilterType) => {
 
   if (filter?.id) {
     filterORs.push({
-      relatedEntities: filter?.id ? { some: { id: filter.id } } : undefined,
+      relationshipsFrom: filter?.id ? { some: { id: filter.id } } : undefined,
     });
 
     filterORs.push({
-      linkedEntities: filter?.id ? { some: { id: filter.id } } : undefined,
+      relationshipsTo: filter?.id ? { some: { id: filter.id } } : undefined,
     });
   }
 
