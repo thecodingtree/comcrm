@@ -5,51 +5,29 @@ import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 
 import {
-  AddressInput,
-  AttributeInput,
   EntityFilterInput,
+  CreatePropertyInput,
+  UpdatePropertyInput,
 } from '@/server/sharedTypes';
 import { propertyCreator } from '@/server/api/creators';
 
 import {
-  getOwnedCoreEntities,
-  getOwnedCoreEntity,
+  getCoreEntities,
+  getCoreEntity,
   CoreEntityResult,
   deleteCoreEntity,
   updateCoreEntity,
-} from '@/db';
+} from '@/server/coreEntities';
 import { propertyDataMapper } from '@/server/api/mappers';
-
-const CreatePropertyInput = z.object({
-  name: z.string(),
-  address: z.optional(AddressInput),
-  attributes: z.optional(z.array(AttributeInput)),
-  linkedEntity: z.optional(z.string()),
-});
-
-export type CreatePropertyInputType = z.infer<typeof CreatePropertyInput>;
-
-const UpdatePropertyInput = z.object({
-  id: z.string(),
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  email: z.string().email().optional(),
-  address: z.optional(AddressInput),
-  attributes: z.optional(z.array(AttributeInput)),
-  linkedEntity: z.optional(z.string()),
-});
-
-export type UpdatePropertyInputType = z.infer<typeof UpdatePropertyInput>;
 
 export const propertyRouter = createTRPCRouter({
   getProperties: protectedProcedure
     .input(z.object({ filter: EntityFilterInput }).optional())
     .query(async ({ ctx, input }) => {
-      const result = await getOwnedCoreEntities({
+      const result = await getCoreEntities({
         db: ctx.prisma,
         entityType: CoreEntityType.PROPERTY,
         filter: input?.filter,
-        withUserId: ctx.session.user.id,
       });
 
       const results = result.map((entity: CoreEntityResult) => {
@@ -69,11 +47,7 @@ export const propertyRouter = createTRPCRouter({
         return null;
       }
 
-      const result = await getOwnedCoreEntity(
-        ctx.prisma,
-        input,
-        ctx?.session?.user?.id
-      );
+      const result = await getCoreEntity({ db: ctx.prisma, id: input });
 
       return result ? propertyDataMapper(result) : null;
     }),
@@ -111,12 +85,11 @@ export const propertyRouter = createTRPCRouter({
         },
       } as Prisma.CoreEntityUpdateInput;
 
-      const result = await updateCoreEntity(
-        ctx.prisma,
-        input.id,
-        ctx.session.user?.id || '',
-        coreEntityUpdateInput
-      );
+      const result = await updateCoreEntity({
+        db: ctx.prisma,
+        id: input.id,
+        data: coreEntityUpdateInput,
+      });
 
       if (!result) {
         throw new TRPCError({
@@ -130,11 +103,10 @@ export const propertyRouter = createTRPCRouter({
   deleteProperty: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const result = await deleteCoreEntity(
-        ctx.prisma,
-        input,
-        ctx.session.user?.id!!
-      );
+      const result = await deleteCoreEntity({
+        db: ctx.prisma,
+        id: input,
+      });
 
       if (!result) {
         throw new Error(`CoreEntity with ID ${input} not found`);

@@ -1,10 +1,14 @@
-import { RelationshipResult, relationshipInclude } from '@/db';
+import {
+  RelationshipResult,
+  getRelationshipsForEntity,
+  createRelationship,
+} from '@/server/relationship';
 import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import {
   CoreEntityType,
   RelationshipType as PrismaRelationshipType,
 } from '@prisma/client';
-import { getOwnedCoreEntities } from '@/db';
+import { getCoreEntities } from '@/server/coreEntities';
 import {
   RelationshipType,
   EntityFilterInput,
@@ -16,11 +20,10 @@ export const relationshipRouter = createTRPCRouter({
   getRelationshipsForEntity: protectedProcedure
     .input(z.object({ entityId: z.string(), limit: z.number().optional() }))
     .query(async ({ ctx, input }) => {
-      const result = await ctx.prisma.relationship.findMany({
-        include: relationshipInclude,
-        where: { fromEntityId: input.entityId! },
-        orderBy: { createdAt: 'desc' },
-        take: input?.limit ?? 10,
+      const result = await getRelationshipsForEntity({
+        db: ctx.prisma,
+        entityId: input.entityId,
+        limit: input.limit,
       });
 
       const results = result.map((relationship: RelationshipResult) => {
@@ -51,16 +54,15 @@ export const relationshipRouter = createTRPCRouter({
           filter: EntityFilterInput.optional(),
           type: z.nativeEnum(CoreEntityType).optional(),
         })
-        .optional()
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
       if (!input?.filter) return [];
 
-      const result = await getOwnedCoreEntities({
+      const result = await getCoreEntities({
         db: ctx.prisma,
         entityType: input?.type,
         filter: input?.filter,
-        withUserId: ctx.session.user.id,
       });
 
       const results = result.map((result) => {
@@ -81,15 +83,14 @@ export const relationshipRouter = createTRPCRouter({
         fromEntityId: z.string(),
         toEntityId: z.string(),
         type: z.nativeEnum(PrismaRelationshipType),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
-      const result = await ctx.prisma.relationship.create({
-        data: {
-          fromEntityId: input.fromEntityId,
-          toEntityId: input.toEntityId,
-          type: input.type,
-        },
+      const result = await createRelationship({
+        db: ctx.prisma,
+        fromEntityId: input.fromEntityId,
+        toEntityId: input.toEntityId,
+        type: input.type,
       });
 
       return result;

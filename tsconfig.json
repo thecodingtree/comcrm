@@ -15,12 +15,12 @@
     "incremental": true,
     "plugins": [
       {
-        "name": "next"
-      }
+        "name": "next",
+      },
     ],
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": ["./*"],
+    },
   },
   "include": [
     "next-env.d.ts",
@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "index.old",
-    "postcss.config.js"
+    "postcss.config.js",
+    "app/_tests/page.test.old",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

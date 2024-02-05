@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/libs/utils';
 
 export interface InputIconProps extends InputProps {
   iconClickable?: boolean;
@@ -16,7 +16,7 @@ const IconInput = React.forwardRef<HTMLInputElement, InputIconProps>(
         <Input
           className={cn(
             'w-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0',
-            className
+            className,
           )}
           ref={ref}
           {...props}
@@ -24,14 +24,14 @@ const IconInput = React.forwardRef<HTMLInputElement, InputIconProps>(
         <div
           className={cn(
             'w-[1rem] m-2',
-            iconClickable ? 'pointer-events-auto' : 'pointer-events-none'
+            iconClickable ? 'pointer-events-auto' : 'pointer-events-none',
           )}
         >
           {icon}
         </div>
       </div>
     );
-  }
+  },
 );
 
 IconInput.displayName = 'IconInput';

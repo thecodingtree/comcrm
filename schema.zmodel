@@ -1,0 +1,229 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String       @id @default(cuid()) @map("_id")
+  email         String       @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  entities      CoreEntity[]
+  accounts      Account[]
+  sessions      Session[]
+  teams         TeamUser[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // everyone can signup, and user profile is also publicly readable
+  @@allow('create,read', true)
+
+  // only the user can update or delete their own profile
+  @@allow('update,delete', auth() == this)
+
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  entities  CoreEntity[]
+  members   TeamUser[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model TeamUser {
+  id        Int   @id @default(autoincrement())
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  role      TeamRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teamId, userId])
+}
+
+enum CoreEntityType {
+  PROPERTY
+  CONTACT
+  COMPANY
+}
+
+model CoreEntity {
+  id                String         @id @default(cuid()) @map("_id")
+  type              CoreEntityType
+  owner              User?          @relation(fields: [ownerId], references: [id])
+  ownerId            String?
+  relationshipsFrom Relationship[] @relation("RelationshipFrom")
+  relationshipsTo   Relationship[] @relation("RelationshipTo")
+  team             Team? @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId            String?
+  attributes        Attributes[]
+  meta              MetaData?
+  notes             Note[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  // can be read by owner or space members (only if not private)
+    @@allow('read', owner == auth() || team.members?[user == auth()] )
+
+    // when create, owner must be set to current user, and user must be in the space
+    @@allow('create', owner == auth())
+
+    // when update, owner must be set to current user, and user must be in the space
+    // update is not allowed to change owner
+    @@allow('update', owner == auth() && team.members?[user == auth()] && future().owner == owner)
+
+    // can be deleted by owner
+    @@allow('delete', owner == auth())
+}
+
+model Attributes {
+  id        String     @id @default(cuid()) @map("_id")
+  name      String
+  value     String
+  entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // can be read by owner or space members (only if not private)
+  @@allow('read', entity.owner == auth() || entity.team.members?[user == auth()] )
+
+  // only the user who owns the entity can read,update,delete their own attributes
+  @@allow('create,update,delete', auth() == entity.owner)
+}
+
+model MetaData {
+  id           Int      @id @default(autoincrement()) @map("_id")
+  name         String
+  surName      String?
+  image        String?
+  email        String?
+  phone        String?
+  address      Address?
+  addressId    String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  entity   CoreEntity? @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId String?     @unique
+
+  // can be read by owner or space members (only if not private)
+  @@allow('read', entity.owner == auth() || entity.team.members?[user == auth()] )
+
+  // only the user who owns the entity can read,update,delete their own metadata
+  @@allow('create,update,delete', auth() == entity.owner)
+}
+
+model Address {
+  id        Int    @id @default(autoincrement()) @map("_id")
+  street    String?
+  city      String?
+  state     String?
+  zip       String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  meta      MetaData? @relation(fields: [metaId], references: [id], onDelete: Cascade)
+  metaId    Int?   @unique
+
+  // can be read by owner or space members (only if not private)
+  @@allow('read', meta.entity.owner == auth() || meta.entity.team.members?[user == auth()] )
+
+  // only the user who owns the entity can read,update,delete their own address
+  @@allow('create,update,delete', auth() == meta.entity.owner)
+}
+
+model Note {
+  id        String     @id @default(cuid()) @map("_id")
+  content   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId  String
+
+  // can be read by owner or space members (only if not private) and team members can create notes on entities
+  @@allow('create,read', entity.owner == auth() || entity.team.members?[user == auth()] )
+
+  // only the user who owns the entity can read,update,delete their own notes
+  @@allow('delete,update', auth() == entity.owner)
+}
+
+model Relationship {
+  id           String           @id @default(cuid()) @map("_id")
+  type         RelationshipType
+  from         CoreEntity       @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
+  fromEntityId String
+  to           CoreEntity       @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
+  toEntityId   String @allow('update', auth() == to.owner) // a user can only link to entities they own
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([fromEntityId, toEntityId])
+
+  @@allow('read', from.owner == auth() || from.team.members?[user == auth()] )
+
+  // only the user who owns the entity can read,update,delete their own relationships
+  @@allow('create,update,delete', auth() == from.owner)
+}
+
+enum RelationshipType {
+  OWNER_OF
+  EMPLOYED_BY
+  EMPLOYER_OF
+  AGENT_FOR
+  OWNED_BY
+  SOLD_TO
+  LEASED_TO
+  LEASED_BY
+  INTERESTED_IN
+}

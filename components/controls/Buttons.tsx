@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { IconPencil, IconX, IconCheck } from '@tabler/icons-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/libs/utils';
 
 export function IconButton({
   className,

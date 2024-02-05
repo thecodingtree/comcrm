@@ -1,0 +1,60 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { inferProcedureInput } from '@trpc/server';
+import { createInnerTRPCContext } from '@/server/api/trpc';
+import { appRouter, AppRouter } from '@/server/api/root';
+
+// 1- mock prisma module
+vi.mock('@/libs/__mocks__/db');
+
+interface TRPCTestContext {
+  trpcContext: ReturnType<typeof createInnerTRPCContext>;
+}
+
+// 3- Reset everything
+beforeEach<TRPCTestContext>(async (context) => {
+  vi.restoreAllMocks();
+
+  // mock user in prisma
+
+  // 4- mock session
+  const session = {
+    expires: '1',
+    user: {
+      id: 'clgb17vnp000008jjere5g15i',
+    },
+  };
+
+  // 5- init tRPC for test
+  const trpcContext = createInnerTRPCContext({
+    session,
+    headers: new Headers(),
+  });
+
+  context.trpcContext = trpcContext;
+});
+
+// 2- our tests
+describe('TRPC Example Tests', () => {
+  it<TRPCTestContext>('should return a list of public todos', async ({
+    trpcContext,
+  }) => {
+    const trpcCaller = appRouter.createCaller({
+      ...trpcContext,
+      prisma: trpcContext.prisma,
+    });
+    const todos = await trpcCaller.todo.getTodos();
+    expect(todos).toHaveLength(1);
+    expect(todos[0].title).toBe('Hello');
+  });
+  it<TRPCTestContext>('should return a list of protected todos', async ({
+    trpcContext,
+  }) => {
+    const trpcCaller = appRouter.createCaller({
+      ...trpcContext,
+      prisma: trpcContext.prisma,
+    });
+    const todos = await trpcCaller.todo.getTodosAuthed();
+    expect(todos).toHaveLength(1);
+    expect(todos[0].title).toBe('Hello');
+  });
+});

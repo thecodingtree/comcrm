@@ -9,12 +9,15 @@
 
 import { initTRPC, TRPCError } from '@trpc/server';
 import { type NextRequest } from 'next/server';
+import type { Session } from 'next-auth';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
-import { PrismaClient } from '@prisma/client';
+import { getZenstackPrisma } from '@/zenstack/utils';
+
+import prisma from '@/prisma/client';
 
 /**
  * 1. CONTEXT
@@ -23,10 +26,10 @@ import { PrismaClient } from '@prisma/client';
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
-
-interface CreateContextOptions {
+type CreateContextOptions = {
+  session: Session | null;
   headers: Headers;
-}
+};
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -38,13 +41,11 @@ interface CreateContextOptions {
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
-  const session = await getServerSession(authOptions);
-
+export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
-    session,
-    headers: opts.headers,
-    prisma: new PrismaClient(),
+    session: opts.session,
+    heaers: opts.headers,
+    prisma: getZenstackPrisma(prisma, opts.session),
   };
 };
 
@@ -54,11 +55,13 @@ export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: { req: NextRequest }) => {
-  // Fetch stuff that depends on the request
+export const createTRPCContext = async (req: NextRequest) => {
+  // Get the session from the server using the unstable_getServerSession wrapper function
+  const session = await getServerSession(authOptions);
 
-  return await createInnerTRPCContext({
-    headers: opts.req.headers,
+  return createInnerTRPCContext({
+    session,
+    headers: req.headers,
   });
 };
 
