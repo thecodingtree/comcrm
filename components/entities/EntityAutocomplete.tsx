@@ -13,7 +13,7 @@ import { trpc } from '@/app/_trpc/client';
 
 import { EntitySearchResult } from '@/server/sharedTypes';
 
-import { useDebouncedState } from '@/lib/hooks';
+import { useDebouncedState } from '@/libs/hooks';
 
 import {
   Popover,
@@ -77,7 +77,7 @@ export function EntityAutocomplete({
       {
         trpc: { abortOnUnmount: true },
         refetchOnMount: false,
-      }
+      },
     );
 
   const onEntitySelectedHandler = (id: string) => {

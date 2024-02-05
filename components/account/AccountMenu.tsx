@@ -20,7 +20,7 @@ export function AccountMenu() {
         <div className="flex flex-row gap-2 cursor-pointer">
           <Avatar>
             <AvatarImage src={user?.image} />
-            <AvatarFallback>{`${user?.name[0]}`}</AvatarFallback>
+            <AvatarFallback>{`${user?.name?.charAt(0) ?? ''}`}</AvatarFallback>
           </Avatar>
 
           <div style={{ flex: 1 }}>
