@@ -72,6 +72,9 @@ model Team {
   members   TeamUser[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // can be read by space members (only if not private)
+    @@allow('read', members?[user == auth()] )
 }
 
 enum TeamRole {
@@ -91,6 +94,9 @@ model TeamUser {
   updatedAt DateTime @updatedAt
 
   @@unique([teamId, userId])
+
+  // can be read by space members (only if not private)
+  @@allow('read', team.members?[user == auth()] )
 }
 
 enum CoreEntityType {
