@@ -3,6 +3,7 @@ import { z } from 'zod';
 import {
   RelationshipType as PrismaRelationshipType,
   CoreEntityType,
+  User,
 } from '@prisma/client';
 
 export const CONTACT_RESERVED_PREFIX = 'CONTACT_RESERVED_';
@@ -11,6 +12,7 @@ export const COMPANY_RESERVED_PREFIX = 'COMPANY_RESERVED_';
 
 export type NoteType = {
   id: string;
+  creator: User;
   entityId: string;
   content: string;
   createdAt: Date;
