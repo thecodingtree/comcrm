@@ -7,10 +7,12 @@ export function IconButton({
   className,
   onClick,
   icon,
+  children,
 }: {
   className?: string;
   onClick?: () => void;
   icon: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
     <Button
@@ -19,6 +21,7 @@ export function IconButton({
       onClick={onClick}
     >
       {icon}
+      {children}
     </Button>
   );
 }

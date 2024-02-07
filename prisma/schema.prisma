@@ -87,6 +87,7 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+/// @@allow('read', members?[user == auth()])
 model Team {
     id String @id() @default(cuid())
     name String
@@ -97,6 +98,7 @@ model Team {
     updatedAt DateTime @updatedAt()
 }
 
+/// @@allow('read', team.members?[user == auth()])
 model TeamUser {
     id Int @id() @default(autoincrement())
     team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
