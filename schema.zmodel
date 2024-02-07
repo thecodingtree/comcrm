@@ -45,6 +45,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   teams         TeamUser[]
+  notes         Note[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
@@ -117,13 +118,14 @@ model CoreEntity {
   attributes        Attributes[]
   meta              MetaData?
   notes             Note[]
+  private            Boolean        @default(false)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 
-  // can be read by owner or space members (only if not private)
-    @@allow('read', owner == auth() || team.members?[user == auth()] )
+  // can be read by owner or space members (and not private)
+    @@allow('read', owner == auth() || (team.members?[user == auth()] && private == false))
 
-    // when create, owner must be set to current user, and user must be in the space
+    // users can only create entities for themselves
     @@allow('create', owner == auth())
 
     // when update, owner must be set to current user, and user must be in the space
@@ -191,13 +193,15 @@ model Address {
 
 model Note {
   id        String     @id @default(cuid()) @map("_id")
+  creator   User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String
   content   String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
   entityId  String
 
-  // can be read by owner or space members (only if not private) and team members can create notes on entities
+  // can be read by owner or space members and team members can create notes on entities
   @@allow('create,read', entity.owner == auth() || entity.team.members?[user == auth()] )
 
   // only the user who owns the entity can read,update,delete their own notes

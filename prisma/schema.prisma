@@ -75,6 +75,7 @@ model User {
     accounts Account[]
     sessions Session[]
     teams TeamUser[]
+    notes Note[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 }
@@ -112,7 +113,7 @@ model TeamUser {
     @@unique([teamId, userId])
 }
 
-/// @@allow('read', owner == auth() || team.members?[user == auth()])
+/// @@allow('read', owner == auth() || (team.members?[user == auth()] && private == false))
 /// @@allow('create', owner == auth())
 /// @@allow('update', owner == auth() && team.members?[user == auth()] && future().owner == owner)
 /// @@allow('delete', owner == auth())
@@ -128,6 +129,7 @@ model CoreEntity {
     attributes Attributes[]
     meta MetaData?
     notes Note[]
+    private Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 }
@@ -179,6 +181,8 @@ model Address {
 /// @@allow('delete,update', auth() == entity.owner)
 model Note {
     id String @id() @default(cuid()) @map("_id")
+    creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+    creatorId String
     content String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
