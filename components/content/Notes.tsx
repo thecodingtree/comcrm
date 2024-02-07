@@ -7,24 +7,27 @@ import { Button } from '@/components/ui/button';
 interface NoteProps {
   date: Date;
   content: string;
+  creator: string;
 }
 
 const getDaysSinceDate = (date: Date): number => {
   return Math.floor(
-    (new Date().getTime() - new Date(date).getTime()) / 86400000
+    (new Date().getTime() - new Date(date).getTime()) / 86400000,
   );
 };
 
 // TODO: This is a very naive implementation of this function
-const getDaysSinceDateText = (date: Date): string => {
+export const getNoteDateLabel = (date: Date): string => {
   const daysSinceDate = getDaysSinceDate(date);
 
   if (daysSinceDate === 0) {
-    return 'Today';
+    return date.toLocaleTimeString('en-US', { timeStyle: 'short' });
   }
 
   if (daysSinceDate === 1) {
-    return 'Yesterday';
+    return (
+      'Yesterday at ' + date.toLocaleTimeString('en-US', { timeStyle: 'short' })
+    );
   }
 
   if (daysSinceDate < 7) {
@@ -46,12 +49,23 @@ const getDaysSinceDateText = (date: Date): string => {
   return `${Math.floor(daysSinceDate / 365)} year(s) ago`;
 };
 
-export function Note({ date, content }: NoteProps) {
+export function Note({
+  date,
+  content,
+  creator,
+}: {
+  date: Date;
+  content: string;
+  creator?: string | undefined;
+}) {
   return (
     <div className="border border-slate-200 rounded-sm p-2 m-2">
-      <div className="flex flex-col gap-2">
-        <p className="text-xs text-slate-400">{getDaysSinceDateText(date)}</p>
+      <div className="flex flex-col gap-4">
+        <p className="text-xs text-slate-400">{getNoteDateLabel(date)}</p>
         <p>{content}</p>
+        {creator && (
+          <p className="text-xs text-slate-400">posted by {creator}</p>
+        )}
       </div>
     </div>
   );

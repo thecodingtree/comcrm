@@ -19,7 +19,7 @@ export function AccountMenuItem() {
       <PopoverTrigger>
         <div className="font-medium text-sm flex flex-row gap-2 justify-start">
           <Avatar>
-            <AvatarImage src={user?.image} />
+            <AvatarImage src={user?.image ?? undefined} />
             <AvatarFallback>{`${user?.name?.charAt(0) ?? ''}`}</AvatarFallback>
           </Avatar>
 
