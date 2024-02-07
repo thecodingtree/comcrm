@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Session } from 'next-auth';
 import { useSession, signOut } from 'next-auth/react';
-
-type User = any;
 
 export default function useUser() {
   const { data: session, status } = useSession();
-  const [user, setUser] = useState<User>(null);
+  const [user, setUser] = useState<Session['user'] | null>(null);
 
   useEffect(() => {
     if (session?.user) {

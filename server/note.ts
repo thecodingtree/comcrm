@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 
+import { getAuthedServerSession } from '@/server/utils';
+
 import { NoteType, NotesFilterType } from '@/server/sharedTypes';
 
-export function getNotes({
+export async function getNotes({
   db,
   filter,
   limit,
@@ -13,12 +15,13 @@ export function getNotes({
 }) {
   return db.note.findMany({
     where: { OR: [{ ...filter }] },
+    include: { creator: true },
     orderBy: { createdAt: 'desc' },
     take: limit,
-  }) as Promise<NoteType[]>;
+  });
 }
 
-export function createNote({
+export async function createNote({
   db,
   entityId,
   content,
@@ -27,10 +30,13 @@ export function createNote({
   entityId: string;
   content: string;
 }) {
+  const session = await getAuthedServerSession();
+
   return db.note.create({
     data: {
       entityId,
       content,
+      creatorId: session?.user?.id!,
     },
   });
 }
