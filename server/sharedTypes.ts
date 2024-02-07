@@ -206,3 +206,26 @@ export enum CompanyReservedAttributes {
   ALT_PHONE = `${COMPANY_RESERVED_PREFIX}ALT_PHONE`,
   ALT_EMAIL = `${COMPANY_RESERVED_PREFIX}ALT_EMAIL`,
 }
+
+export enum TeamRole {
+  OWNER = 'OWNER',
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER',
+}
+
+export type TeamUser = {
+  id: string;
+  email: string;
+  name: string;
+  image: string;
+  role: TeamRole;
+};
+
+export type Team = {
+  id: string;
+  name: string;
+  slug: string;
+  members: TeamUser[];
+  createdAt: Date;
+  updatedAt: Date;
+};

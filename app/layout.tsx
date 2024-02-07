@@ -9,9 +9,6 @@ import '@uploadthing/react/styles.css';
 
 import '@/app/globals.css';
 
-import Header from '@/components/common/Header';
-import Footer from '@/components/common/Footer';
-
 export const metadata = {
   title: 'COMCRM - The Modern CRM for Real Estate Agents',
   description: 'COMCRM - The Modern CRM for Real Estate Agents',
@@ -40,11 +37,7 @@ export default function RootLayout({ children }: { children: any }) {
           fontSans.variable,
         )}
       >
-        <TRPCProvider headers={headers()}>
-          <Header />
-          {children}
-          <Footer />
-        </TRPCProvider>
+        <TRPCProvider headers={headers()}>{children}</TRPCProvider>
         <Analytics />
       </body>
     </html>
