@@ -11,7 +11,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 
-import { AddNote } from '../content/Notes';
+import { AddNote, getNoteDateLabel } from '@/components/content/Notes';
 
 import { NoteType } from '@/server/sharedTypes';
 
@@ -28,8 +28,9 @@ export default function EntitiyNotesTable({ entity }: { entity: string }) {
     const date = new Date(row.createdAt);
     return (
       <TableRow key={row.id}>
-        <TableCell>{`${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`}</TableCell>
+        <TableCell>{getNoteDateLabel(date)}</TableCell>
         <TableCell>{row.content}</TableCell>
+        <TableCell>{row.creator?.email}</TableCell>
       </TableRow>
     );
   };
@@ -41,6 +42,7 @@ export default function EntitiyNotesTable({ entity }: { entity: string }) {
           <TableRow>
             <TableHead>Date</TableHead>
             <TableHead>Content</TableHead>
+            <TableHead>Creator</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
