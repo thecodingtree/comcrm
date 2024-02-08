@@ -13,6 +13,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+import { Button } from '@/components/ui/button';
+
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { IconUser } from '@tabler/icons-react';
 
@@ -49,7 +51,9 @@ export default function TeamUsers({ teamId }: { teamId: string }) {
         </TableRow>
       </TableHeader>
       <TableBody>{teamUsers}</TableBody>
-      <TableFooter></TableFooter>
+      <TableFooter>
+        <Button>Invite</Button>
+      </TableFooter>
     </Table>
   );
 }

@@ -32,6 +32,8 @@ export default function ContactDetails() {
 
   if (isLoading) return <p>Loading...</p>;
 
+  const isReadOnly = data?.canEdit === false;
+
   return (
     <div className="grid grid-cols-3">
       <div>
@@ -39,12 +41,13 @@ export default function ContactDetails() {
           <ContactAvatar
             avatarSrc={data?.image}
             onUpdated={handleAvatarImgUpdate}
+            readOnly={data?.canEdit === false}
           />
         </div>
         <div>Owner: {data?.owner}</div>
       </div>
       <div>
-        <ContactInfo contactId={contactId} />
+        <ContactInfo contactId={contactId} readOnly={isReadOnly} />
       </div>
       <div>
         <EntityNotesBrief entityId={contactId} />
@@ -53,6 +56,7 @@ export default function ContactDetails() {
         <RelationshipsTable
           fromEntityId={contactId!}
           fromEntityType={CoreEntityType.CONTACT}
+          readOnly={isReadOnly}
         />
       </div>
       <div className="col-span-3">

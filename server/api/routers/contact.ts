@@ -31,7 +31,7 @@ export const contactRouter = createTRPCRouter({
       });
 
       const results = result.map((entity: CoreEntityResult) => {
-        return contactDataMapper(entity);
+        return contactDataMapper(entity, ctx.session?.user);
       });
 
       return results;
@@ -45,7 +45,7 @@ export const contactRouter = createTRPCRouter({
 
       const result = await getCoreEntity({ db: ctx.prisma, id: input });
 
-      return result ? contactDataMapper(result) : null;
+      return result ? contactDataMapper(result, ctx.session?.user) : null;
     }),
   createContact: protectedProcedure
     .input(CreateContactInput)
@@ -53,7 +53,7 @@ export const contactRouter = createTRPCRouter({
       contactCreator({
         db: ctx.prisma,
         data: input,
-        user: ctx.session.user.id,
+        user: ctx.session.user,
       }),
     ),
   updateContact: protectedProcedure
@@ -88,7 +88,7 @@ export const contactRouter = createTRPCRouter({
         });
       }
 
-      return contactDataMapper(result);
+      return contactDataMapper(result, ctx.session?.user);
     }),
   deleteContact: protectedProcedure
     .input(z.string())
@@ -102,7 +102,7 @@ export const contactRouter = createTRPCRouter({
         throw new Error(`CoreEntity with ID ${input} not found`);
       }
 
-      return contactDataMapper(result);
+      return contactDataMapper(result, ctx.session?.user);
     }),
   updateAvatarSrc: protectedProcedure
     .input(z.object({ id: z.string(), avatarSrc: z.string().optional() }))
@@ -128,6 +128,6 @@ export const contactRouter = createTRPCRouter({
         });
       }
 
-      return contactDataMapper(result);
+      return contactDataMapper(result, ctx.session?.user);
     }),
 });

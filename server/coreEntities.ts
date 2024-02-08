@@ -7,6 +7,7 @@ const coreEntityInclude = Prisma.validator<Prisma.CoreEntityInclude>()({
   meta: { include: { address: true } },
   attributes: true,
   owner: true,
+  team: { include: { members: { include: { user: true } } } },
 });
 
 export type CoreEntityResult = Prisma.CoreEntityGetPayload<{

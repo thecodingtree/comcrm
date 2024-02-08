@@ -12,6 +12,7 @@ import {
   CreateCompanyInputType,
   CreateContactInputType,
   CreatePropertyInputType,
+  SessionUser,
 } from '@/server/sharedTypes';
 
 export const contactCreator = async ({
@@ -21,7 +22,7 @@ export const contactCreator = async ({
 }: {
   db: PrismaClient;
   data: CreateContactInputType;
-  user?: string;
+  user?: SessionUser;
 }) => {
   const { name, surName, phone, email, address, attributes, linkedEntity } =
     data;
@@ -48,13 +49,13 @@ export const contactCreator = async ({
     },
     attributes: attributes ? { create: attributes } : undefined,
     owner: {
-      connect: { id: user },
+      connect: { id: user?.id },
     },
   } as Prisma.CoreEntityCreateInput;
 
   const result = await createCoreEntity({ db, data: contactCreateInput });
 
-  return contactDataMapper(result);
+  return contactDataMapper(result, user);
 };
 
 export const companyCreator = async ({
@@ -64,7 +65,7 @@ export const companyCreator = async ({
 }: {
   db: PrismaClient;
   data: CreateCompanyInputType;
-  user?: string;
+  user?: SessionUser;
 }) => {
   const { name, phone, email, address, attributes, linkedEntity } = data;
 
@@ -86,13 +87,13 @@ export const companyCreator = async ({
       create: attributes,
     },
     owner: {
-      connect: { id: user },
+      connect: { id: user?.id },
     },
   } as Prisma.CoreEntityCreateInput;
 
   const result = await createCoreEntity({ db, data: coreEntityCreateInput });
 
-  return companyDataMapper(result);
+  return companyDataMapper(result, user);
 };
 
 export const propertyCreator = async ({
@@ -102,7 +103,7 @@ export const propertyCreator = async ({
 }: {
   db: PrismaClient;
   data: CreatePropertyInputType;
-  user?: string;
+  user?: SessionUser;
 }) => {
   const { name, address, attributes, linkedEntity } = data;
 
@@ -122,11 +123,11 @@ export const propertyCreator = async ({
       create: attributes,
     },
     owner: {
-      connect: { id: user },
+      connect: { id: user?.id },
     },
   } as Prisma.CoreEntityCreateInput;
 
   const result = await createCoreEntity({ db, data: coreEntityCreateInput });
 
-  return propertyDataMapper(result);
+  return propertyDataMapper(result, user);
 };
