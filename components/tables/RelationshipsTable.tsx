@@ -119,9 +119,11 @@ const rowRenderer = (row: RelationshipType) => {
 export function RelationshipsTable({
   fromEntityId,
   fromEntityType,
+  readOnly,
 }: {
   fromEntityId: string;
   fromEntityType: CoreEntityType;
+  readOnly?: boolean;
 }) {
   const { data, refetch } =
     trpc.relationship.getRelationshipsForEntity.useQuery({
@@ -141,11 +143,13 @@ export function RelationshipsTable({
         </TableHeader>
         <TableBody>
           {data?.map((row) => rowRenderer(row))}
-          <AddRelationship
-            fromEntityId={fromEntityId}
-            fromEntityType={fromEntityType}
-            refetch={refetch}
-          />
+          {!readOnly && (
+            <AddRelationship
+              fromEntityId={fromEntityId}
+              fromEntityType={fromEntityType}
+              refetch={refetch}
+            />
+          )}
         </TableBody>
       </Table>
     </ScrollArea>
