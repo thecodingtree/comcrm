@@ -233,6 +233,15 @@ export type TeamUser = {
   role: TeamRole;
 };
 
+export type TeamInvite = {
+  id: number;
+  team: Team;
+  token: string;
+  email: string;
+  role: TeamRole;
+  status: 'PENDING' | 'EXPIRED';
+};
+
 export type Team = {
   id: string;
   name: string;

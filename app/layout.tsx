@@ -1,9 +1,12 @@
 import React from 'react';
 import { headers } from 'next/headers';
 import { Inter as FontSans } from 'next/font/google';
+import { toast } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
 
 import { TRPCProvider } from '@/app/_trpc/TRPCProvider';
+
+import { Toaster } from '@/components/ui/sonner';
 
 import '@uploadthing/react/styles.css';
 
@@ -39,6 +42,7 @@ export default function RootLayout({ children }: { children: any }) {
       >
         <TRPCProvider headers={headers()}>{children}</TRPCProvider>
         <Analytics />
+        <Toaster position="bottom-center" closeButton />
       </body>
     </html>
   );

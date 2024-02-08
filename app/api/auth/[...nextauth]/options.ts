@@ -5,7 +5,7 @@ import EmailProvider from 'next-auth/providers/email';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/prisma/client';
 
-import { sendVerificationRequest } from '@/resend/utils';
+import { sendVerificationRequest } from '@/emails/send-verification';
 
 const providers = [
   GitHubProvider({
