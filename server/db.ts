@@ -1,11 +1,8 @@
 import { getZenstackPrisma } from '@/zenstack/utils';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/options';
+import { Session } from 'next-auth';
 
 import prisma from '@/prisma/client';
 
-export async function getEnhancedDB() {
-  const session = await getServerSession(authOptions);
-
+export async function getEnhancedDB(session: Session) {
   return getZenstackPrisma(prisma, session);
 }
