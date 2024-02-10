@@ -23,6 +23,8 @@ export default function CompanyDetails() {
 
   if (isLoading) return <p>Loading...</p>;
 
+  const isReadOnly = data?.canEdit === false;
+
   return (
     <div className="grid grid-cols-3">
       <div>
@@ -37,7 +39,7 @@ export default function CompanyDetails() {
         <div>Owner: {data?.owner}</div>
       </div>
       <div>
-        <CompanyInfo companyId={companyId} />
+        <CompanyInfo companyId={companyId} readOnly={isReadOnly} />
       </div>
       <div>
         <EntityNotesBrief entityId={companyId} />
@@ -46,6 +48,7 @@ export default function CompanyDetails() {
         <RelationshipsTable
           fromEntityId={companyId!}
           fromEntityType={CoreEntityType.COMPANY}
+          readOnly={isReadOnly}
         />
       </div>
       <div className="col-span-3">

@@ -24,6 +24,8 @@ export default function PropertyDetail() {
 
   if (getProperty.isLoading) return <p>Loading...</p>;
 
+  const isReadOnly = getProperty.data?.canEdit === false;
+
   return (
     <div className="grid grid-cols-3">
       <div>
@@ -38,7 +40,7 @@ export default function PropertyDetail() {
         <div>Owner: {getProperty?.data?.owner}</div>
       </div>
       <div>
-        <PropertyInfo propertyId={propertyId} />
+        <PropertyInfo propertyId={propertyId} readOnly={isReadOnly} />
       </div>
       <div>
         <EntityNotesBrief entityId={propertyId} />
@@ -47,6 +49,7 @@ export default function PropertyDetail() {
         <RelationshipsTable
           fromEntityId={propertyId!}
           fromEntityType={CoreEntityType.PROPERTY}
+          readOnly={isReadOnly}
         />
       </div>
       <div className="col-span-3">
