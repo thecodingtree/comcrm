@@ -17,16 +17,18 @@ export function AccountMenuItem() {
   return (
     <Popover>
       <PopoverTrigger>
-        <div className="font-medium text-sm flex flex-row gap-2 justify-start">
+        <div className="font-medium text-sm grid grid-flow-col gap-2 justify-start overflow-hidden">
           <Avatar>
             <AvatarImage src={user?.image ?? undefined} />
             <AvatarFallback>{`${user?.name?.charAt(0) ?? ''}`}</AvatarFallback>
           </Avatar>
 
-          <div style={{ flex: 1 }}>
+          <div className="overflow-hidden text-ellipsis">
             <p className="text-sm font-bold text-start">{user?.name}</p>
 
-            <p className="text-xs text-slate-400 text-start">{user?.email}</p>
+            <p className="text-xs text-slate-400 text-start text-ellipsis overflow-hidden">
+              {user?.email}
+            </p>
           </div>
 
           <IconChevronRight size={24} stroke={1.5} />

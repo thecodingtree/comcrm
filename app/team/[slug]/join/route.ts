@@ -47,13 +47,13 @@ export async function GET(
       });
     } catch (error) {
       console.log('Error adding user to team', error);
-      redirect('/dashboard/home');
+      redirect('/home');
     }
   } else {
     console.log(`No invite found for user: ${email} and team: ${params?.slug}`);
-    redirect('/dashboard/home');
+    redirect('/home');
   }
 
   // User added to team, redirect to the team dashboard
-  redirect('/dashboard/team/');
+  redirect('/team');
 }

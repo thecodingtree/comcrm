@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
-
-import { toast } from 'sonner';
+import React from 'react';
 
 import { SessionProvider } from 'next-auth/react';
 
 import { BackButton } from '@/components/controls/NavButtons';
 import Sidebar from '@/components/sidebar/Sidebar';
 
-export default function DashboardLayout({ children }: { children: any }) {
+export default function MainLayout({ children }: { children: any }) {
   return (
     <SessionProvider>
       <div className="flex flex-row">
