@@ -10,6 +10,7 @@ import {
 import useUser from '@/hooks/useUser';
 
 import { IconButton } from '@/components/controls/Buttons';
+import { AccountSkeleton } from '@/components/account/AccountSkeleton';
 
 export function AccountMenuItem() {
   const { user, signOut } = useUser();
@@ -18,10 +19,14 @@ export function AccountMenuItem() {
     <Popover>
       <PopoverTrigger>
         <div className="font-medium text-sm grid grid-flow-col gap-2 justify-start overflow-hidden">
-          <Avatar>
-            <AvatarImage src={user?.image ?? undefined} />
-            <AvatarFallback>{`${user?.name?.charAt(0) ?? ''}`}</AvatarFallback>
-          </Avatar>
+          {user ? (
+            <Avatar>
+              <AvatarImage src={user?.image ?? undefined} />
+              <AvatarFallback>{`${user?.name?.charAt(0) ?? ''}`}</AvatarFallback>
+            </Avatar>
+          ) : (
+            <AccountSkeleton />
+          )}
 
           <div className="overflow-hidden text-ellipsis">
             <p className="text-sm font-bold text-start">{user?.name}</p>
