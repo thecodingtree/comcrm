@@ -1,53 +1,64 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
+import { cn } from '@/libs/utils';
+
 import { AccountMenuItem } from '@/components/account/AccountMenuItem';
 
 import {
+  IconDashboard,
   IconCompany,
   IconContact,
   IconProperty,
   IconTeam,
 } from '@/components/common/icons';
 
-const data = [
-  { link: '/dashboard/contacts', label: 'Contacts', icon: IconContact },
-  { link: '/dashboard/companies', label: 'Companies', icon: IconCompany },
-  { link: '/dashboard/properties', label: 'Properties', icon: IconProperty },
-  { link: '/dashboard/team', label: 'Team', icon: IconTeam },
+const sidebarData = [
+  { link: '/dashboard', label: 'Dashboard', icon: IconDashboard },
+  { link: '/contacts', label: 'Contacts', icon: IconContact },
+  { link: '/companies', label: 'Companies', icon: IconCompany },
+  { link: '/properties', label: 'Properties', icon: IconProperty },
+  { link: '/team', label: 'Team', icon: IconTeam },
 ];
+
+const getActiveFromPath = (path: string) => {
+  return sidebarData.find((item) => path.includes(item.link))?.label;
+};
 
 export default function Sidebar() {
   const pathName = usePathname();
 
-  const getActiveFromPath = (path: string) => {
-    return data.find((item) => path.includes(item.link))?.label;
-  };
+  const links = sidebarData.map((item) => {
+    const isActive = pathName?.includes(item.link);
 
-  const [active, setActive] = useState(getActiveFromPath(pathName || ''));
-
-  const links = data.map((item) => (
-    <Link
-      className="w-full flex items-center gap-2 p-4 text-sm font-medium text-slate-900 hover:bg-slate-100 hover:text-slate-900 rounded-md transition-colors duration-200 ease-in-out"
-      data-active={item.label === active || undefined}
-      href={item.link}
-      key={item.label}
-    >
-      <item.icon size={24} stroke={1.5} />
-      <span>{item.label}</span>
-    </Link>
-  ));
+    return (
+      <Link
+        className={cn(
+          'w-full flex items-center gap-2 p-4 text-sm font-medium text-slate-900 hover:bg-slate-100 hover:text-slate-900 rounded-md transition-colors duration-200 ease-in-out',
+          `${isActive ? 'bg-slate-200 hover:bg-slate-200' : null}`,
+        )}
+        data-active={isActive || undefined}
+        href={item.link}
+        key={item.label}
+      >
+        <item.icon size={24} stroke={1.5} />
+        <span>{item.label}</span>
+      </Link>
+    );
+  });
 
   return (
     <aside className="h-screen bg-slate-50">
-      <nav className="grid items-start px-4 text-sm font-medium w-64 min-h-screen">
-        <div className="align-top">{links}</div>
-        <div className="align-bottom">
-          <AccountMenuItem />
+      <nav className="">
+        <div className="flex flex-col overflow-hidden justify-between items-start p-4 text-sm font-medium w-64 min-h-screen">
+          <div className="w-full">{links}</div>
+          <div className="w-full h-full">
+            <AccountMenuItem />
+          </div>
         </div>
       </nav>
     </aside>

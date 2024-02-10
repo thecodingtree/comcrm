@@ -3,7 +3,10 @@ import {
   IconTopologyStar3,
   IconBuilding,
   IconUsers,
+  IconLayoutDashboard,
 } from '@tabler/icons-react';
+
+export const IconDashboard = (props: any) => <IconLayoutDashboard {...props} />;
 
 export const IconContact = (props: any) => <IconAddressBook {...props} />;
 

@@ -59,7 +59,7 @@ export default function CompaniesTable({
 
   const goToCompany = (id: string) => {
     return (
-      <Link href={`/dashboard/companies/${id}`}>
+      <Link href={`/companies/${id}`}>
         <button>Go to</button>
       </Link>
     );
