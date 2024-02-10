@@ -88,18 +88,24 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-/// @@allow('read', members?[user == auth()])
+/// @@allow('read', auth() != null)
+/// @@allow('create', auth() != null)
 model Team {
     id String @id() @default(cuid())
     name String
     slug String @unique()
+    /// @allow('read', members?[user == auth()])
     entities CoreEntity[]
+    /// @allow('read', members?[user == auth()])
     members TeamUser[]
+    invites TeamInvite[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 }
 
 /// @@allow('read', team.members?[user == auth()])
+/// @@allow('create', team.invites?[email == auth().email] || team.members?[user == auth() && role != 'MEMBER'] || future().team.members?[user == auth() && role != 'MEMBER'])
+/// @@allow('delete', team.members?[user == auth() && role != 'MEMBER'] || auth() == user)
 model TeamUser {
     id Int @id() @default(autoincrement())
     team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
@@ -113,10 +119,25 @@ model TeamUser {
     @@unique([teamId, userId])
 }
 
+/// @@allow('read', auth().email == email || team.members?[user == auth() && role != 'MEMBER'])
+/// @@allow('create', team.members?[user == auth() && role != 'MEMBER'])
+/// @@allow('delete', auth().email == email || team.members?[user == auth() && role != 'MEMBER'])
+model TeamInvite {
+    id Int @id() @default(autoincrement())
+    email String
+    team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+    teamId String
+    role TeamRole
+    token String @unique() @default(uuid())
+    expires DateTime @default(dbgenerated("NOW() + interval '1 week'"))
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+
+    @@unique([email, teamId])
+}
+
 /// @@allow('read', owner == auth() || (team.members?[user == auth()] && private == false))
-/// @@allow('create', owner == auth())
-/// @@allow('update', owner == auth() && team.members?[user == auth()] && future().owner == owner)
-/// @@allow('delete', owner == auth())
+/// @@allow('create, update, delete', owner == auth())
 model CoreEntity {
     id String @id() @default(cuid()) @map("_id")
     type CoreEntityType
@@ -124,7 +145,7 @@ model CoreEntity {
     ownerId String?
     relationshipsFrom Relationship[] @relation("RelationshipFrom")
     relationshipsTo Relationship[] @relation("RelationshipTo")
-    team Team? @relation(fields: [teamId], references: [id], onDelete: Cascade)
+    team Team? @relation(fields: [teamId], references: [id])
     teamId String?
     attributes Attributes[]
     meta MetaData?

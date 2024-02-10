@@ -13,7 +13,7 @@ interface EditTitleProps {
   onChange?: (value?: string | null) => void;
 }
 
-export default function EditText({ initValue, onChange }: EditTitleProps) {
+export default function EditTitle({ initValue, onChange }: EditTitleProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [tmpValue, setTmpValue] = useState(initValue);
 

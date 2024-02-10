@@ -69,13 +69,17 @@ model Team {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
-  entities  CoreEntity[]
-  members   TeamUser[]
+  entities  CoreEntity[] @allow('read', members?[user == auth()])
+  members   TeamUser[] @allow('read', members?[user == auth()])
+  invites   TeamInvite[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // can be read by space members (only if not private)
-    @@allow('read', members?[user == auth()] )
+  @@allow('read', auth() != null )
+
+  // Any logged in user can create a team
+  @@allow('create', auth() != null)
 }
 
 enum TeamRole {
@@ -98,6 +102,35 @@ model TeamUser {
 
   // can be read by space members (only if not private)
   @@allow('read', team.members?[user == auth()] )
+
+  // Only users with an invite or team admins/owners can add users
+  @@allow('create', team.invites?[email == auth().email] || team.members?[user == auth() && role != "MEMBER"] || future().team.members?[user == auth() && role != "MEMBER"])
+
+  // Only team admins/owners can delete team members
+  @@allow('delete', team.members?[user == auth() && role != "MEMBER"] || auth() == user)
+}
+
+model TeamInvite {
+  id        Int   @id @default(autoincrement())
+  email     String
+  team      Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
+  role      TeamRole
+  token     String   @unique @default(uuid())
+  expires   DateTime @default(dbgenerated("NOW() + interval '1 week'"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email, teamId])
+
+  // can be read by the person who was invited
+  @@allow('read', (auth().email == email) || (team.members?[user == auth() && role != "MEMBER"]))
+
+  // only team ADMINs or OWNERs can create invites
+  @@allow('create', team.members?[user == auth() && role != "MEMBER"])
+
+  // only the person who was invited can delete the invite or an admin/owner of the team
+  @@allow('delete', auth().email == email || team.members?[user == auth() && role != "MEMBER"])
 }
 
 enum CoreEntityType {
@@ -113,7 +146,7 @@ model CoreEntity {
   ownerId            String?
   relationshipsFrom Relationship[] @relation("RelationshipFrom")
   relationshipsTo   Relationship[] @relation("RelationshipTo")
-  team             Team? @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team             Team? @relation(fields: [teamId], references: [id])
   teamId            String?
   attributes        Attributes[]
   meta              MetaData?
@@ -125,15 +158,8 @@ model CoreEntity {
   // can be read by owner or space members (and not private)
     @@allow('read', owner == auth() || (team.members?[user == auth()] && private == false))
 
-    // users can only create entities for themselves
-    @@allow('create', owner == auth())
-
-    // when update, owner must be set to current user, and user must be in the space
-    // update is not allowed to change owner
-    @@allow('update', owner == auth() && team.members?[user == auth()] && future().owner == owner)
-
-    // can be deleted by owner
-    @@allow('delete', owner == auth())
+    // users can only create, update or delete entities for themselves
+    @@allow('create, update, delete', owner == auth())
 }
 
 model Attributes {

@@ -91,7 +91,7 @@ export default function ContactsTable({
           <TableCell>{row.email}</TableCell>
           <TableCell>{addressStr}</TableCell>
           <TableCell>
-            <div>{deleteBtn(row.id)}</div>
+            <div>{row.isOwner && deleteBtn(row.id)}</div>
             <div>{goToContact(row.id)}</div>
           </TableCell>
         </TableRow>

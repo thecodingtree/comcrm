@@ -14,9 +14,11 @@ import { IconContact } from '../common/icons';
 export default function ContactAvatar({
   avatarSrc,
   onUpdated,
+  readOnly = false,
 }: {
   avatarSrc?: string;
   onUpdated?: (res: any) => void;
+  readOnly?: boolean;
 }) {
   return (
     <div className="flex flex-col items-start">
@@ -26,28 +28,30 @@ export default function ContactAvatar({
           <IconContact size={64} />
         </AvatarFallback>
       </Avatar>
-      <Popover>
-        <PopoverTrigger>
-          <IconPencil style={{ width: '100%', height: '70%' }} stroke={1.5} />
-        </PopoverTrigger>
-        <PopoverContent>
-          <UploadDropzone
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              close();
-              onUpdated && onUpdated(res);
-            }}
-            onUploadError={(error: Error) => {
-              alert(`ERROR! ${error.message}`);
-            }}
-            onUploadBegin={(name) => {
-              // Do something once upload begins
-              console.log('Uploading: ', name);
-            }}
-            config={{ mode: 'manual' }}
-          />
-        </PopoverContent>
-      </Popover>
+      {!readOnly && (
+        <Popover>
+          <PopoverTrigger>
+            <IconPencil style={{ width: '100%', height: '70%' }} stroke={1.5} />
+          </PopoverTrigger>
+          <PopoverContent>
+            <UploadDropzone
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                close();
+                onUpdated && onUpdated(res);
+              }}
+              onUploadError={(error: Error) => {
+                alert(`ERROR! ${error.message}`);
+              }}
+              onUploadBegin={(name) => {
+                // Do something once upload begins
+                console.log('Uploading: ', name);
+              }}
+              config={{ mode: 'manual' }}
+            />
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 }

@@ -69,10 +69,10 @@ export default function CompaniesTable({
     if (row) {
       const addressStr = `${row?.address?.street} ${row?.address?.city} ${row?.address?.state} ${row?.address?.zip}`;
       const website = row?.attributes?.find(
-        (attr) => attr.name === CompanyReservedAttributes.WEBSITE
+        (attr) => attr.name === CompanyReservedAttributes.WEBSITE,
       )?.value;
       const size = row?.attributes?.find(
-        (attr) => attr.name === CompanyReservedAttributes.SIZE
+        (attr) => attr.name === CompanyReservedAttributes.SIZE,
       )?.value;
       return (
         <TableRow key={row.name}>
@@ -81,7 +81,7 @@ export default function CompaniesTable({
           <TableCell>{website}</TableCell>
           <TableCell>{row.phone}</TableCell>
           <TableCell>
-            <div>{deleteBtn(row.id)}</div>
+            <div>{row.isOwner && deleteBtn(row.id)}</div>
             <div>{goToCompany(row.id)}</div>
           </TableCell>
         </TableRow>

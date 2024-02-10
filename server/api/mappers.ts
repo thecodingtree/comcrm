@@ -1,7 +1,36 @@
 import { CoreEntityResult } from '@/server/coreEntities';
-import { ContactType, CompanyType, PropertyType } from '@/server/sharedTypes';
+import {
+  ContactType,
+  CompanyType,
+  PropertyType,
+  TeamRole,
+} from '@/server/sharedTypes';
+import { SessionUser } from '@/server/sharedTypes';
+import { TeamUser } from '@prisma/client';
 
-export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
+export const canEditEntity = (
+  user?: SessionUser,
+  ownerId?: string,
+  teamMembers?: TeamUser[],
+) => {
+  // If no user is provided, then the user is not logged in and therefore cannot edit the entity
+  if (!user) return false;
+
+  return (
+    // If the user is the owner of the entity, then they can edit it
+    user?.id === ownerId ||
+    // If the user is an admin of the team that the entity belongs to, then they can edit it
+    teamMembers?.some(
+      (member) => member.userId === user?.id && member.role === TeamRole.ADMIN,
+    ) ||
+    false
+  );
+};
+
+export const contactDataMapper = (
+  entity: CoreEntityResult,
+  user?: SessionUser,
+): ContactType => {
   const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
   return {
     id,
@@ -15,11 +44,16 @@ export const contactDataMapper = (entity: CoreEntityResult): ContactType => {
     owner: owner?.email ?? '',
     createdAt,
     updatedAt,
+    canEdit: canEditEntity(user, owner?.id, entity.team?.members),
+    isOwner: user?.id === owner?.id,
   } as ContactType;
 };
 
-export const companyDataMapper = (entity: CoreEntityResult): CompanyType => {
-  const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
+export const companyDataMapper = (
+  entity: CoreEntityResult,
+  user?: SessionUser,
+): CompanyType => {
+  const { id, meta, attributes, owner, team, createdAt, updatedAt } = entity;
   return {
     id,
     name: meta?.name!,
@@ -30,10 +64,15 @@ export const companyDataMapper = (entity: CoreEntityResult): CompanyType => {
     owner: owner?.email ?? '',
     createdAt,
     updatedAt,
+    canEdit: canEditEntity(user, owner?.id, entity.team?.members),
+    isOwner: user?.id === owner?.id,
   } as CompanyType;
 };
 
-export const propertyDataMapper = (entity: CoreEntityResult): PropertyType => {
+export const propertyDataMapper = (
+  entity: CoreEntityResult,
+  user?: SessionUser,
+): PropertyType => {
   const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
   return {
     id,
@@ -45,5 +84,7 @@ export const propertyDataMapper = (entity: CoreEntityResult): PropertyType => {
     owner: owner?.email ?? '',
     createdAt,
     updatedAt,
+    canEdit: canEditEntity(user, owner?.id, entity.team?.members),
+    isOwner: user?.id === owner?.id,
   } as PropertyType;
 };

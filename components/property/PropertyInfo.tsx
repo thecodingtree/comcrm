@@ -7,7 +7,13 @@ import EditAttribute from '../input/EditAttribute';
 
 import { PropertyReservedAttributes } from '@/server/sharedTypes';
 
-export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
+export default function PropertyInfo({
+  propertyId,
+  readOnly = false,
+}: {
+  propertyId?: string;
+  readOnly?: boolean;
+}) {
   const { data, isLoading } = trpc.property.getProperty.useQuery(propertyId);
 
   const updateProperty = trpc.property.updateProperty.useMutation();
@@ -18,93 +24,136 @@ export default function PropertyInfo({ propertyId }: { propertyId?: string }) {
   return (
     <div className="p-2">
       <div className="flex flex-col gap-2">
-        <EditTitle
-          initValue={data?.name}
-          onChange={(name) =>
-            updateProperty.mutate({ id: propertyId!, name: name || undefined })
-          }
-        />
-        <EditAddress
-          label="address"
-          address={data?.address}
-          onChange={(address) =>
-            updateProperty.mutate({
-              id: propertyId!,
-              address: {
-                street: address?.street,
-                city: address?.city,
-                state: address?.state,
-                zip: address?.zip,
-              },
-            })
-          }
-        />
-        <EditText
-          label="phone"
-          initValue={data?.phone}
-          onChange={(phone) =>
-            updateProperty.mutate({
-              id: propertyId!,
-              phone: phone || undefined,
-            })
-          }
-        />
+        {readOnly ? (
+          <div>{data?.name}</div>
+        ) : (
+          <EditTitle
+            initValue={data?.name}
+            onChange={(name) =>
+              updateProperty.mutate({
+                id: propertyId!,
+                name: name || undefined,
+              })
+            }
+          />
+        )}
+        {readOnly ? (
+          <div>{data?.address?.street}</div>
+        ) : (
+          <EditAddress
+            label="address"
+            address={data?.address}
+            onChange={(address) =>
+              updateProperty.mutate({
+                id: propertyId!,
+                address: {
+                  street: address?.street,
+                  city: address?.city,
+                  state: address?.state,
+                  zip: address?.zip,
+                },
+              })
+            }
+          />
+        )}
+        {readOnly ? (
+          <div>{data?.phone}</div>
+        ) : (
+          <EditText
+            label="phone"
+            initValue={data?.phone}
+            onChange={(phone) =>
+              updateProperty.mutate({
+                id: propertyId!,
+                phone: phone || undefined,
+              })
+            }
+          />
+        )}
 
-        <EditText
-          label="email"
-          initValue={data?.email}
-          onChange={(email) =>
-            updateProperty.mutate({
-              id: propertyId!,
-              email: email || undefined,
-            })
-          }
-        />
-        <EditAttribute
-          label="suite"
-          initAttr={data?.attributes?.find(
-            (attr) => attr.name === PropertyReservedAttributes.SUITE
-          )}
-          reservedName={PropertyReservedAttributes.SUITE}
-          onChange={(attr) => {
-            updateOrCreateAttribute.mutate({
-              id: attr?.id,
-              name: attr?.name!,
-              value: attr?.value!,
-              entityId: propertyId!,
-            });
-          }}
-        />
-        <EditAttribute
-          label="price"
-          initAttr={data?.attributes?.find(
-            (attr) => attr.name === PropertyReservedAttributes.PRICE
-          )}
-          reservedName={PropertyReservedAttributes.PRICE}
-          onChange={(attr) => {
-            updateOrCreateAttribute.mutate({
-              id: attr?.id,
-              name: attr?.name!,
-              value: attr?.value!,
-              entityId: propertyId!,
-            });
-          }}
-        />
-        <EditAttribute
-          label="size"
-          initAttr={data?.attributes?.find(
-            (attr) => attr.name === PropertyReservedAttributes.SIZE
-          )}
-          reservedName={PropertyReservedAttributes.SIZE}
-          onChange={(attr) => {
-            updateOrCreateAttribute.mutate({
-              id: attr?.id,
-              name: attr?.name!,
-              value: attr?.value!,
-              entityId: propertyId!,
-            });
-          }}
-        />
+        {readOnly ? (
+          <div>{data?.email}</div>
+        ) : (
+          <EditText
+            label="email"
+            initValue={data?.email}
+            onChange={(email) =>
+              updateProperty.mutate({
+                id: propertyId!,
+                email: email || undefined,
+              })
+            }
+          />
+        )}
+        {readOnly ? (
+          <div>{`${
+            data?.attributes?.find(
+              (attr) => attr.name === PropertyReservedAttributes.SUITE,
+            )?.value ?? ''
+          }`}</div>
+        ) : (
+          <EditAttribute
+            label="suite"
+            initAttr={data?.attributes?.find(
+              (attr) => attr.name === PropertyReservedAttributes.SUITE,
+            )}
+            reservedName={PropertyReservedAttributes.SUITE}
+            onChange={(attr) => {
+              updateOrCreateAttribute.mutate({
+                id: attr?.id,
+                name: attr?.name!,
+                value: attr?.value!,
+                entityId: propertyId!,
+              });
+            }}
+          />
+        )}
+        {readOnly ? (
+          <div>{`${
+            data?.attributes?.find(
+              (attr) => attr.name === PropertyReservedAttributes.PRICE,
+            )?.value ?? ''
+          }`}</div>
+        ) : (
+          <EditAttribute
+            label="price"
+            initAttr={data?.attributes?.find(
+              (attr) => attr.name === PropertyReservedAttributes.PRICE,
+            )}
+            reservedName={PropertyReservedAttributes.PRICE}
+            onChange={(attr) => {
+              updateOrCreateAttribute.mutate({
+                id: attr?.id,
+                name: attr?.name!,
+                value: attr?.value!,
+                entityId: propertyId!,
+              });
+            }}
+          />
+        )}
+        {readOnly ? (
+          <div>{`${
+            data?.attributes?.find(
+              (attr) => attr.name === PropertyReservedAttributes.SIZE,
+            )?.value ?? ''
+          }`}</div>
+        ) : (
+          <EditAttribute
+            label="size"
+            initAttr={data?.attributes?.find(
+              (attr) => attr.name === PropertyReservedAttributes.SIZE,
+            )}
+            reservedName={PropertyReservedAttributes.SIZE}
+            onChange={(attr) => {
+              updateOrCreateAttribute.mutate({
+                id: attr?.id,
+                name: attr?.name!,
+                value: attr?.value!,
+                entityId: propertyId!,
+              });
+            }}
+          />
+        )}
       </div>
     </div>
   );
