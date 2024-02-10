@@ -1,20 +1,61 @@
-import TeamUsers from '@/components/team/TeamUsers';
+import { TeamRole } from '@prisma/client';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { getTeam } from '@/server/team';
+import TeamUsers from '@/components/team/TeamUsers';
+import TeamInvites from '@/components/team/TeamInvites';
+import CreateTeamDialog from '@/components/team/CreateTeamDialog';
+
+import { getTeamForUser } from '@/server/team';
 import { getEnhancedDB } from '@/server/db';
+import { getAuthedServerSession } from '@/server/utils';
 
 export default async function Team() {
-  const team = await getTeam({ db: await getEnhancedDB() });
+  const session = await getAuthedServerSession();
+  const team = await getTeamForUser({
+    db: await getEnhancedDB(session!),
+    user: session!.user?.id!,
+  });
 
-  if (!team) {
-    return <div>Loading...</div>;
-  }
+  const canAdminTeam =
+    team?.members.find((m) => m.userId === session?.user?.id)?.role !==
+    TeamRole.MEMBER;
 
   return (
     <div className="grid grid-flow-row gap-10">
-      <div className="text-5xl font-bold">{team.name}</div>
+      {team ? (
+        <div className="grid grid-flow-row gap-1">
+          <div className="text-2xl font-light">Team</div>
+          <div className="text-5xl font-bold uppercase">{team.name}</div>
+        </div>
+      ) : (
+        <div>
+          <CreateTeamDialog />
+        </div>
+      )}
       <div>
-        <TeamUsers teamId={team.id} />
+        {team ? (
+          <Tabs defaultValue="members">
+            {canAdminTeam && (
+              <TabsList className="grid w-full grid-cols-2 bg-black text-white">
+                <TabsTrigger value="members">Members</TabsTrigger>
+                <TabsTrigger value="invites">Invites</TabsTrigger>
+              </TabsList>
+            )}
+            <TabsContent value="members">
+              <TeamUsers teamId={team.id} canAdminTeam />
+            </TabsContent>
+            <TabsContent value="invites">
+              <TeamInvites team={team.id} canAdminTeam />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <div className="grid grid-flow-row gap-4">
+            <div className="text-2xl font-light">Invites</div>
+            <div>
+              <TeamInvites email={session?.user?.email ?? undefined} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

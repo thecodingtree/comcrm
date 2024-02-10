@@ -6,9 +6,13 @@ import {
   User,
 } from '@prisma/client';
 
+import { Session } from 'next-auth';
+
 export const CONTACT_RESERVED_PREFIX = 'CONTACT_RESERVED_';
 export const PROPERTY_RESERVED_PREFIX = 'PROPERTY_RESERVED_';
 export const COMPANY_RESERVED_PREFIX = 'COMPANY_RESERVED_';
+
+export type SessionUser = Session['user'];
 
 export type NoteType = {
   id: string;
@@ -67,6 +71,8 @@ export type ContactType = {
   owner?: string;
   createdAt: Date;
   updatedAt: Date;
+  canEdit?: boolean;
+  isOwner?: boolean;
 };
 
 export const CreateContactInput = z.object({
@@ -106,6 +112,8 @@ export type PropertyType = {
   owner?: string;
   createdAt: Date;
   updatedAt: Date;
+  canEdit?: boolean;
+  isOwner?: boolean;
 };
 
 export const CreatePropertyInput = z.object({
@@ -141,6 +149,8 @@ export type CompanyType = {
   owner?: string;
   createdAt: Date;
   updatedAt: Date;
+  canEdit?: boolean;
+  isOwner?: boolean;
 };
 
 export const CreateCompanyInput = z.object({
@@ -221,6 +231,15 @@ export type TeamUser = {
   name: string;
   image: string;
   role: TeamRole;
+};
+
+export type TeamInvite = {
+  id: number;
+  team: Team;
+  token: string;
+  email: string;
+  role: TeamRole;
+  status: 'PENDING' | 'EXPIRED';
 };
 
 export type Team = {

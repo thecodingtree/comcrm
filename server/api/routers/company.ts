@@ -31,7 +31,7 @@ export const companyRouter = createTRPCRouter({
       });
 
       const results = result.map((entity: CoreEntityResult) => {
-        return companyDataMapper(entity);
+        return companyDataMapper(entity, ctx.session?.user);
       });
       return results;
     }),
@@ -44,7 +44,7 @@ export const companyRouter = createTRPCRouter({
 
       const result = await getCoreEntity({ db: ctx.prisma, id: input });
 
-      return result ? companyDataMapper(result) : null;
+      return result ? companyDataMapper(result, ctx.session?.user) : null;
     }),
   createCompany: protectedProcedure
     .input(CreateCompanyInput)
@@ -52,7 +52,7 @@ export const companyRouter = createTRPCRouter({
       return companyCreator({
         db: ctx.prisma,
         data: input,
-        user: ctx.session.user.id,
+        user: ctx.session.user,
       });
     }),
   updateCompany: protectedProcedure
@@ -86,7 +86,7 @@ export const companyRouter = createTRPCRouter({
         });
       }
 
-      return companyDataMapper(result);
+      return companyDataMapper(result, ctx.session?.user);
     }),
   deleteCompany: protectedProcedure
     .input(z.string())
@@ -100,6 +100,6 @@ export const companyRouter = createTRPCRouter({
         throw new Error(`CoreEntity with ID ${input} not found`);
       }
 
-      return companyDataMapper(result);
+      return companyDataMapper(result, ctx.session?.user);
     }),
 });

@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+
+import { toast } from 'sonner';
 
 import { SessionProvider } from 'next-auth/react';
 
 import { BackButton } from '@/components/controls/NavButtons';
 import Sidebar from '@/components/sidebar/Sidebar';
-import Header from '../common/Header';
 
 export default function DashboardLayout({ children }: { children: any }) {
   return (

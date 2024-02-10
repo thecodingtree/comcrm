@@ -31,7 +31,7 @@ export const propertyRouter = createTRPCRouter({
       });
 
       const results = result.map((entity: CoreEntityResult) => {
-        return propertyDataMapper(entity);
+        return propertyDataMapper(entity, ctx.session?.user);
       });
 
       return results;
@@ -49,7 +49,7 @@ export const propertyRouter = createTRPCRouter({
 
       const result = await getCoreEntity({ db: ctx.prisma, id: input });
 
-      return result ? propertyDataMapper(result) : null;
+      return result ? propertyDataMapper(result, ctx.session?.user) : null;
     }),
   createProperty: protectedProcedure
     .input(CreatePropertyInput)
@@ -64,7 +64,7 @@ export const propertyRouter = createTRPCRouter({
       return propertyCreator({
         db: ctx.prisma,
         data: input,
-        user: ctx.session.user.id,
+        user: ctx.session.user,
       });
     }),
   updateProperty: protectedProcedure
@@ -98,7 +98,7 @@ export const propertyRouter = createTRPCRouter({
         });
       }
 
-      return propertyDataMapper(result);
+      return propertyDataMapper(result, ctx.session?.user);
     }),
   deleteProperty: protectedProcedure
     .input(z.string())
@@ -112,6 +112,6 @@ export const propertyRouter = createTRPCRouter({
         throw new Error(`CoreEntity with ID ${input} not found`);
       }
 
-      return propertyDataMapper(result);
+      return propertyDataMapper(result, ctx.session?.user);
     }),
 });
