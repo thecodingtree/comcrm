@@ -13,11 +13,12 @@ import {
 import { IconExpand, IconCollapse, IconTime } from '@/components/common/icons';
 import { IconEvent, IconCall, IconTodo } from './icons';
 
-const getIcon = (category: string) => {
+const getIcon = (category?: string) => {
+  console.log(category);
   switch (category) {
-    case 'call':
+    case 'phone':
       return <IconCall className="w-4 h-4" />;
-    case 'event':
+    case 'calendar':
       return <IconEvent className="w-4 h-4" />;
     case 'todo':
       return <IconTodo className="w-4 h-4" />;
@@ -33,7 +34,7 @@ export default function TaskItem({
   description,
   content,
 }: {
-  category: string;
+  category?: string;
   time: string;
   date: string;
   description: string;

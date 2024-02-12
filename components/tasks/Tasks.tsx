@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 
 import { IconPlus } from '@/components/common/icons';
@@ -7,6 +9,7 @@ import { IconPlus } from '@/components/common/icons';
 import { IconCall, IconEvent, IconTodo } from './icons';
 
 import TasksList from './TasksList';
+import TaskFilters from './TaskFilters';
 
 export default function Tasks() {
   return (
@@ -18,25 +21,8 @@ export default function Tasks() {
             <IconPlus className="w-4 h-4" />
             <span className="sr-only">Add</span>
           </Button>
-          <div className="ml-4 gap-2 flex flex-row">
-            <div>
-              <Button className="rounded-full" size="icon" variant="outline">
-                <IconCall className="w-4 h-4" />
-                <span className="sr-only">Filter: Call</span>
-              </Button>
-            </div>
-            <div>
-              <Button className="rounded-full" size="icon" variant="outline">
-                <IconEvent className="w-4 h-4" />
-                <span className="sr-only">Filter: Event</span>
-              </Button>
-            </div>
-            <div>
-              <Button className="rounded-full" size="icon" variant="outline">
-                <IconTodo className="w-4 h-4" />
-                <span className="sr-only">Filter: Todo</span>
-              </Button>
-            </div>
+          <div className="ml-4 gap-2">
+            <TaskFilters />
           </div>
         </div>
       </div>

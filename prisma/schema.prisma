@@ -236,6 +236,7 @@ model Relationship {
     @@unique([fromEntityId, toEntityId])
 }
 
+/// @@allow('read', true)
 model TaskCategory {
     id String @id() @default(cuid()) @map("_id")
     name String
