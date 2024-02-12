@@ -66,7 +66,7 @@ export default function ContactsTable({
 
   const goToContact = (id: string) => {
     return (
-      <Link href={`/dashboard/contacts/${id}`}>
+      <Link href={`/contacts/${id}`}>
         <button>Go to</button>
       </Link>
     );
