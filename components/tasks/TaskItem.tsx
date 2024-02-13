@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { IconCalendar } from '@tabler/icons-react';
+
 import { CardContent, CardHeader, Card } from '@/components/ui/card';
 import {
   Collapsible,
@@ -11,34 +12,25 @@ import {
 } from '@/components/ui/collapsible';
 
 import { IconExpand, IconCollapse, IconTime } from '@/components/common/icons';
-import { IconEvent, IconCall, IconTodo } from './icons';
 
-const getIcon = (category?: string) => {
-  console.log(category);
-  switch (category) {
-    case 'phone':
-      return <IconCall className="w-4 h-4" />;
-    case 'calendar':
-      return <IconEvent className="w-4 h-4" />;
-    case 'todo':
-      return <IconTodo className="w-4 h-4" />;
-    default:
-      return null;
-  }
-};
+import { TaskType } from '@/server/sharedTypes';
+
+import { getTaskIcon, getTaskDateLabel } from './utils';
 
 export default function TaskItem({
-  category,
-  time,
-  date,
+  type,
+  startDate,
+  endDate,
   description,
   content,
+  assignedBy,
 }: {
-  category?: string;
-  time: string;
-  date: string;
+  type: TaskType;
+  startDate?: Date;
+  endDate: Date;
   description: string;
   content?: string;
+  assignedBy?: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -46,20 +38,26 @@ export default function TaskItem({
     <Collapsible defaultOpen={false} onOpenChange={setIsExpanded}>
       <Card>
         <CollapsibleTrigger className="w-full">
-          <CardHeader className="p-0">
+          <CardHeader className="p-0 text-sm font-medium">
             <div className="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800/40 rounded-tl-lg rounded-tr-lg">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                {getIcon(category)}
-                <span className="font-semibold">{description}</span>
+              <div>
+                <div className="flex items-center gap-2 ">
+                  {getTaskIcon(type)}
+                  <span className="">{description}</span>
+                  <div className="font-light">
+                    {assignedBy ? `Assigned By: ${assignedBy}` : null}
+                  </div>
+                </div>
               </div>
-              <Button className="rounded-full" size="icon" variant="ghost">
+
+              <div className="flex flex-row gap-4 items-center">
+                <div>{getTaskDateLabel(endDate, startDate)}</div>
                 {isExpanded ? (
                   <IconCollapse className="w-4 h-4" />
                 ) : (
                   <IconExpand className="w-4 h-4" />
                 )}
-                <span className="sr-only">More</span>
-              </Button>
+              </div>
             </div>
           </CardHeader>
         </CollapsibleTrigger>
@@ -70,11 +68,11 @@ export default function TaskItem({
               <div className="grid gap-2 text-xs  dark:text-gray-400">
                 <div className="flex items-center gap-2">
                   <IconTime className="w-4 h-4" />
-                  <span className="">{time}</span>
+                  <span className="">{endDate.toLocaleTimeString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <IconEvent className="w-4 h-4" />
-                  <span className="">{date}</span>
+                  <IconCalendar className="w-4 h-4" />
+                  <span className="">{endDate.toLocaleDateString()}</span>
                 </div>
               </div>
             </div>
