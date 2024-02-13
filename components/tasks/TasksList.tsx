@@ -1,29 +1,27 @@
 'use client';
 
-import { trpc } from '@/app/_trpc/client';
 import TaskItem from './TaskItem';
-import TaskListSkeleton from './TaskListSkeleton';
+import { TaskResult } from '@/server/task';
 
-export default function TasksList({ category }: { category?: string }) {
-  const { data, isLoading } = trpc.task.getTasksForUser.useQuery({
-    category,
-  });
-
-  return !isLoading ? (
+export default function TasksList({
+  tasks,
+}: {
+  tasks: TaskResult[] | undefined;
+}) {
+  return (
     <div className="flex flex-col gap-2">
-      {data?.map((task) => (
+      {tasks?.map((task) => (
         <div key={task.id}>
           <TaskItem
-            category={task.category?.icon ?? undefined}
-            time={task.endDate.toLocaleTimeString()}
-            date={task.endDate.toLocaleDateString()}
+            type={task.type}
+            startDate={task.startDate ?? undefined}
+            endDate={task.endDate}
             description={task.description}
             content={task.content ?? ''}
+            assignedBy={task.assignee?.name ?? undefined}
           />
         </div>
       ))}
     </div>
-  ) : (
-    <TaskListSkeleton />
   );
 }

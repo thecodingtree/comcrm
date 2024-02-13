@@ -1,5 +1,59 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, TaskPriority } from '@prisma/client';
 import { getAuthedServerSession } from './utils';
+
+import { TaskType, TasksFilter } from './sharedTypes';
+
+export async function createTask({
+  db,
+  creator,
+  assignee,
+  type,
+  description,
+  content,
+  entity,
+  priority = TaskPriority.LOW,
+  isPrivate = false,
+  completed = false,
+  startDate,
+  endDate,
+}: {
+  db: PrismaClient;
+  creator: string;
+  assignee?: string;
+  type: TaskType;
+  description: string;
+  content?: string;
+  entity?: string;
+  priority?: TaskPriority;
+  isPrivate?: boolean;
+  completed?: boolean;
+  startDate?: Date;
+  endDate: Date;
+}) {
+  return db.task.create({
+    data: {
+      creatorId: creator,
+      assigneeId: assignee,
+      type,
+      description,
+      content,
+      entityId: entity,
+      priority,
+      private: isPrivate,
+      completed,
+      startDate,
+      endDate,
+    },
+  });
+}
+
+const taskInclude = Prisma.validator<Prisma.TaskInclude>()({
+  assignee: true,
+});
+
+export type TaskResult = Prisma.TaskGetPayload<{
+  include: typeof taskInclude;
+}>;
 
 export async function getTasksForUser({
   db,
@@ -8,23 +62,43 @@ export async function getTasksForUser({
 }: {
   db: PrismaClient;
   user?: string;
-  filter?: {
-    category?: string;
-  };
+  filter?: TasksFilter;
 }) {
   if (!user) {
     const session = await getAuthedServerSession();
     user = session?.user?.id;
   }
 
-  const filters = filter
-    ? {
-        category: { id: filter.category },
-      }
-    : {};
+  const filters = {} as {
+    type: TaskType | { in: TaskType[] } | undefined;
+    completed: boolean;
+    startDate: { lte: Date };
+    endDate: { gte: Date };
+  };
+
+  filters.type = filter?.type
+    ? Array.isArray(filter.type)
+      ? { in: filter.type }
+      : filter.type
+    : undefined;
+
+  if (filter?.completed !== undefined) {
+    filters.completed = filter.completed;
+  }
+
+  if (filter?.startDate) {
+    filters.startDate = { lte: filter.startDate };
+  }
+
+  if (filter?.endDate) {
+    filters.endDate = { gte: filter.endDate };
+  }
 
   return db.task.findMany({
-    include: { category: true },
+    include: taskInclude,
     where: { OR: [{ creatorId: user }, { assigneeId: user }], AND: filters },
+    orderBy: { endDate: 'asc' },
   });
 }
+
+export type TaskResponse = typeof getTasksForUser;

@@ -1,31 +1,33 @@
-import { useState } from 'react';
+import { TasksFilter } from '@/server/sharedTypes';
 
-import { Button } from '@/components/ui/button';
+import TaskTypeSelect from './TaskTypeSelect';
 
-import { IconCall, IconEvent, IconTodo } from './icons';
-
-export default function TaskFilters() {
-  const [filter, setFilter] = useState<string | undefined>(undefined);
+export default function TaskFilters({
+  filters,
+  onFilterChange,
+}: {
+  filters?: TasksFilter;
+  onFilterChange: (filter?: TasksFilter) => void;
+}) {
+  const handleFilterChange = (filter: TasksFilter) => {
+    onFilterChange(filter);
+  };
 
   return (
-    <div className="flex flex-row">
-      <div>
-        <Button className="rounded-full" size="icon" variant="outline">
-          <IconCall className="w-4 h-4" />
-          <span className="sr-only">Filter: Call</span>
-        </Button>
-      </div>
-      <div>
-        <Button className="rounded-full" size="icon" variant="outline">
-          <IconEvent className="w-4 h-4" />
-          <span className="sr-only">Filter: Event</span>
-        </Button>
-      </div>
-      <div>
-        <Button className="rounded-full" size="icon" variant="outline">
-          <IconTodo className="w-4 h-4" />
-          <span className="sr-only">Filter: Todo</span>
-        </Button>
+    <div className="flex flex-row gap-10">
+      <div className="grid grid-flow-col grid-3 gap-2">
+        <TaskTypeSelect
+          selected={filters?.type}
+          onChange={(typeFilter) => {
+            console.log('typeFilter', typeFilter);
+            handleFilterChange({
+              ...filters,
+              type: typeFilter,
+            });
+          }}
+          allowMultiple
+          allowNone
+        />
       </div>
     </div>
   );

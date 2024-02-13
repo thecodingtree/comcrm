@@ -1,22 +1,41 @@
 import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
-import { z } from 'zod';
 
 import { getTasksForUser } from '@/server/task';
 
+import { taskInput, tasksFilter } from '@/server/sharedTypes';
+
 export const taskRouter = createTRPCRouter({
   getTasksForUser: protectedProcedure
-    .input(
-      z.object({
-        category: z.string().optional(),
-        limit: z.number().optional().default(10),
-      }),
-    )
+    .input(tasksFilter)
     .query(async ({ ctx, input }) => {
+      const numResults = input.limit ?? 10;
       const results = await getTasksForUser({
         db: ctx.prisma,
-        filter: { category: input.category },
+        filter: {
+          type: input.type?.length ? input.type : undefined,
+          completed: input.completed,
+          endDate: input.endDate,
+        },
       });
 
-      return results.slice(0, input.limit);
+      return results.slice(0, numResults);
+    }),
+  createTask: protectedProcedure
+    .input(taskInput)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.task.create({
+        data: {
+          creatorId: ctx.session?.user.id!,
+          type: input.type,
+          description: input.description,
+          content: input.content,
+          entityId: input.entity,
+          priority: input.priority,
+          private: input.isPrivate,
+          completed: input.completed,
+          startDate: input.startDate,
+          endDate: input.endDate,
+        },
+      });
     }),
 });
