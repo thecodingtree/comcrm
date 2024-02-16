@@ -55,25 +55,19 @@ export type TaskResult = Prisma.TaskGetPayload<{
   include: typeof taskInclude;
 }>;
 
-export async function getTasksForUser({
+export async function getTasks({
   db,
-  user,
   filter,
 }: {
   db: PrismaClient;
-  user?: string;
   filter?: TasksFilter;
 }) {
-  if (!user) {
-    const session = await getAuthedServerSession();
-    user = session?.user?.id;
-  }
-
   const filters = {} as {
     type: TaskType | { in: TaskType[] } | undefined;
     completed: boolean;
     startDate: { lte: Date };
     endDate: { gte: Date };
+    entityId: string;
   };
 
   filters.type = filter?.type
@@ -94,11 +88,15 @@ export async function getTasksForUser({
     filters.endDate = { gte: filter.endDate };
   }
 
+  if (filter?.entity) {
+    filters.entityId = filter.entity;
+  }
+
   return db.task.findMany({
     include: taskInclude,
-    where: { OR: [{ creatorId: user }, { assigneeId: user }], AND: filters },
+    where: filters,
     orderBy: { endDate: 'asc' },
   });
 }
 
-export type TaskResponse = typeof getTasksForUser;
+export type TaskResponse = typeof getTasks;
