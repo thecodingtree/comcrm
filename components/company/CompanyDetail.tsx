@@ -9,7 +9,7 @@ import { trpc } from '@/app/_trpc/client';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import CompanyInfo from './CompanyInfo';
-import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
+import EntityUpdates from '../updates/EntityUpdates';
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 import EntitiyNotesTable from '../entities/EntityNotesTable';
 import { IconCompany } from '../common/icons';
@@ -26,33 +26,36 @@ export default function CompanyDetails() {
   const isReadOnly = data?.canEdit === false;
 
   return (
-    <div className="grid grid-cols-3">
-      <div>
+    <div className="flex flex-col">
+      <div className="flex flex-row justify-between">
         <div>
-          <Avatar className="min-w-40 min-h-40">
-            <AvatarImage src={data?.image} />
-            <AvatarFallback className="w-full">
-              <IconCompany size={64} />
-            </AvatarFallback>
-          </Avatar>
+          <div>
+            <Avatar className="min-w-40 min-h-40">
+              <AvatarImage src={data?.image} />
+              <AvatarFallback className="w-full">
+                <IconCompany size={64} />
+              </AvatarFallback>
+            </Avatar>
+          </div>
+          <div>
+            <CompanyInfo companyId={companyId} readOnly={isReadOnly} />
+          </div>
         </div>
-        <div>Owner: {data?.owner}</div>
+        <div className="flex-1">
+          <EntityUpdates entityId={companyId} />
+        </div>
       </div>
       <div>
-        <CompanyInfo companyId={companyId} readOnly={isReadOnly} />
-      </div>
-      <div>
-        <EntityNotesBrief entityId={companyId} />
-      </div>
-      <div className="col-span-3">
-        <RelationshipsTable
-          fromEntityId={companyId!}
-          fromEntityType={CoreEntityType.COMPANY}
-          readOnly={isReadOnly}
-        />
-      </div>
-      <div className="col-span-3">
-        <EntitiyNotesTable entity={companyId!} />
+        <div className="">
+          <RelationshipsTable
+            fromEntityId={companyId!}
+            fromEntityType={CoreEntityType.COMPANY}
+            readOnly={isReadOnly}
+          />
+        </div>
+        <div className="">
+          <EntitiyNotesTable entity={companyId!} />
+        </div>
       </div>
     </div>
   );

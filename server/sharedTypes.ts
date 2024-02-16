@@ -264,6 +264,7 @@ export const tasksFilter = z.object({
   completed: z.boolean().optional(),
   startDate: z.date().optional(),
   endDate: z.date().optional(),
+  entity: z.string().optional(),
   limit: z.number().optional(),
 });
 

@@ -1,18 +1,19 @@
 import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 
-import { getTasksForUser } from '@/server/task';
+import { getTasks } from '@/server/task';
 
 import { taskInput, tasksFilter } from '@/server/sharedTypes';
 
 export const taskRouter = createTRPCRouter({
-  getTasksForUser: protectedProcedure
+  getTasks: protectedProcedure
     .input(tasksFilter)
     .query(async ({ ctx, input }) => {
       const numResults = input.limit ?? 10;
-      const results = await getTasksForUser({
+      const results = await getTasks({
         db: ctx.prisma,
         filter: {
           type: input.type?.length ? input.type : undefined,
+          entity: input.entity,
           completed: input.completed,
           endDate: input.endDate,
         },

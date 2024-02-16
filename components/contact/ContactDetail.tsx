@@ -6,10 +6,11 @@ import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 
 import ContactInfo from './ContactInfo';
 import ContactAvatar from './ContactAvatar';
-import EntityNotesBrief from '@/components/entities/EntityNotesBrief';
+
 import { trpc } from '@/app/_trpc/client';
 import { CoreEntityType } from '@prisma/client';
 import EntitiyNotesTable from '../entities/EntityNotesTable';
+import EntityUpdates from '../updates/EntityUpdates';
 
 export default function ContactDetails() {
   const params = useParams();
@@ -21,6 +22,10 @@ export default function ContactDetails() {
 
   const updateAvatarImg = trpc.contact.updateAvatarSrc.useMutation({
     onSuccess: () => refetch(),
+  });
+
+  const createNote = trpc.notes.createNote.useMutation({
+    //onSettled: () => getNotesForEntity?.refetch(),
   });
 
   const handleAvatarImgUpdate = (res: any) => {
@@ -35,32 +40,36 @@ export default function ContactDetails() {
   const isReadOnly = data?.canEdit === false;
 
   return (
-    <div className="grid grid-cols-3">
+    <div className="flex flex-col">
+      <div className="flex flex-row justify-between">
+        <div className="">
+          <div>
+            <ContactAvatar
+              avatarSrc={data?.image}
+              onUpdated={handleAvatarImgUpdate}
+              readOnly={data?.canEdit === false}
+            />
+          </div>
+          <div>
+            <ContactInfo contactId={contactId} readOnly={isReadOnly} />
+          </div>
+        </div>
+        <div className="flex-1">
+          <EntityUpdates entityId={contactId} />
+        </div>
+      </div>
+
       <div>
-        <div>
-          <ContactAvatar
-            avatarSrc={data?.image}
-            onUpdated={handleAvatarImgUpdate}
-            readOnly={data?.canEdit === false}
+        <div className="">
+          <RelationshipsTable
+            fromEntityId={contactId!}
+            fromEntityType={CoreEntityType.CONTACT}
+            readOnly={isReadOnly}
           />
         </div>
-        <div>Owner: {data?.owner}</div>
-      </div>
-      <div>
-        <ContactInfo contactId={contactId} readOnly={isReadOnly} />
-      </div>
-      <div>
-        <EntityNotesBrief entityId={contactId} />
-      </div>
-      <div className="col-span-3">
-        <RelationshipsTable
-          fromEntityId={contactId!}
-          fromEntityType={CoreEntityType.CONTACT}
-          readOnly={isReadOnly}
-        />
-      </div>
-      <div className="col-span-3">
-        <EntitiyNotesTable entity={contactId!} />
+        <div className="">
+          <EntitiyNotesTable entity={contactId!} />
+        </div>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   IconPlus as IconPlusTabler,
   IconClock,
   IconCalendarClock as IconCalendarClockTabler,
+  IconNote as IconNoteTabler,
 } from '@tabler/icons-react';
 
 export const IconDashboard = (props: any) => <IconLayoutDashboard {...props} />;
@@ -31,3 +32,5 @@ export const IconTime = (props: any) => <IconClock {...props} />;
 export const IconCalendarClock = (props: any) => (
   <IconCalendarClockTabler {...props} />
 );
+
+export const IconNote = (props: any) => <IconNoteTabler {...props} />;

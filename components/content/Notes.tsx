@@ -4,11 +4,14 @@ import { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 
-interface NoteProps {
-  date: Date;
-  content: string;
-  creator: string;
-}
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardDescription,
+} from '@/components/ui/card';
+
+import { IconNote } from '@/components/common/icons';
 
 const getDaysSinceDate = (date: Date): number => {
   return Math.floor(
@@ -59,15 +62,19 @@ export function Note({
   creator?: string | undefined;
 }) {
   return (
-    <div className="border border-slate-200 rounded-sm p-2 m-2">
-      <div className="flex flex-col gap-4">
-        <p className="text-xs text-slate-400">{getNoteDateLabel(date)}</p>
-        <p>{content}</p>
-        {creator && (
-          <p className="text-xs text-slate-400">posted by {creator}</p>
-        )}
-      </div>
-    </div>
+    <Card>
+      <CardContent className="p-4">
+        <CardHeader className="space-y-0 p-1 flex flex-row items-center gap-2 justify-between">
+          <div>{content}</div>
+        </CardHeader>
+        <CardDescription className="flex flex-row justify-between">
+          <div>{creator}</div>
+          <div className="font-bold text-xs text-slate-500">
+            {getNoteDateLabel(date)}
+          </div>
+        </CardDescription>
+      </CardContent>
+    </Card>
   );
 }
 

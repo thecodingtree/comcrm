@@ -31,9 +31,11 @@ const getAMorPM = (date: Date | undefined) => {
 export default function DateTimePicker({
   date,
   onChange,
+  placeholder = 'Pick a date',
 }: {
   date: Date | undefined;
   onChange: (day: Date | undefined) => void;
+  placeholder?: string;
 }) {
   const minuteRef = useRef<HTMLInputElement>(null);
   const hourRef = useRef<HTMLInputElement>(null);
@@ -48,7 +50,6 @@ export default function DateTimePicker({
       date.setHours(hours + 12);
     }
 
-    console.log('date', date);
     onChange(date);
 
     return date;
@@ -60,11 +61,11 @@ export default function DateTimePicker({
         <Button
           variant={'outline'}
           className={cn(
-            'w-[240px] pl-3 text-left font-normal',
+            'w-full pl-3 text-left font-normal',
             !date && 'text-muted-foreground',
           )}
         >
-          {date ? format(date, 'PPp') : <span>Pick a date</span>}
+          {date ? format(date, 'PPp') : <span>{placeholder}</span>}
           <IconCalendarClock className="ml-auto h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>

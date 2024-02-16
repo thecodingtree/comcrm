@@ -21,7 +21,7 @@ export default function Tasks() {
     endDate: new Date(),
   });
 
-  const { data, isLoading, refetch } = trpc.task.getTasksForUser.useQuery({
+  const { data, isLoading, refetch } = trpc.task.getTasks.useQuery({
     type: filters?.type,
     completed: filters?.completed,
     endDate: filters?.endDate,
