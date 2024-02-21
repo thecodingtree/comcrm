@@ -30,6 +30,7 @@
     "index.old",
     "postcss.config.js",
     "app/_tests/page.test.old",
+    "components/tasks/Tasks.old",
   ],
   "exclude": ["node_modules"],
 }

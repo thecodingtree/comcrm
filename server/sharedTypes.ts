@@ -4,6 +4,9 @@ import {
   RelationshipType as PrismaRelationshipType,
   CoreEntityType,
   User,
+  TaskPriority as PrismaTaskPriority,
+  TaskType as PrismaTaskType,
+  TaskType,
 } from '@prisma/client';
 
 import { Session } from 'next-auth';
@@ -250,3 +253,35 @@ export type Team = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export const tasksFilter = z.object({
+  type: z
+    .union([
+      z.array(z.nativeEnum(PrismaTaskType)),
+      z.nativeEnum(PrismaTaskType),
+    ])
+    .optional(),
+  completed: z.boolean().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+  entity: z.string().optional(),
+  limit: z.number().optional(),
+});
+
+export type TasksFilter = z.infer<typeof tasksFilter>;
+
+export const taskInput = z.object({
+  type: z.nativeEnum(PrismaTaskType),
+  description: z.string(),
+  content: z.string().optional(),
+  entity: z.string().optional(),
+  priority: z.nativeEnum(PrismaTaskPriority).optional(),
+  isPrivate: z.boolean().optional(),
+  completed: z.boolean().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date(),
+});
+
+export { PrismaTaskType as TaskType, PrismaTaskPriority as TaskPriority };
+
+export type TaskData = z.infer<typeof taskInput>;
