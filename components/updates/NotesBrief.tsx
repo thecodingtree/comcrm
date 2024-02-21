@@ -1,23 +1,15 @@
-import { Note, AddNote } from '@/components/content/Notes';
+import { Note } from '@/components/content/Notes';
 
 import { trpc } from '@/app/_trpc/client';
 import { NoteType } from '@/server/sharedTypes';
 
 import useUser from '@/hooks/useUser';
 
-export default function EntityNotesBrief({
-  entityId,
-}: {
-  entityId?: string | null;
-}) {
+export default function NotesBrief({ entityId }: { entityId?: string | null }) {
   const { user } = useUser();
   const getNotesForEntity = entityId
     ? trpc.notes.getNotesForEntity.useQuery({ entityId, limit: 3 })
     : null;
-
-  const createNote = trpc.notes.createNote.useMutation({
-    onSettled: () => getNotesForEntity?.refetch(),
-  });
 
   const getNoteCreator = (note: NoteType) => {
     const creator = note.creator;
@@ -28,7 +20,7 @@ export default function EntityNotesBrief({
   if (!entityId) return null;
 
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center gap-2">
       {getNotesForEntity?.data?.map((note, index) => (
         <Note
           key={`notes-${index}`}
@@ -37,9 +29,6 @@ export default function EntityNotesBrief({
           creator={getNoteCreator(note) || 'Unknown'}
         />
       ))}
-      <AddNote
-        onAddNote={(content) => createNote.mutate({ entityId, content })}
-      />
     </div>
   );
 }

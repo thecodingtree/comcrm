@@ -8,6 +8,8 @@ import { TRPCProvider } from '@/app/_trpc/TRPCProvider';
 
 import { Toaster } from '@/components/ui/sonner';
 
+import MainLayout from '@/components/layouts/MainLayout';
+
 import '@uploadthing/react/styles.css';
 
 import '@/app/globals.css';
@@ -40,7 +42,9 @@ export default function RootLayout({ children }: { children: any }) {
           fontSans.variable,
         )}
       >
-        <TRPCProvider headers={headers()}>{children}</TRPCProvider>
+        <TRPCProvider headers={headers()}>
+          <MainLayout>{children}</MainLayout>
+        </TRPCProvider>
         <Analytics />
         <Toaster position="bottom-center" closeButton />
       </body>
