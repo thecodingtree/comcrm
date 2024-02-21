@@ -1,7 +1,7 @@
 import { SendVerificationRequestParams } from 'next-auth/providers/email';
 import { resend } from '@/resend';
 
-import { SendVerificationEmail } from '@/react-email-starter/emails/send-verfication';
+import SendVerificationEmail from '@/react-email-starter/emails/send-verfication';
 
 export const sendVerificationRequest = async (
   params: SendVerificationRequestParams,
