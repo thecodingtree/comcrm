@@ -90,13 +90,13 @@ const getEntityLink = ({
   let typeHref = '';
   switch (entityType) {
     case CoreEntityType.COMPANY:
-      typeHref = '/dashboard/companies';
+      typeHref = '/companies';
       break;
     case CoreEntityType.CONTACT:
-      typeHref = '/dashboard/contacts';
+      typeHref = '/contacts';
       break;
     case CoreEntityType.PROPERTY:
-      typeHref = '/dashboard/properties';
+      typeHref = '/properties';
       break;
   }
 

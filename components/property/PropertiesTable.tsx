@@ -56,7 +56,7 @@ export default function PropertiesTable({
 
   const goToProperty = (id: string) => {
     return (
-      <Link href={`/dashboard/properties/${id}`}>
+      <Link href={`/properties/${id}`}>
         <button>Go to</button>
       </Link>
     );
