@@ -29,7 +29,7 @@ export default function TeamUsers({
   const { data, isLoading, refetch } = trpc.team.getTeamUsers.useQuery({
     teamId,
   });
-  const leaveTeam = trpc.team.leaveTeam.useMutation();
+
   const removeUser = trpc.team.removeTeamUsers.useMutation();
 
   const teamUsers = data?.map((teamUser) => {
@@ -66,22 +66,7 @@ export default function TeamUsers({
 
   return (
     <Table>
-      <TableCaption>
-        <Button
-          onClick={() =>
-            leaveTeam.mutate(
-              { teamId },
-              {
-                onSuccess: () => {
-                  router.refresh();
-                },
-              },
-            )
-          }
-        >
-          leave team
-        </Button>
-      </TableCaption>
+      <TableCaption></TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]"></TableHead>

@@ -1,5 +1,11 @@
+import { useState } from 'react';
+import Link from 'next/link';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { IconChevronRight, IconLogout } from '@tabler/icons-react';
+import {
+  IconChevronRight,
+  IconLogout,
+  IconUserEdit,
+} from '@tabler/icons-react';
 
 import {
   Popover,
@@ -9,14 +15,14 @@ import {
 
 import useUser from '@/hooks/useUser';
 
-import { IconButton } from '@/components/controls/Buttons';
 import { AccountSkeleton } from '@/components/account/AccountSkeleton';
 
 export function AccountMenuItem() {
+  const [open, setOpen] = useState(false);
   const { user, signOut } = useUser();
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={(open) => setOpen(open)}>
       <PopoverTrigger>
         <div className="font-medium text-sm grid grid-flow-col gap-2 justify-start overflow-hidden">
           {user ? (
@@ -39,10 +45,29 @@ export function AccountMenuItem() {
           <IconChevronRight size={24} stroke={1.5} />
         </div>
       </PopoverTrigger>
-      <PopoverContent>
-        <IconButton icon={<IconLogout size={24} />} onClick={signOut}>
-          <div className="ml-4 text-sm">Logout</div>
-        </IconButton>
+      <PopoverContent side="right">
+        <div className="flex flex-col">
+          <div className="p-2">
+            <Link
+              href="/profile"
+              className="w-full flex flex-row gap-2 items-center"
+              onClick={(_) => setOpen(false)}
+            >
+              <IconUserEdit size={24} />
+              <div className="">Profile</div>
+            </Link>
+          </div>
+          <div className="p-2">
+            <Link
+              href="#"
+              className="w-full flex flex-row gap-2 items-center"
+              onClick={(_) => signOut()}
+            >
+              <IconLogout size={24} />
+              <div className="">Logout</div>
+            </Link>
+          </div>
+        </div>
       </PopoverContent>
     </Popover>
   );
