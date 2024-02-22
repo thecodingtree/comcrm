@@ -24,8 +24,7 @@ export const contactCreator = async ({
   data: CreateContactInputType;
   user?: SessionUser;
 }) => {
-  const { name, surName, phone, email, address, attributes, linkedEntity } =
-    data;
+  const { name, surName, phone, email, address, attributes } = data;
 
   const contactCreateInput = {
     type: CoreEntityType.CONTACT,
@@ -48,7 +47,7 @@ export const contactCreator = async ({
       },
     },
     attributes: attributes ? { create: attributes } : undefined,
-    owner: {
+    creator: {
       connect: { id: user?.id },
     },
   } as Prisma.CoreEntityCreateInput;
@@ -86,7 +85,7 @@ export const companyCreator = async ({
     attributes: {
       create: attributes,
     },
-    owner: {
+    creator: {
       connect: { id: user?.id },
     },
   } as Prisma.CoreEntityCreateInput;
@@ -122,7 +121,7 @@ export const propertyCreator = async ({
     attributes: {
       create: attributes,
     },
-    owner: {
+    creator: {
       connect: { id: user?.id },
     },
   } as Prisma.CoreEntityCreateInput;

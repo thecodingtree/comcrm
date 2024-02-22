@@ -14,6 +14,8 @@ import TaskFilters from './TaskFilters';
 import AddTaskDialog from './AddTaskDialog';
 import TaskListSkeleton from './TaskListSkeleton';
 
+import { toast } from 'sonner';
+
 export default function Tasks() {
   const [filters, setFilters] = useState<TasksFilter | undefined>({
     type: undefined,
@@ -21,11 +23,23 @@ export default function Tasks() {
     endDate: new Date(),
   });
 
+  const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+
+  const handleSelectChange = (selected: boolean, taskId: string) => {
+    if (selected) {
+      setSelectedTasks([...selectedTasks, taskId]);
+    } else {
+      setSelectedTasks(selectedTasks.filter((id) => id !== taskId));
+    }
+  };
+
   const { data, isLoading, refetch } = trpc.task.getTasks.useQuery({
     type: filters?.type,
     completed: filters?.completed,
     endDate: filters?.endDate,
   });
+
+  const completeTasks = trpc.task.completeTasks.useMutation();
 
   return (
     <div className="flex flex-col gap-4">
@@ -43,9 +57,36 @@ export default function Tasks() {
               onFilterChange={(filters) => setFilters(filters)}
             />
           </div>
+          <div className="m-4">
+            <Button
+              disabled={selectedTasks.length === 0}
+              onClick={() =>
+                completeTasks.mutate(
+                  { taskIds: selectedTasks },
+                  {
+                    onSettled: () => {
+                      refetch();
+                      toast.success('Tasks updated!');
+                      setSelectedTasks([]);
+                    },
+                  },
+                )
+              }
+            >
+              Mark Completed
+            </Button>
+          </div>
         </div>
       </div>
-      {!isLoading ? <TasksList tasks={data} /> : <TaskListSkeleton />}
+      {!isLoading ? (
+        <TasksList
+          tasks={data}
+          onSelectChange={handleSelectChange}
+          selectedTasks={selectedTasks}
+        />
+      ) : (
+        <TaskListSkeleton />
+      )}
     </div>
   );
 }

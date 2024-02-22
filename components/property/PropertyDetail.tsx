@@ -23,8 +23,6 @@ export default function PropertyDetail() {
 
   if (getProperty.isLoading) return <p>Loading...</p>;
 
-  const isReadOnly = getProperty.data?.canEdit === false;
-
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-between">
@@ -38,7 +36,7 @@ export default function PropertyDetail() {
             </Avatar>
           </div>
           <div>
-            <PropertyInfo propertyId={propertyId} readOnly={isReadOnly} />
+            <PropertyInfo propertyId={propertyId} readOnly={false} />
           </div>
         </div>
         <div className="flex-1">
@@ -50,7 +48,7 @@ export default function PropertyDetail() {
           <RelationshipsTable
             fromEntityId={propertyId!}
             fromEntityType={CoreEntityType.PROPERTY}
-            readOnly={isReadOnly}
+            readOnly={false}
           />
         </div>
         <div className="">

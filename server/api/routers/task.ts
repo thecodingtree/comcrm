@@ -4,6 +4,8 @@ import { getTasks } from '@/server/task';
 
 import { taskInput, tasksFilter } from '@/server/sharedTypes';
 
+import { z } from 'zod';
+
 export const taskRouter = createTRPCRouter({
   getTasks: protectedProcedure
     .input(tasksFilter)
@@ -36,6 +38,20 @@ export const taskRouter = createTRPCRouter({
           completed: input.completed,
           startDate: input.startDate,
           endDate: input.endDate,
+        },
+      });
+    }),
+  completeTasks: protectedProcedure
+    .input(z.object({ taskIds: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.task.updateMany({
+        where: {
+          id: {
+            in: input.taskIds,
+          },
+        },
+        data: {
+          completed: true,
         },
       });
     }),

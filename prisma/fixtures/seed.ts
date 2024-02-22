@@ -65,7 +65,7 @@ async function main() {
   const coreEntityContact = await createCoreEntity({
     db: prisma,
     type: CoreEntityType.CONTACT,
-    ownerId: user1.id!,
+    creatorId: user1.id,
     teamId: team1.id!,
     name: 'Test',
     surName: 'Contact',
@@ -74,7 +74,7 @@ async function main() {
   const coreEntityCompany = await createCoreEntity({
     db: prisma,
     type: CoreEntityType.COMPANY,
-    ownerId: user1.id!,
+    creatorId: user1.id!,
     teamId: team1.id!,
     name: 'Test Company',
   });
@@ -82,7 +82,7 @@ async function main() {
   const coreEntityProperty = await createCoreEntity({
     db: prisma,
     type: CoreEntityType.PROPERTY,
-    ownerId: user1.id!,
+    creatorId: user1.id!,
     teamId: team1.id!,
     name: 'Test Property',
   });

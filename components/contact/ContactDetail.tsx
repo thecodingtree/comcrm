@@ -37,8 +37,6 @@ export default function ContactDetails() {
 
   if (isLoading) return <p>Loading...</p>;
 
-  const isReadOnly = data?.canEdit === false;
-
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-between">
@@ -47,11 +45,11 @@ export default function ContactDetails() {
             <EditAvatar
               src={data?.image}
               onUpdated={handleAvatarImgUpdate}
-              readOnly={data?.canEdit === false}
+              readOnly={false}
             />
           </div>
           <div>
-            <ContactInfo contactId={contactId} readOnly={isReadOnly} />
+            <ContactInfo contactId={contactId} readOnly={false} />
           </div>
         </div>
         <div className="flex-1">
@@ -64,7 +62,7 @@ export default function ContactDetails() {
           <RelationshipsTable
             fromEntityId={contactId!}
             fromEntityType={CoreEntityType.CONTACT}
-            readOnly={isReadOnly}
+            readOnly={false}
           />
         </div>
         <div className="">
