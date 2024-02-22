@@ -246,7 +246,7 @@ model Relationship {
 }
 
 /// @@allow('read', creator == auth() || assignee == auth() || related.owner == auth() || related.team.members?[user == auth()])
-/// @@allow('create,update,delete', creator == auth())
+/// @@allow('create,update,delete', creator == auth() || assignee == auth())
 model Task {
     id String @id() @default(cuid()) @map("_id")
     type TaskType @default(TODO)

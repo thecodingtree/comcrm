@@ -305,5 +305,5 @@ model Task {
   @@allow('read', creator == auth() || assignee == auth() || related.owner == auth() || related.team.members?[user == auth()])
 
   // only the user who owns the task can read,update,delete their own tasks
-  @@allow('create,update,delete', creator == auth())
+  @@allow('create,update,delete', creator == auth() || assignee == auth())
 }
