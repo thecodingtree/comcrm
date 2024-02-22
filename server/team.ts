@@ -43,7 +43,7 @@ export async function createTeam({
   return team;
 }
 
-export async function getTeamForUser({
+export async function getTeamUser({
   db,
   user,
 }: {
@@ -55,9 +55,9 @@ export async function getTeamForUser({
     user = session?.user?.id;
   }
 
-  return db.team.findFirst({
-    where: { members: { some: { userId: user } } },
-    include: { members: { include: { user: true } } },
+  return db.teamUser.findFirst({
+    where: { userId: user },
+    include: { team: true },
   });
 }
 

@@ -4,15 +4,28 @@ import { useEffect, useState } from 'react';
 import { Session } from 'next-auth';
 import { useSession, signOut } from 'next-auth/react';
 
+import { trpc } from '@/app/_trpc/client';
+
+import { toast } from 'sonner';
+
 export default function useUser() {
-  const { data: session, status } = useSession();
-  const [user, setUser] = useState<Session['user'] | null>(null);
+  const { data, status, update } = useSession();
+  const updateMe = trpc.me.updateMe.useMutation();
 
-  useEffect(() => {
-    if (session?.user) {
-      setUser(session?.user);
-    }
-  }, [session]);
+  const updateUser = ({ name, image }: { name?: string; image?: string }) => {
+    updateMe.mutate(
+      { name, image },
+      {
+        onSuccess: () => {
+          update({ name, image });
+          toast.success('Profile updated');
+        },
+      },
+    );
+    //update({ name, image });
+  };
 
-  return { user, signOut };
+  const user = data?.user;
+
+  return { user, signOut, updateUser };
 }
