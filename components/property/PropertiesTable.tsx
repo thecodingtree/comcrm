@@ -84,7 +84,7 @@ export default function PropertiesTable({
           <TableCell>{sizeStr}</TableCell>
           <TableCell>{priceStr}</TableCell>
           <TableCell>
-            <div>{row.isOwner && deleteBtn(row.id)}</div>
+            <div>{row.canAdmin && deleteBtn(row.id)}</div>
             <div>{goToProperty(row.id)}</div>
           </TableCell>
         </TableRow>

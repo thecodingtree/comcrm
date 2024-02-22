@@ -14,7 +14,7 @@ export default function CompanyAdd({
   return (
     <div className="flex flex-col items-center">
       <EntityAddDialog
-        triggerLabel="Add Comapny"
+        triggerLabel="Add Company"
         entityType={CoreEntityType.COMPANY}
         onAdded={onAdded}
       />

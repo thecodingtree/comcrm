@@ -8,22 +8,23 @@ import {
 import { SessionUser } from '@/server/sharedTypes';
 import { TeamUser } from '@prisma/client';
 
-export const canEditEntity = (
+export const canAdminEntity = (
   user?: SessionUser,
-  ownerId?: string,
+  creatorId?: string,
   teamMembers?: TeamUser[],
 ) => {
   // If no user is provided, then the user is not logged in and therefore cannot edit the entity
   if (!user) return false;
 
   return (
-    // If the user is the owner of the entity, then they can edit it
-    user?.id === ownerId ||
-    // If the user is an admin of the team that the entity belongs to, then they can edit it
-    teamMembers?.some(
-      (member) => member.userId === user?.id && member.role === TeamRole.ADMIN,
-    ) ||
-    false
+    user?.id === creatorId ||
+    // If the user is an Admin or Owner of the team that the entity belongs to, then they can edit it
+    (teamMembers
+      ?.filter((member) => member.userId === user?.id)
+      .some((member) => {
+        return member.role === TeamRole.ADMIN || member.role === TeamRole.OWNER;
+      }) ??
+      false)
   );
 };
 
@@ -31,7 +32,7 @@ export const contactDataMapper = (
   entity: CoreEntityResult,
   user?: SessionUser,
 ): ContactType => {
-  const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
+  const { id, meta, attributes, creator, createdAt, updatedAt } = entity;
   return {
     id,
     name: meta?.name!,
@@ -41,11 +42,10 @@ export const contactDataMapper = (
     email: meta?.email,
     phone: meta?.phone,
     attributes,
-    owner: owner?.email ?? '',
+    creator: creator?.email ?? '',
     createdAt,
     updatedAt,
-    canEdit: canEditEntity(user, owner?.id, entity.team?.members),
-    isOwner: user?.id === owner?.id,
+    canAdmin: canAdminEntity(user, creator?.id, entity.team?.members),
   } as ContactType;
 };
 
@@ -53,7 +53,7 @@ export const companyDataMapper = (
   entity: CoreEntityResult,
   user?: SessionUser,
 ): CompanyType => {
-  const { id, meta, attributes, owner, team, createdAt, updatedAt } = entity;
+  const { id, meta, attributes, creator, createdAt, updatedAt } = entity;
   return {
     id,
     name: meta?.name!,
@@ -61,11 +61,10 @@ export const companyDataMapper = (
     phone: meta?.phone || undefined,
     email: meta?.email || undefined,
     attributes,
-    owner: owner?.email ?? '',
+    creator: creator?.email ?? '',
     createdAt,
     updatedAt,
-    canEdit: canEditEntity(user, owner?.id, entity.team?.members),
-    isOwner: user?.id === owner?.id,
+    canAdmin: canAdminEntity(user, creator?.id, entity.team?.members),
   } as CompanyType;
 };
 
@@ -73,7 +72,7 @@ export const propertyDataMapper = (
   entity: CoreEntityResult,
   user?: SessionUser,
 ): PropertyType => {
-  const { id, meta, attributes, owner, createdAt, updatedAt } = entity;
+  const { id, meta, attributes, creator, createdAt, updatedAt } = entity;
   return {
     id,
     name: meta?.name,
@@ -81,10 +80,9 @@ export const propertyDataMapper = (
     phone: meta?.phone,
     email: meta?.email,
     attributes,
-    owner: owner?.email ?? '',
+    creator: creator?.email ?? '',
     createdAt,
     updatedAt,
-    canEdit: canEditEntity(user, owner?.id, entity.team?.members),
-    isOwner: user?.id === owner?.id,
+    canAdmin: canAdminEntity(user, creator?.id, entity.team?.members),
   } as PropertyType;
 };
