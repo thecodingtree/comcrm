@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import {
   createTeam,
-  getTeamForUser,
+  getTeamUser,
   getTeamUsers,
   getTeamInvites,
   createTeamInvite,
@@ -41,26 +41,11 @@ export const teamRouter = createTRPCRouter({
         slug: team.slug,
       } as Team;
     }),
-  getTeamForUser: protectedProcedure.query(async ({ ctx }) => {
-    const team = await getTeamForUser({
+  getTeamUser: protectedProcedure.query(async ({ ctx }) => {
+    return getTeamUser({
       db: ctx.prisma,
       user: ctx.session?.user?.id!,
     });
-
-    return team
-      ? ({
-          ...team,
-          members: team?.members?.map((member) => {
-            return {
-              id: member.user.id,
-              name: member.user.name,
-              email: member.user.email,
-              image: member.user.image,
-              role: member.role,
-            } as TeamUser;
-          }),
-        } as Team)
-      : null;
   }),
   getTeamUsers: protectedProcedure
     .input(

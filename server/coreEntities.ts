@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient, CoreEntityType } from '@prisma/client';
 
 import { EntityFilterType } from '@/server/sharedTypes';
-import { getTeamForUser } from './team';
+import { getTeamUser } from './team';
 
 const coreEntityInclude = Prisma.validator<Prisma.CoreEntityInclude>()({
   meta: { include: { address: true } },
@@ -86,10 +86,15 @@ export const createCoreEntity = async ({
   db: PrismaClient;
   data: Prisma.CoreEntityCreateInput;
 }) => {
-  const team = await getTeamForUser({ db });
+  const teamUser = await getTeamUser({ db });
 
   return db.coreEntity.create({
-    data: { ...data, team: team ? { connect: { id: team?.id } } : undefined },
+    data: {
+      ...data,
+      team: teamUser?.team
+        ? { connect: { id: teamUser?.team?.id } }
+        : undefined,
+    },
     include: coreEntityInclude,
   });
 };

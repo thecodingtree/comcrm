@@ -11,19 +11,19 @@ import { IconPencil } from '@tabler/icons-react';
 import { UploadDropzone } from '@/utils/uploadthing';
 import { IconContact } from '../common/icons';
 
-export default function ContactAvatar({
-  avatarSrc,
+export default function EditAvatar({
+  src,
   onUpdated,
   readOnly = false,
 }: {
-  avatarSrc?: string;
-  onUpdated?: (res: any) => void;
+  src?: string;
+  onUpdated?: (url: string) => void;
   readOnly?: boolean;
 }) {
   return (
     <div className="flex flex-col items-start">
       <Avatar className="min-w-40 min-h-40">
-        <AvatarImage src={avatarSrc} />
+        <AvatarImage src={src} />
         <AvatarFallback>
           <IconContact size={64} />
         </AvatarFallback>
@@ -38,7 +38,7 @@ export default function ContactAvatar({
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 close();
-                onUpdated && onUpdated(res);
+                onUpdated && onUpdated(res[0].url);
               }}
               onUploadError={(error: Error) => {
                 alert(`ERROR! ${error.message}`);
