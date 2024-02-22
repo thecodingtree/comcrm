@@ -1,4 +1,8 @@
+'use client';
+
 import { useState } from 'react';
+
+import { cn } from '@/libs/utils';
 
 import { Input } from '@/components/ui/input';
 
@@ -10,24 +14,26 @@ import {
 
 interface EditTextProps {
   label?: string | null;
-  initValue?: string | null;
-  onChange?: (value?: string | null) => void;
+  initValue?: string;
+  className?: string;
+  onChange?: (value?: string) => void;
 }
 
 export default function EditText({
   label,
   initValue,
+  className,
   onChange,
 }: EditTextProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [tmpValue, setTmpValue] = useState(initValue);
+  const [tmpValue, setTmpValue] = useState<string | undefined>(initValue);
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setTmpValue(e.currentTarget.value);
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className={cn('flex flex-col', className)}>
       <div className="flex justify-start gap-4">
         <p className="text-base text-slate-400">{label}</p>
         {!isEditing ? (
