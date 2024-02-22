@@ -6,7 +6,6 @@ import {
   User,
   TaskPriority as PrismaTaskPriority,
   TaskType as PrismaTaskType,
-  TaskType,
 } from '@prisma/client';
 
 import { Session } from 'next-auth';
@@ -71,11 +70,10 @@ export type ContactType = {
   address?: AddressType;
   image?: string;
   attributes: AttributeType[];
-  owner?: string;
+  creator?: string;
   createdAt: Date;
   updatedAt: Date;
-  canEdit?: boolean;
-  isOwner?: boolean;
+  canAdmin?: boolean;
 };
 
 export const CreateContactInput = z.object({
@@ -112,11 +110,10 @@ export type PropertyType = {
   address?: AddressType;
   attributes: AttributeType[];
   image?: string;
-  owner?: string;
+  creator?: string;
   createdAt: Date;
   updatedAt: Date;
-  canEdit?: boolean;
-  isOwner?: boolean;
+  canAdmin?: boolean;
 };
 
 export const CreatePropertyInput = z.object({
@@ -149,11 +146,10 @@ export type CompanyType = {
   address?: AddressType;
   attributes: AttributeType[];
   image?: string;
-  owner?: string;
+  creator?: string;
   createdAt: Date;
   updatedAt: Date;
-  canEdit?: boolean;
-  isOwner?: boolean;
+  canAdmin?: boolean;
 };
 
 export const CreateCompanyInput = z.object({

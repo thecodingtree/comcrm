@@ -5,23 +5,38 @@ import { TaskResult } from '@/server/task';
 
 export default function TasksList({
   tasks,
+  selectedTasks,
+  onSelectChange,
 }: {
   tasks: TaskResult[] | undefined;
+  selectedTasks: string[];
+  onSelectChange?: (selected: boolean, taskId: string) => void;
 }) {
+  const hasTasks = tasks?.length;
+
   return (
     <div className="flex flex-col gap-2">
-      {tasks?.map((task) => (
-        <div key={task.id}>
-          <TaskItem
-            type={task.type}
-            startDate={task.startDate ?? undefined}
-            endDate={task.endDate}
-            description={task.description}
-            content={task.content ?? ''}
-            assignedBy={task.assignee?.name ?? undefined}
-          />
+      {hasTasks ? (
+        tasks?.map((task) => (
+          <div key={task.id}>
+            <TaskItem
+              task={task}
+              selected={selectedTasks.some(
+                (selectedTask) => selectedTask === task.id,
+              )}
+              onSelectChange={(selected) =>
+                onSelectChange && onSelectChange(selected, task.id)
+              }
+            />
+          </div>
+        ))
+      ) : (
+        <div className="flex items-center justify-center h-64">
+          <p className="text-gray-400 dark:text-gray-600">
+            Congratulations! You&apos;ve completed all of your tasks!
+          </p>
         </div>
-      ))}
+      )}
     </div>
   );
 }

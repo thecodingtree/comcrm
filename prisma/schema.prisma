@@ -25,6 +25,11 @@ enum CoreEntityType {
     COMPANY
 }
 
+enum OwnerType {
+    USER
+    TEAM
+}
+
 enum RelationshipType {
     OWNER_OF
     EMPLOYED_BY
@@ -153,13 +158,14 @@ model TeamInvite {
     @@unique([email, teamId])
 }
 
-/// @@allow('read', owner == auth() || (team.members?[user == auth()] && private == false))
-/// @@allow('create, update, delete', owner == auth())
+/// @@allow('read, update', team == null && creator == auth() || (team != null && team.members?[user == auth()]))
+/// @@allow('create', auth() != null)
+/// @@allow('delete', team == null && creator == auth() || (team != null && team.members?[user == auth() && role != 'MEMBER']))
 model CoreEntity {
     id String @id() @default(cuid()) @map("_id")
     type CoreEntityType
-    owner User? @relation(fields: [ownerId], references: [id])
-    ownerId String?
+    creator User? @relation(fields: [creatorId], references: [id])
+    creatorId String?
     relationshipsFrom Relationship[] @relation("RelationshipFrom")
     relationshipsTo Relationship[] @relation("RelationshipTo")
     team Team? @relation(fields: [teamId], references: [id])
@@ -173,8 +179,7 @@ model CoreEntity {
     updatedAt DateTime @updatedAt()
 }
 
-/// @@allow('read', entity.owner == auth() || entity.team.members?[user == auth()])
-/// @@allow('create,update,delete', auth() == entity.owner)
+/// @@allow('create, read, update', entity.team == null && entity.creator == auth() || (entity.team != null && entity.team.members?[user == auth()]))
 model Attributes {
     id String @id() @default(cuid()) @map("_id")
     name String
@@ -185,8 +190,7 @@ model Attributes {
     updatedAt DateTime @updatedAt()
 }
 
-/// @@allow('read', entity.owner == auth() || entity.team.members?[user == auth()])
-/// @@allow('create,update,delete', auth() == entity.owner)
+/// @@allow('create, read, update', entity.team == null && entity.creator == auth() || (entity.team != null && entity.team.members?[user == auth()]))
 model MetaData {
     id Int @id() @default(autoincrement()) @map("_id")
     name String
@@ -202,8 +206,7 @@ model MetaData {
     entityId String? @unique()
 }
 
-/// @@allow('read', meta.entity.owner == auth() || meta.entity.team.members?[user == auth()])
-/// @@allow('create,update,delete', auth() == meta.entity.owner)
+/// @@allow('create, read, update', meta.entity.team == null && meta.entity.creator == auth() || (meta.entity.team != null && meta.entity.team.members?[user == auth()]))
 model Address {
     id Int @id() @default(autoincrement()) @map("_id")
     street String?
@@ -216,28 +219,27 @@ model Address {
     metaId Int? @unique()
 }
 
-/// @@allow('create,read', entity.owner == auth() || entity.team.members?[user == auth()])
-/// @@allow('delete,update', auth() == entity.owner)
+/// @@allow('create,read', entity.creator == auth() || entity.team.members?[user == auth()])
+/// @@allow('delete,update', auth() == entity.creator)
 model Note {
     id String @id() @default(cuid()) @map("_id")
-    creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+    creator User @relation(fields: [creatorId], references: [id])
     creatorId String
     content String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
-    entity CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+    entity CoreEntity @relation(fields: [entityId], references: [id])
     entityId String
 }
 
-/// @@allow('read', from.owner == auth() || from.team.members?[user == auth()])
-/// @@allow('create,update,delete', auth() == from.owner)
+/// @@allow('read', true)
+/// @@allow('create, update, delete', from.team == null && from.creator == auth() || (from.team != null && from.team.members?[user == auth()]))
 model Relationship {
     id String @id() @default(cuid()) @map("_id")
     type RelationshipType
     from CoreEntity @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
     fromEntityId String
     to CoreEntity @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
-    /// @allow('update', auth() == to.owner)
     toEntityId String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
@@ -245,8 +247,8 @@ model Relationship {
     @@unique([fromEntityId, toEntityId])
 }
 
-/// @@allow('read', creator == auth() || assignee == auth() || related.owner == auth() || related.team.members?[user == auth()])
-/// @@allow('create,update,delete', creator == auth())
+/// @@allow('read', creator == auth() || assignee == auth() || (related.team == null && related.creator == auth()) || (related.team != null && related.team.members?[user == auth()]))
+/// @@allow('create,update,delete', creator == auth() || assignee == auth())
 model Task {
     id String @id() @default(cuid()) @map("_id")
     type TaskType @default(TODO)

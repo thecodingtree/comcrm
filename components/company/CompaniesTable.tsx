@@ -81,7 +81,7 @@ export default function CompaniesTable({
           <TableCell>{website}</TableCell>
           <TableCell>{row.phone}</TableCell>
           <TableCell>
-            <div>{row.isOwner && deleteBtn(row.id)}</div>
+            <div>{row.canAdmin && deleteBtn(row.id)}</div>
             <div>{goToCompany(row.id)}</div>
           </TableCell>
         </TableRow>
