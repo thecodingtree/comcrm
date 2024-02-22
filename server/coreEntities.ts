@@ -6,7 +6,7 @@ import { getTeamUser } from './team';
 const coreEntityInclude = Prisma.validator<Prisma.CoreEntityInclude>()({
   meta: { include: { address: true } },
   attributes: true,
-  owner: true,
+  creator: true,
   team: { include: { members: { include: { user: true } } } },
 });
 
