@@ -12,17 +12,29 @@ export default function useUser() {
   const { data, status, update } = useSession();
   const updateMe = trpc.me.updateMe.useMutation();
 
-  const updateUser = ({ name, image }: { name?: string; image?: string }) => {
+  const updateUser = ({
+    name,
+    image,
+    onSuccess,
+  }: {
+    name?: string;
+    image?: string;
+    onSuccess?: (user: Session['user']) => void;
+  }) => {
     updateMe.mutate(
       { name, image },
       {
         onSuccess: () => {
-          update({ name, image });
+          update();
+
+          if (onSuccess) {
+            onSuccess({ name, image });
+          }
+
           toast.success('Profile updated');
         },
       },
     );
-    //update({ name, image });
   };
 
   const user = data?.user;
