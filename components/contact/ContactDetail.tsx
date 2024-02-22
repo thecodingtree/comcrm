@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
 
 import ContactInfo from './ContactInfo';
-import ContactAvatar from './ContactAvatar';
+import EditAvatar from '../input/EditAvatar';
 
 import { trpc } from '@/app/_trpc/client';
 import { CoreEntityType } from '@prisma/client';
@@ -44,8 +44,8 @@ export default function ContactDetails() {
       <div className="flex flex-row justify-between">
         <div className="">
           <div>
-            <ContactAvatar
-              avatarSrc={data?.image}
+            <EditAvatar
+              src={data?.image}
               onUpdated={handleAvatarImgUpdate}
               readOnly={data?.canEdit === false}
             />
