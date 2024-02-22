@@ -17,7 +17,7 @@ export default function UpdateName() {
       return;
     }
 
-    updateUser({ name: value });
+    updateUser({ name: value, onSuccess: () => refetch() });
   };
 
   return (
