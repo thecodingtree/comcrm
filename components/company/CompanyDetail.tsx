@@ -23,8 +23,6 @@ export default function CompanyDetails() {
 
   if (isLoading) return <p>Loading...</p>;
 
-  const isReadOnly = data?.canEdit === false;
-
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-between">
@@ -38,7 +36,7 @@ export default function CompanyDetails() {
             </Avatar>
           </div>
           <div>
-            <CompanyInfo companyId={companyId} readOnly={isReadOnly} />
+            <CompanyInfo companyId={companyId} readOnly={false} />
           </div>
         </div>
         <div className="flex-1">
@@ -50,7 +48,7 @@ export default function CompanyDetails() {
           <RelationshipsTable
             fromEntityId={companyId!}
             fromEntityType={CoreEntityType.COMPANY}
-            readOnly={isReadOnly}
+            readOnly={false}
           />
         </div>
         <div className="">

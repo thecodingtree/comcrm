@@ -1,6 +1,21 @@
 import { PrismaClient, TeamRole } from '@prisma/client';
 import { getAuthedServerSession } from './utils';
 
+async function linkEntitiesToTeam({
+  db,
+  creatorId,
+  teamId,
+}: {
+  db: PrismaClient;
+  creatorId: string;
+  teamId: string;
+}) {
+  return db.coreEntity.updateMany({
+    where: { creatorId, teamId: null },
+    data: { teamId },
+  });
+}
+
 export async function createTeam({
   db,
   name,
@@ -34,10 +49,7 @@ export async function createTeam({
 
   if (linkData) {
     // Set all of the users entities to be linked to the new team
-    await db.coreEntity.updateMany({
-      where: { ownerId: user! },
-      data: { teamId: team.id },
-    });
+    await linkEntitiesToTeam({ db, creatorId: user!, teamId: team.id });
   }
 
   return team;
@@ -74,7 +86,7 @@ export function getTeamUsers({
   });
 }
 
-export function addUserToTeam({
+export async function addUserToTeam({
   db,
   teamId,
   userId,
@@ -85,13 +97,18 @@ export function addUserToTeam({
   userId: string;
   role?: TeamRole;
 }) {
-  return db.teamUser.create({
+  const teamUser = db.teamUser.create({
     data: {
       teamId,
       userId,
       role,
     },
   });
+
+  // Set all of the users entities to be linked to the new team
+  await linkEntitiesToTeam({ db, creatorId: userId, teamId });
+
+  return teamUser;
 }
 
 export function removeUsersFromTeam({

@@ -3,14 +3,14 @@ import { PrismaClient, CoreEntityType } from '@prisma/client';
 export async function createCoreEntity({
   db,
   type,
-  ownerId,
+  creatorId,
   teamId,
   name,
   surName,
 }: {
   db: PrismaClient;
   type: CoreEntityType;
-  ownerId: string;
+  creatorId: string;
   teamId?: string;
   name: string;
   surName?: string;
@@ -18,7 +18,7 @@ export async function createCoreEntity({
   return await db.coreEntity.create({
     data: {
       type,
-      ownerId,
+      creatorId,
       teamId,
       meta: {
         create: {
