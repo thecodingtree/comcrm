@@ -19,7 +19,6 @@ export default function TaskFilters({
         <TaskTypeSelect
           selected={filters?.type}
           onChange={(typeFilter) => {
-            console.log('typeFilter', typeFilter);
             handleFilterChange({
               ...filters,
               type: typeFilter,
