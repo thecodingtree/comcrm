@@ -22,8 +22,24 @@ export async function getNotes({
   filter?: NotesFilterType;
   limit?: number;
 }): Promise<NoteResult[]> {
+  const filters = [];
+
+  if (filter?.creator) {
+    filters.push({ creatorId: filter.creator });
+  }
+
+  if (filter?.entity) {
+    if (filter.entity.id && filter.entity.id.length > 0) {
+      filters.push({ entityId: { in: filter.entity.id ?? [] } });
+    }
+
+    if (filter.entity.type && filter.entity.type.length > 0) {
+      filters.push({ entity: { type: { in: filter.entity.type } } });
+    }
+  }
+
   return db.note.findMany({
-    where: { OR: filter ? [{ ...filter }] : undefined },
+    where: { AND: filters },
     include: notesInclude,
     orderBy: { createdAt: 'desc' },
     take: limit,

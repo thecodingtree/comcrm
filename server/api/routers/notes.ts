@@ -2,7 +2,7 @@ import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { z } from 'zod';
 
 import { getNotes, createNote } from '@/server/note';
-import { NotesFilterInput } from '@/server/sharedTypes';
+import { NotesFilterInput, NotesFilterType } from '@/server/sharedTypes';
 
 export const notesRouter = createTRPCRouter({
   getNotes: protectedProcedure
@@ -20,11 +20,16 @@ export const notesRouter = createTRPCRouter({
       });
     }),
   getNotesForMe: protectedProcedure
-    .input(z.object({ limit: z.number().optional() }))
+    .input(
+      z.object({
+        filter: NotesFilterInput.optional(),
+        limit: z.number().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       return await getNotes({
         db: ctx.prisma,
-        filter: { creatorId: ctx.session?.user?.id },
+        filter: { ...input.filter, creator: ctx.session?.user?.id },
         limit: input.limit ?? 10,
       });
     }),

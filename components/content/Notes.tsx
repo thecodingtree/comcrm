@@ -75,7 +75,7 @@ export function Note({
             <div className="flex flex-row gap-2 items-center">
               <div>
                 {getEntityIcon({
-                  entityType: entity?.type,
+                  type: entity?.type,
                   className: 'h-6 w-6',
                 })}
               </div>
