@@ -1,6 +1,15 @@
 import { TasksFilter } from '@/server/sharedTypes';
 
-import TaskTypeSelect from './TaskTypeSelect';
+import FilterSelect from '../controls/FilterSelect';
+
+import { TaskType } from '@/server/sharedTypes';
+
+import { getTaskIcon } from '@/components/tasks/utils';
+
+const filterItems = Object.values(TaskType).map((type) => ({
+  key: type,
+  icon: getTaskIcon(type),
+}));
 
 export default function TaskFilters({
   filters,
@@ -16,17 +25,17 @@ export default function TaskFilters({
   return (
     <div className="flex flex-row gap-10">
       <div className="grid grid-flow-col grid-3 gap-2">
-        <TaskTypeSelect
+        <FilterSelect
           selected={filters?.type}
           onChange={(typeFilter) => {
-            console.log('typeFilter', typeFilter);
             handleFilterChange({
               ...filters,
-              type: typeFilter,
+              type: typeFilter as TaskType,
             });
           }}
           allowMultiple
           allowNone
+          items={filterItems}
         />
       </div>
     </div>

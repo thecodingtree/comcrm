@@ -5,8 +5,10 @@ import { trpc } from '@/app/_trpc/client';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import AddTaskForm from '@/components/tasks/AddTaskForm';
-import TaskTypeSelect from './TaskTypeSelect';
+import FilterSelect from '../controls/FilterSelect';
 import { TaskData, TaskType } from '@/server/sharedTypes';
+
+import { getTaskIcon } from './utils';
 
 export default function AddTaskDialog({
   children,
@@ -36,11 +38,15 @@ export default function AddTaskDialog({
       <Dialog open={opened} onOpenChange={setOpened}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
-          <TaskTypeSelect
+          <FilterSelect
             allowNone={false}
             allowMultiple={false}
             selected={type}
             onChange={(type) => setType(type as TaskType)}
+            items={Object.values(TaskType).map((type) => ({
+              key: type,
+              icon: getTaskIcon(type),
+            }))}
           />
           <AddTaskForm
             submitting={submitting}

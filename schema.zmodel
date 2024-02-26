@@ -227,10 +227,10 @@ model Note {
   entityId  String
 
   // can be read by owner or space members and team members can create notes on entities
-  @@allow('create,read', entity.creator == auth() || entity.team.members?[user == auth()] )
+  @@allow('create,read', creator == auth() || entity.team.members?[user == auth()] )
 
   // only the user who owns the entity can read,update,delete their own notes
-  @@allow('delete,update', auth() == entity.creator)
+  @@allow('delete,update', auth() == creator)
 }
 
 model Relationship {
