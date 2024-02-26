@@ -8,10 +8,10 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardDescription,
+  CardFooter,
 } from '@/components/ui/card';
-
-import { IconNote } from '@/components/common/icons';
+import { getEntityIcon, getEntityLink } from '@/components/entities/utils';
+import { NoteResult } from '@/server/note';
 
 const getDaysSinceDate = (date: Date): number => {
   return Math.floor(
@@ -56,10 +56,12 @@ export function Note({
   date,
   content,
   creator,
+  entity,
 }: {
   date: Date;
   content: string;
   creator?: string | undefined;
+  entity?: NoteResult['entity'] | undefined;
 }) {
   return (
     <Card>
@@ -67,12 +69,29 @@ export function Note({
         <CardHeader className="space-y-0 p-1 flex flex-row items-center gap-2 justify-between">
           <div>{content}</div>
         </CardHeader>
-        <CardDescription className="flex flex-row justify-between">
-          <div>{creator}</div>
+        <CardFooter className="flex flex-row justify-between p-0 text-sm text-slate-500">
+          {creator ? <div>{creator}</div> : null}
+          {entity ? (
+            <div className="flex flex-row gap-2 items-center">
+              <div>
+                {getEntityIcon({
+                  type: entity?.type,
+                  className: 'h-6 w-6',
+                })}
+              </div>
+              <div>
+                {getEntityLink({
+                  type: entity?.type,
+                  id: entity?.id,
+                  label: `${entity?.meta?.name} ${entity?.meta?.surName ?? ''}`,
+                })}
+              </div>
+            </div>
+          ) : null}
           <div className="font-bold text-xs text-slate-500">
             {getNoteDateLabel(date)}
           </div>
-        </CardDescription>
+        </CardFooter>
       </CardContent>
     </Card>
   );

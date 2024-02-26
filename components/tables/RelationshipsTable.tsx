@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import {
@@ -15,14 +13,13 @@ import {
 
 import { RelationshipType } from '@/server/sharedTypes';
 
-import {
-  CoreEntityType,
-  RelationshipType as RelationshipTypeEnum,
-} from '@prisma/client';
+import { CoreEntityType } from '@prisma/client';
 
 import { trpc } from '@/app/_trpc/client';
 
 import { AddRelationship } from './AddRelationship';
+
+import { getEntityLink } from '@/components/entities/utils';
 
 function Th({
   thKey,
@@ -80,29 +77,6 @@ const getRelationshipType = (type: string) => {
   return type;
 };
 
-const getEntityLink = ({
-  entityType,
-  id,
-}: {
-  entityType: string;
-  id: string;
-}) => {
-  let typeHref = '';
-  switch (entityType) {
-    case CoreEntityType.COMPANY:
-      typeHref = '/companies';
-      break;
-    case CoreEntityType.CONTACT:
-      typeHref = '/contacts';
-      break;
-    case CoreEntityType.PROPERTY:
-      typeHref = '/properties';
-      break;
-  }
-
-  return <Link href={`${typeHref}/${id}`}>Go To</Link>;
-};
-
 const rowRenderer = (row: RelationshipType) => {
   const { id, type, to } = row;
 
@@ -111,7 +85,7 @@ const rowRenderer = (row: RelationshipType) => {
       <TableCell>{to.type}</TableCell>
       <TableCell>{to.name}</TableCell>
       <TableCell>{getRelationshipType(type)}</TableCell>
-      <TableCell>{getEntityLink({ entityType: to.type, id: to.id })}</TableCell>
+      <TableCell>{getEntityLink({ type: to.type, id: to.id })}</TableCell>
     </TableRow>
   );
 };

@@ -19,11 +19,6 @@ export default function EntityUpdates({
       <div className="flex-1">
         {entityId && <TasksBrief entityId={entityId} />}
       </div>
-      {/* <AddNote
-    onAddNote={(content) =>
-      createNote.mutate({ entityId: contactId!, content })
-    }
-  /> */}
     </div>
   );
 }
