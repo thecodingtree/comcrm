@@ -219,8 +219,8 @@ model Address {
     metaId Int? @unique()
 }
 
-/// @@allow('create,read', entity.creator == auth() || entity.team.members?[user == auth()])
-/// @@allow('delete,update', auth() == entity.creator)
+/// @@allow('create,read', creator == auth() || entity.team.members?[user == auth()])
+/// @@allow('delete,update', auth() == creator)
 model Note {
     id String @id() @default(cuid()) @map("_id")
     creator User @relation(fields: [creatorId], references: [id])

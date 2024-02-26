@@ -16,8 +16,8 @@ import { AddNote, getNoteDateLabel } from '@/components/content/Notes';
 import { NoteType } from '@/server/sharedTypes';
 
 export default function EntitiyNotesTable({ entity }: { entity: string }) {
-  const { data, refetch } = trpc.notes.getNotesForEntity.useQuery({
-    entityId: entity,
+  const { data, refetch } = trpc.notes.getNotes.useQuery({
+    filter: { entityId: entity },
   });
 
   const createNote = trpc.notes.createNote.useMutation({

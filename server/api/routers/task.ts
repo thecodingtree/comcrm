@@ -10,8 +10,7 @@ export const taskRouter = createTRPCRouter({
   getTasks: protectedProcedure
     .input(tasksFilter)
     .query(async ({ ctx, input }) => {
-      const numResults = input.limit ?? 10;
-      const results = await getTasks({
+      return await getTasks({
         db: ctx.prisma,
         filter: {
           type: input.type?.length ? input.type : undefined,
@@ -19,9 +18,8 @@ export const taskRouter = createTRPCRouter({
           completed: input.completed,
           endDate: input.endDate,
         },
+        limit: input.limit ?? 10,
       });
-
-      return results.slice(0, numResults);
     }),
   createTask: protectedProcedure
     .input(taskInput)

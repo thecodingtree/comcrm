@@ -9,14 +9,14 @@ import { IconPlus } from '@/components/common/icons';
 
 import { TasksFilter } from '@/server/sharedTypes';
 
-import TasksList from './TasksList';
-import TaskFilters from './TaskFilters';
-import AddTaskDialog from './AddTaskDialog';
-import TaskListSkeleton from './TaskListSkeleton';
+import TasksList from '../tasks/TasksList';
+import TaskFilters from '../tasks/TaskFilters';
+import AddTaskDialog from '../tasks/AddTaskDialog';
+import TaskListSkeleton from '../tasks/TaskListSkeleton';
 
 import { toast } from 'sonner';
 
-export default function Tasks() {
+export default function DashboardTasks() {
   const [filters, setFilters] = useState<TasksFilter | undefined>({
     type: undefined,
     completed: false,
@@ -44,7 +44,6 @@ export default function Tasks() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-4">
-        <h1 className="text-2xl font-bold">Today&apos;s Tasks</h1>
         <div className="flex items-center gap-2">
           <AddTaskDialog onAdded={() => refetch()}>
             <Button className="rounded-full" size="icon" variant="outline">

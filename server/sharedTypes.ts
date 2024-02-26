@@ -26,6 +26,7 @@ export type NoteType = {
 };
 
 export const NotesFilterInput = z.object({
+  creatorId: z.string().optional(),
   entityId: z.string().optional(),
 });
 
