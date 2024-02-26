@@ -32,9 +32,7 @@ export default function TasksList({
         ))
       ) : (
         <div className="flex items-center justify-center">
-          <p className="text-gray-400 dark:text-gray-600">
-            Congratulations! You&apos;ve completed all of your tasks!
-          </p>
+          <p className="text-gray-400 dark:text-gray-600">No Tasks Found</p>
         </div>
       )}
     </div>

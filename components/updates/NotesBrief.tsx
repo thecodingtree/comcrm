@@ -11,7 +11,10 @@ import { on } from 'events';
 export default function NotesBrief({ entityId }: { entityId?: string | null }) {
   const { user } = useUser();
   const getNotes = entityId
-    ? trpc.notes.getNotes.useQuery({ filter: { entityId }, limit: 3 })
+    ? trpc.notes.getNotes.useQuery({
+        filter: { entity: { id: [entityId] } },
+        limit: 3,
+      })
     : null;
 
   const createNote = trpc.notes.createNote.useMutation();

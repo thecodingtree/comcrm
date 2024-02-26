@@ -40,13 +40,13 @@ export const getEntityLink = ({
 };
 
 export const getEntityIcon = ({
-  entityType,
+  type,
   className,
 }: {
-  entityType?: CoreEntityType;
+  type?: CoreEntityType;
   className?: string;
 }) => {
-  switch (entityType) {
+  switch (type) {
     case CoreEntityType.COMPANY:
       return <IconCompany className={className} />;
     case CoreEntityType.CONTACT:

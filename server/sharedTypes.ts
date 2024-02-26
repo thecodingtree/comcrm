@@ -26,8 +26,13 @@ export type NoteType = {
 };
 
 export const NotesFilterInput = z.object({
-  creatorId: z.string().optional(),
-  entityId: z.string().optional(),
+  creator: z.string().optional(),
+  entity: z
+    .object({
+      id: z.array(z.string()).optional(),
+      type: z.array(z.nativeEnum(CoreEntityType)).optional(),
+    })
+    .optional(),
 });
 
 export type NotesFilterType = z.infer<typeof NotesFilterInput>;
