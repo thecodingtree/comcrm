@@ -1,8 +1,17 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 import { getAuthedServerSession } from '@/server/utils';
 
-import { NoteType, NotesFilterType } from '@/server/sharedTypes';
+import { NotesFilterType } from '@/server/sharedTypes';
+
+const notesInclude = Prisma.validator<Prisma.NoteInclude>()({
+  creator: true,
+  entity: { include: { meta: true } },
+});
+
+export type NoteResult = Prisma.NoteGetPayload<{
+  include: typeof notesInclude;
+}>;
 
 export async function getNotes({
   db,
@@ -12,10 +21,26 @@ export async function getNotes({
   db: PrismaClient;
   filter?: NotesFilterType;
   limit?: number;
-}) {
+}): Promise<NoteResult[]> {
+  const filters = [];
+
+  if (filter?.creator) {
+    filters.push({ creatorId: filter.creator });
+  }
+
+  if (filter?.entity) {
+    if (filter.entity.id && filter.entity.id.length > 0) {
+      filters.push({ entityId: { in: filter.entity.id ?? [] } });
+    }
+
+    if (filter.entity.type && filter.entity.type.length > 0) {
+      filters.push({ entity: { type: { in: filter.entity.type } } });
+    }
+  }
+
   return db.note.findMany({
-    where: { OR: [{ ...filter }] },
-    include: { creator: true },
+    where: { AND: filters },
+    include: notesInclude,
     orderBy: { createdAt: 'desc' },
     take: limit,
   });

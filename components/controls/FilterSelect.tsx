@@ -2,23 +2,20 @@ import { cn } from '@/libs/utils';
 
 import { Button } from '@/components/ui/button';
 
-import { TaskType } from '@/server/sharedTypes';
-import { getTaskIcon } from './utils';
-
-export default function TaskTypeSelect({
+export default function FilterSelect({
   selected,
   onChange,
   allowMultiple = false,
   allowNone = false,
+  items,
 }: {
-  selected?: TaskType[] | TaskType | undefined;
-  onChange: (type?: TaskType | TaskType[]) => void;
+  selected?: string[] | string | undefined;
+  onChange: (type?: string | string[]) => void;
   allowMultiple?: boolean;
   allowNone?: boolean;
+  items: { key: string; icon: React.ReactNode }[];
 }) {
-  const handleSelectedChange = (type: TaskType) => {
-    console.log(selected);
-
+  const handleSelectedChange = (type: string) => {
     if (allowMultiple) {
       if (selected === undefined) {
         onChange([type]);
@@ -27,9 +24,9 @@ export default function TaskTypeSelect({
 
       if (allowNone && selected?.includes(type)) {
         // Remove type from selected
-        onChange((selected as TaskType[]).filter((t) => t !== type));
+        onChange((selected as string[]).filter((t) => t !== type));
       } else {
-        onChange([...(selected as TaskType[]), type]);
+        onChange([...(selected as string[]), type]);
       }
       return;
     } else if (selected === type) {
@@ -42,7 +39,7 @@ export default function TaskTypeSelect({
     onChange(type);
   };
 
-  const isSelected = (type: TaskType) => {
+  const isSelected = (type: string) => {
     if (allowMultiple && Array.isArray(selected)) {
       return selected.includes(type);
     }
@@ -52,23 +49,23 @@ export default function TaskTypeSelect({
   return (
     <div className="flex flex-row gap-10">
       <div className="grid grid-flow-col grid-3 gap-2">
-        {Object.keys(TaskType).map((type) => (
-          <div key={type}>
+        {items.map((item) => (
+          <div key={item.key}>
             <Button
               className={cn(
                 'rounded-full',
-                isSelected(type as TaskType)
+                isSelected(item.key)
                   ? `bg-slate-300 border-2 border-slate-600`
                   : null,
               )}
               size="icon"
               variant="outline"
               onClick={() => {
-                handleSelectedChange(type as TaskType);
+                handleSelectedChange(item.key);
               }}
-              name={`FILTER:${type}`}
+              name={`FILTER:${item.key}`}
             >
-              {getTaskIcon(type as TaskType)}
+              {item.icon}
             </Button>
           </div>
         ))}

@@ -58,9 +58,11 @@ export type TaskResult = Prisma.TaskGetPayload<{
 export async function getTasks({
   db,
   filter,
+  limit,
 }: {
   db: PrismaClient;
   filter?: TasksFilter;
+  limit?: number;
 }) {
   const filters = {} as {
     type: TaskType | { in: TaskType[] } | undefined;
@@ -96,6 +98,7 @@ export async function getTasks({
     include: taskInclude,
     where: filters,
     orderBy: { endDate: 'asc' },
+    take: limit,
   });
 }
 
