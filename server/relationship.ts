@@ -2,6 +2,7 @@ import {
   CoreEntityType,
   Prisma,
   PrismaClient,
+  RelationshipCategory,
   RelationshipDirection,
 } from '@prisma/client';
 
@@ -35,26 +36,26 @@ export function getRelationshipsForEntity({
 }
 
 const relationshipTypeInclude =
-  Prisma.validator<Prisma.RelationshipTypeInclude>()({});
+  Prisma.validator<Prisma.RelationshipTypeInclude>()({ relationship: true });
 
 export type RelationshipTypeResult = Prisma.RelationshipTypeGetPayload<{
   include: typeof relationshipTypeInclude;
 }>;
 
-const twoWayWhereLookUp = (from?: CoreEntityType, to?: CoreEntityType) => ({
+const twoWayWhereLookUp = (from?: CoreEntityType[], to?: CoreEntityType[]) => ({
   direction: RelationshipDirection.TWO_WAY,
   OR: [
-    { from: from, to: to },
-    { from: to, to: from },
+    { from: { in: from }, to: { in: to } },
+    { from: { in: to }, to: { in: from } },
   ],
 });
 
-const oneWayWhereLookUp = (from?: CoreEntityType, to?: CoreEntityType) => ({
+const oneWayWhereLookUp = (from?: CoreEntityType[], to?: CoreEntityType[]) => ({
   direction: RelationshipDirection.ONE_WAY,
   AND: [
-    { from: from },
+    { from: { in: from } },
     {
-      to: to,
+      to: { in: to },
     },
   ],
 });
@@ -66,15 +67,97 @@ export function getRelationshipTypes({
   db: PrismaClient;
   filter?: RelationshipTypeFilter;
 }) {
+  const filters = [];
+
+  if (filter?.entity && filter?.entity?.length > 0) {
+    filters.push({
+      OR: [{ from: { in: filter.entity } }, { to: { in: filter.entity } }],
+    });
+  }
+
+  if (filter?.name) {
+    filters.push({ name: { contains: filter.name } });
+  }
+
+  if (filter?.category && filter.category.length > 0) {
+    filters.push({ category: { in: filter.category } });
+  }
+
   return db.relationshipType.findMany({
     where: {
-      OR: [
-        twoWayWhereLookUp(filter?.from, filter?.to),
-        oneWayWhereLookUp(filter?.from, filter?.to),
-        { name: { contains: filter?.name } },
-      ],
+      AND: filters,
     },
     include: relationshipTypeInclude,
+  });
+}
+
+export function createRelationshipType({
+  db,
+  creator,
+  name,
+  from,
+  to,
+  category,
+  direction,
+}: {
+  db: PrismaClient;
+  creator: string;
+  name: string;
+  from: CoreEntityType;
+  to: CoreEntityType;
+  category: RelationshipCategory;
+  direction?: RelationshipDirection;
+}) {
+  return db.relationshipType.create({
+    data: {
+      creatorId: creator,
+      name,
+      from,
+      to,
+      category,
+      direction,
+    },
+  });
+}
+
+export function updateRelationshipType({
+  db,
+  id,
+  name,
+  from,
+  to,
+  category,
+  direction,
+}: {
+  db: PrismaClient;
+  id: string;
+  name: string;
+  from: CoreEntityType;
+  to: CoreEntityType;
+  category: RelationshipCategory;
+  direction?: RelationshipDirection;
+}) {
+  return db.relationshipType.update({
+    where: { id },
+    data: {
+      name,
+      from,
+      to,
+      category,
+      direction,
+    },
+  });
+}
+
+export function deleteRelationshipType({
+  db,
+  id,
+}: {
+  db: PrismaClient;
+  id: string;
+}) {
+  return db.relationshipType.delete({
+    where: { id },
   });
 }
 

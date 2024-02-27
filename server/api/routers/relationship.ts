@@ -1,19 +1,19 @@
 import {
-  RelationshipResult,
   getRelationshipsForEntity,
   createRelationship,
   getRelationshipTypes,
+  createRelationshipType,
+  updateRelationshipType,
+  deleteRelationshipType,
 } from '@/server/relationship';
 import { protectedProcedure, createTRPCRouter } from '@/server/api/trpc';
-import {
-  CoreEntityType,
-  RelationshipType as PrismaRelationshipType,
-} from '@prisma/client';
+import { CoreEntityType } from '@prisma/client';
 import { getCoreEntities } from '@/server/coreEntities';
 import {
   EntityFilterInput,
   EntitySearchResult,
   RelationshipTypeFilterInput,
+  RelationshipTypeInput,
 } from '@/server/sharedTypes';
 import { z } from 'zod';
 
@@ -26,6 +26,29 @@ export const relationshipRouter = createTRPCRouter({
         filter: input?.filter,
       });
     }),
+  addRelationshipType: protectedProcedure
+    .input(RelationshipTypeInput)
+    .mutation(async ({ ctx, input }) => {
+      return createRelationshipType({
+        db: ctx.prisma,
+        creator: ctx.session.user.id!,
+        ...input,
+      });
+    }),
+  updateRelationshipType: protectedProcedure
+    .input(z.object({ id: z.string(), data: RelationshipTypeInput }))
+    .mutation(async ({ ctx, input }) => {
+      return await updateRelationshipType({
+        db: ctx.prisma,
+        id: input.id,
+        ...input.data,
+      });
+    }),
+  deleteRelationshipType: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return await deleteRelationshipType({ db: ctx.prisma, id: input });
+    }),
   getRelationshipsForEntity: protectedProcedure
     .input(z.object({ entityId: z.string(), limit: z.number().optional() }))
     .query(async ({ ctx, input }) => {
@@ -34,8 +57,6 @@ export const relationshipRouter = createTRPCRouter({
         entityId: input.entityId,
         limit: input.limit,
       });
-
-      // const results = result.map((relationship: RelationshipResult) => {
       //   return {
       //     id: relationship.id,
       //     from: {

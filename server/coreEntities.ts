@@ -17,16 +17,6 @@ export type CoreEntityResult = Prisma.CoreEntityGetPayload<{
 const buildCoreEntitiesORFilters = (filter?: EntityFilterType) => {
   const filterORs: Prisma.CoreEntityWhereInput[] = [];
 
-  if (filter?.id) {
-    filterORs.push({
-      relationshipsFrom: filter?.id ? { some: { id: filter.id } } : undefined,
-    });
-
-    filterORs.push({
-      relationshipsTo: filter?.id ? { some: { id: filter.id } } : undefined,
-    });
-  }
-
   if (filter?.name) {
     filterORs.push({
       meta: { name: { contains: filter.name } },
