@@ -6,7 +6,7 @@ import {
   IconLayoutDashboard,
   IconChevronDown,
   IconChevronUp,
-  IconPlus as IconPlusTabler,
+  IconPlus,
   IconClock,
   IconCalendarClock as IconCalendarClockTabler,
   IconNote as IconNoteTabler,
@@ -26,7 +26,7 @@ export const IconTeam = (props: any) => <IconUsers {...props} />;
 export const IconExpand = (props: any) => <IconChevronDown {...props} />;
 export const IconCollapse = (props: any) => <IconChevronUp {...props} />;
 
-export const IconPlus = (props: any) => <IconPlusTabler {...props} />;
+export const IconAdd = (props: any) => <IconPlus {...props} />;
 
 export const IconTime = (props: any) => <IconClock {...props} />;
 

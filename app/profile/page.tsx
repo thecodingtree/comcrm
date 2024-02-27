@@ -1,5 +1,6 @@
 import UpdateAvatar from '@/components/profile/UpdateAvatar';
 import UpdateName from '@/components/profile/UpdateName';
+import UpdateRelationshipTypes from '@/components/profile/UpdateRelationshipTypes';
 import UpdateTeam from '@/components/profile/UpdateTeam';
 
 export default function ProfilePage() {
@@ -8,6 +9,7 @@ export default function ProfilePage() {
       <UpdateAvatar />
       <UpdateName />
       <UpdateTeam />
+      <UpdateRelationshipTypes />
     </div>
   );
 }
