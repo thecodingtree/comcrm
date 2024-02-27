@@ -22,8 +22,7 @@ export default function SettingCard({
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>{children}</CardContent>
-      {/* <CardFooter>Something here</CardFooter> */}
+      <CardContent className="flex flex-col gap-4">{children}</CardContent>
     </Card>
   );
 }

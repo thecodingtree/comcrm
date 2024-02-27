@@ -21,14 +21,14 @@ export function AddRelationship({
   refetch?: () => void;
 }) {
   const [toEntityType, setToEntityType] = useState<CoreEntityType | undefined>(
-    undefined
+    undefined,
   );
   const [toEntity, setToEntity] = useState<EntitySearchResult | undefined>(
-    undefined
+    undefined,
   );
-  const [relationshipType, setRelationshipType] = useState<
-    RelationshipType | undefined
-  >(undefined);
+  const [relationshipType, setRelationshipType] = useState<string | undefined>(
+    undefined,
+  );
 
   const addRelationship = trpc.relationship.addRelationship.useMutation({
     onSettled: (data) => {
@@ -39,7 +39,7 @@ export function AddRelationship({
 
   const handleAdd = () => {
     addRelationship.mutate({
-      type: relationshipType!,
+      typeId: relationshipType!,
       fromEntityId,
       toEntityId: toEntity?.id!,
     });
@@ -73,7 +73,7 @@ export function AddRelationship({
           onSelect={(val) => setRelationshipType(val)}
           fromType={fromEntityType}
           toType={toEntityType!}
-          disabled={!toEntityType || !toEntity}
+          disabled={!toEntityType && !toEntity}
         />
       </TableCell>
       <TableCell>
