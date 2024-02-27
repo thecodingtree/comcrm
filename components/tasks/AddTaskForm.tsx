@@ -33,7 +33,7 @@ import DateTimePicker from '@/components/controls/DateTime/DateTimePicker';
 
 import { getDateRounded } from '@/components/controls/DateTime/utils';
 
-export default function AddTaskDetailsForm({
+export default function AddTaskForm({
   submitLabel,
   onSubmit,
   dateType = 'dueDate',

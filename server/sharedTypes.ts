@@ -6,6 +6,8 @@ import {
   User,
   TaskPriority as PrismaTaskPriority,
   TaskType as PrismaTaskType,
+  RelationshipCategory,
+  RelationshipDirection,
 } from '@prisma/client';
 
 import { Session } from 'next-auth';
@@ -181,19 +183,33 @@ export const UpdateCompanyInput = z.object({
 
 export type UpdateCompanyInputType = z.infer<typeof UpdateCompanyInput>;
 
-export type RelationshipType = {
-  id: string;
-  from: { id: string; name: string; type: string };
-  to: { id: string; name: string; type: string };
-  type: PrismaRelationshipType;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export const RelationshipTypeInput = z
+  .object({
+    id: z.string().optional(),
+    name: z.string().min(1),
+    from: z.nativeEnum(CoreEntityType),
+    to: z.nativeEnum(CoreEntityType),
+    category: z.nativeEnum(RelationshipCategory),
+    direction: z.nativeEnum(RelationshipDirection).optional(),
+  })
+  .refine((data) => data.from !== data.to, {
+    path: ['from'],
+    message: 'From and To cannot be the same',
+  });
 
-export type RelationshipTypeEnum = PrismaRelationshipType;
+export type RelationshipTypeData = z.infer<typeof RelationshipTypeInput>;
+
+export const RelationshipTypeFilterInput = z.object({
+  name: z.string().optional(),
+  entity: z.array(z.nativeEnum(CoreEntityType)).optional(),
+  category: z.array(z.nativeEnum(RelationshipCategory)).optional(),
+});
+
+export type RelationshipTypeFilter = z.infer<
+  typeof RelationshipTypeFilterInput
+>;
 
 export const EntityFilterInput = z.object({
-  id: z.string().optional(),
   name: z.string().optional(),
   email: z.string().email().optional(),
   type: z.nativeEnum(CoreEntityType).optional(),
