@@ -30,16 +30,16 @@ enum OwnerType {
     TEAM
 }
 
-enum RelationshipType {
-    OWNER_OF
-    EMPLOYED_BY
-    EMPLOYER_OF
-    AGENT_FOR
-    OWNED_BY
-    SOLD_TO
-    LEASED_TO
-    LEASED_BY
-    INTERESTED_IN
+enum RelationshipCategory {
+    OWNERSHIP
+    EMPLOYMENT
+    AGENCY
+    PARTNERSHIP
+}
+
+enum RelationshipDirection {
+    ONE_WAY
+    TWO_WAY
 }
 
 enum TaskPriority {
@@ -94,10 +94,11 @@ model User {
     entities CoreEntity[]
     accounts Account[]
     sessions Session[]
-    teams TeamUser[]
+    team TeamUser?
     notes Note[]
     creatorTasks Task[] @relation(name: "creator")
     assigneeTasks Task[] @relation(name: "assignee")
+    relationshipTypes RelationshipType[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 }
@@ -133,7 +134,7 @@ model TeamUser {
     team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId String
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String
+    userId String @unique()
     role TeamRole
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
@@ -236,7 +237,8 @@ model Note {
 /// @@allow('create, update, delete', from.team == null && from.creator == auth() || (from.team != null && from.team.members?[user == auth()]))
 model Relationship {
     id String @id() @default(cuid()) @map("_id")
-    type RelationshipType
+    type RelationshipType @relation(fields: [typeId], references: [id])
+    typeId String
     from CoreEntity @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
     fromEntityId String
     to CoreEntity @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
@@ -244,7 +246,24 @@ model Relationship {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 
-    @@unique([fromEntityId, toEntityId])
+    @@unique([fromEntityId, toEntityId, typeId])
+}
+
+/// @@allow('create', auth() != null)
+/// @@allow('read', creator == auth() || creator.team.team.members?[user == auth()])
+/// @@allow('update,delete', creator == auth())
+model RelationshipType {
+    id String @id() @default(cuid()) @map("_id")
+    creator User @relation(fields: [creatorId], references: [id])
+    creatorId String
+    name String
+    to CoreEntityType?
+    from CoreEntityType?
+    direction RelationshipDirection @default(TWO_WAY)
+    category RelationshipCategory
+    relationship Relationship[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
 }
 
 /// @@allow('read', creator == auth() || assignee == auth() || (related.team == null && related.creator == auth()) || (related.team != null && related.team.members?[user == auth()]))

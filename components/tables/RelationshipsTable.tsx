@@ -11,7 +11,10 @@ import {
   TableCell,
 } from '@/components/ui/table';
 
-import { RelationshipType } from '@/server/sharedTypes';
+import {
+  RelationshipTypeResult,
+  RelationshipResult,
+} from '@/server/relationship';
 
 import { CoreEntityType } from '@prisma/client';
 
@@ -77,15 +80,15 @@ const getRelationshipType = (type: string) => {
   return type;
 };
 
-const rowRenderer = (row: RelationshipType) => {
-  const { id, type, to } = row;
-
+const rowRenderer = (row: RelationshipResult) => {
   return (
-    <TableRow key={id}>
-      <TableCell>{to.type}</TableCell>
-      <TableCell>{to.name}</TableCell>
-      <TableCell>{getRelationshipType(type)}</TableCell>
-      <TableCell>{getEntityLink({ type: to.type, id: to.id })}</TableCell>
+    <TableRow key={row.id}>
+      <TableCell>{row.from.type}</TableCell>
+      <TableCell>{row.to.meta?.name}</TableCell>
+      <TableCell>{row.type.name}</TableCell>
+      <TableCell>
+        {getEntityLink({ type: row.to.type, id: row.to.id })}
+      </TableCell>
     </TableRow>
   );
 };
