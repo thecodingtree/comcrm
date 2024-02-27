@@ -237,7 +237,7 @@ model Note {
 /// @@allow('create, update, delete', from.team == null && from.creator == auth() || (from.team != null && from.team.members?[user == auth()]))
 model Relationship {
     id String @id() @default(cuid()) @map("_id")
-    type RelationshipType @relation(fields: [typeId], references: [id])
+    type RelationshipType @relation(fields: [typeId], references: [id], onDelete: Cascade)
     typeId String
     from CoreEntity @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
     fromEntityId String

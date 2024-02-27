@@ -5,7 +5,7 @@ import { trpc } from '@/app/_trpc/client';
 
 import { Button } from '@/components/ui/button';
 
-import { IconPlus } from '@/components/common/icons';
+import { IconAdd } from '@/components/common/icons';
 
 import { TasksFilter } from '@/server/sharedTypes';
 
@@ -47,7 +47,7 @@ export default function DashboardTasks() {
         <div className="flex items-center gap-2">
           <AddTaskDialog onAdded={() => refetch()}>
             <Button className="rounded-full" size="icon" variant="outline">
-              <IconPlus className="w-4 h-4" />
+              <IconAdd className="w-4 h-4" />
             </Button>
           </AddTaskDialog>
           <div className="ml-4 gap-2">

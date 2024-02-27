@@ -119,7 +119,7 @@ export function RelationshipsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((row) => rowRenderer(row))}
+          {data?.map((row: RelationshipResult) => rowRenderer(row))}
           {!readOnly && (
             <AddRelationship
               fromEntityId={fromEntityId}
