@@ -181,7 +181,7 @@ export const UpdateCompanyInput = z.object({
 
 export type UpdateCompanyInputType = z.infer<typeof UpdateCompanyInput>;
 
-export type RelationshipType = {
+export type Relationship = {
   id: string;
   from: { id: string; name: string; type: string };
   to: { id: string; name: string; type: string };
@@ -190,10 +190,18 @@ export type RelationshipType = {
   updatedAt: Date;
 };
 
-export type RelationshipTypeEnum = PrismaRelationshipType;
+export const RelationshipTypeFilterInput = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  from: z.nativeEnum(CoreEntityType).optional(),
+  to: z.nativeEnum(CoreEntityType).optional(),
+});
+
+export type RelationshipTypeFilter = z.infer<
+  typeof RelationshipTypeFilterInput
+>;
 
 export const EntityFilterInput = z.object({
-  id: z.string().optional(),
   name: z.string().optional(),
   email: z.string().email().optional(),
   type: z.nativeEnum(CoreEntityType).optional(),
