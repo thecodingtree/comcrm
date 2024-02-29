@@ -57,39 +57,23 @@ export const relationshipRouter = createTRPCRouter({
         entityId: input.entityId,
         limit: input.limit,
       });
-      //   return {
-      //     id: relationship.id,
-      //     from: {
-      //       id: relationship.from.id,
-      //       name: relationship.from.meta?.name!,
-      //       type: relationship.from.type,
-      //     },
-      //     to: {
-      //       id: relationship.to.id,
-      //       name: relationship.to.meta?.name!,
-      //       type: relationship.to.type,
-      //     },
-      //     type: relationship.type,
-      //     createdAt: relationship.createdAt,
-      //     updatedAt: relationship.updatedAt,
-      //   } satisfies RelationshipType;
-      // });
     }),
   getEntitiesForSearch: protectedProcedure
     .input(
       z
         .object({
+          search: z.string().optional(),
           filter: EntityFilterInput.optional(),
-          type: z.nativeEnum(CoreEntityType).optional(),
         })
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      if (!input?.filter) return [];
+      // Unlike the normal getCoreEntities behavior, we want to return an empty array if the search or filter is not provided
+      if (!input?.filter || !input?.search) return [];
 
       const result = await getCoreEntities({
         db: ctx.prisma,
-        entityType: input?.type,
+        search: input?.search,
         filter: input?.filter,
       });
 

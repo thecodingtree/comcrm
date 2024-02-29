@@ -210,9 +210,8 @@ export type RelationshipTypeFilter = z.infer<
 >;
 
 export const EntityFilterInput = z.object({
-  name: z.string().optional(),
-  email: z.string().email().optional(),
-  type: z.nativeEnum(CoreEntityType).optional(),
+  creator: z.array(z.string()).optional(),
+  type: z.array(z.nativeEnum(CoreEntityType)).optional(),
 });
 
 export type EntityFilterType = z.infer<typeof EntityFilterInput>;

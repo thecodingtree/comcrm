@@ -64,6 +64,7 @@ export function AddRelationship({
         <EntityAutocomplete
           type={toEntityType || undefined}
           onEntitySelected={(entity) => setToEntity(entity)}
+          onEntityCleared={() => setToEntity(undefined)}
           disabled={!toEntityType}
           withAddOption={true}
         />
@@ -71,13 +72,19 @@ export function AddRelationship({
       <TableCell>
         <RelationshipTypeSelect
           onSelect={(val) => setRelationshipType(val)}
+          onClear={() => setRelationshipType(undefined)}
           fromType={fromEntityType}
           toType={toEntityType!}
           disabled={!toEntityType && !toEntity}
         />
       </TableCell>
       <TableCell>
-        <Button onClick={handleAdd}>Add Relationship</Button>
+        <Button
+          onClick={handleAdd}
+          disabled={toEntity === undefined || relationshipType === undefined}
+        >
+          Add Relationship
+        </Button>
       </TableCell>
     </TableRow>
   );
