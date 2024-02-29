@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { IconSearch, IconChevronDown } from '@tabler/icons-react';
+import { IconSearch, IconChevronDown, IconX } from '@tabler/icons-react';
 
 import Loader from '@/components/common/Loader';
 
@@ -58,10 +58,12 @@ export function EntityAutocomplete({
   type,
   disabled = false,
   onEntitySelected,
+  onEntityCleared,
 }: {
   type?: CoreEntityType;
   disabled?: boolean;
   onEntitySelected?: (entity: EntitySearchResult) => void;
+  onEntityCleared?: () => void;
   withAddOption?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -71,8 +73,8 @@ export function EntityAutocomplete({
   const { data, isLoading, refetch } =
     trpc.relationship.getEntitiesForSearch.useQuery(
       {
-        filter: searchQuery ? { name: searchQuery! } : undefined,
-        type,
+        search: searchQuery,
+        filter: type ? { type: [type] } : undefined,
       },
       {
         trpc: { abortOnUnmount: true },
@@ -80,15 +82,18 @@ export function EntityAutocomplete({
       },
     );
 
+  const clearValue = () => {
+    setEntity(null);
+    onEntityCleared?.();
+  };
+
   const onEntitySelectedHandler = (id: string) => {
     const entity = data?.find((entity) => entity.id === id)!;
 
     setEntity(entity);
     setOpen(false);
 
-    if (onEntitySelected) {
-      onEntitySelected(entity);
-    }
+    onEntitySelected?.(entity);
   };
 
   return (
@@ -102,39 +107,52 @@ export function EntityAutocomplete({
           disabled={disabled}
         >
           {entity ? entity?.name : 'Select entity...'}
-          <IconChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          {entity ? (
+            <IconX
+              onClick={(e) => {
+                e.preventDefault();
+                clearValue();
+              }}
+              className="ml-2 h-4 w-4 shrink-0 opacity-50"
+            />
+          ) : (
+            <IconChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          )}
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent>
+      <PopoverContent className="flex flex-col p-2 gap-2">
         <Command>
           <IconInput
+            className="pr-2"
             onChange={(e) => setSearchQuery(e.currentTarget.value)}
             placeholder="Search entities..."
             icon={isLoading ? <Loader /> : <IconSearch />}
           />
-          {!isLoading &&
-            (data && data?.length ? (
-              <EntityList
-                entities={data}
-                onEntitySelected={onEntitySelectedHandler}
-              />
-            ) : (
-              <EntityAddDialog
-                entityType={type!}
-                triggerLabel={`Add ${searchQuery ? searchQuery : 'New Enity'}`}
-                defaultName={searchQuery ?? ''}
-                onAdded={(data) => {
-                  setEntity(data);
-                  setOpen(false);
-
-                  if (onEntitySelected) {
-                    onEntitySelected(data);
-                  }
-                }}
-              />
-            ))}
+          <CommandGroup>
+            {!isLoading && (
+              <CommandItem>
+                <EntityList
+                  entities={data}
+                  onEntitySelected={onEntitySelectedHandler}
+                />
+              </CommandItem>
+            )}
+          </CommandGroup>
         </Command>
+        <EntityAddDialog
+          entityType={type!}
+          triggerLabel="Add New Enity"
+          defaultName={searchQuery ?? ''}
+          onAdded={(data) => {
+            setEntity(data);
+            setOpen(false);
+
+            if (onEntitySelected) {
+              onEntitySelected(data);
+            }
+          }}
+        />
       </PopoverContent>
     </Popover>
   );

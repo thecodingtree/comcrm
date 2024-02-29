@@ -183,6 +183,33 @@ export const UpdateCompanyInput = z.object({
 
 export type UpdateCompanyInputType = z.infer<typeof UpdateCompanyInput>;
 
+export type RelationshipType = PrismaRelationshipType;
+
+export const RelationshipFilterInput = z.object({
+  from: z
+    .object({
+      id: z.array(z.string()).optional(),
+      type: z.array(z.nativeEnum(CoreEntityType)).optional(),
+    })
+    .optional(),
+  to: z
+    .object({
+      id: z.array(z.string()).optional(),
+      type: z.array(z.nativeEnum(CoreEntityType)).optional(),
+    })
+    .optional(),
+  type: z
+    .object({
+      id: z.array(z.string()).optional(),
+      search: z.string().optional(),
+      direction: z.array(z.nativeEnum(RelationshipDirection)).optional(),
+      category: z.array(z.nativeEnum(RelationshipCategory)).optional(),
+    })
+    .optional(),
+});
+
+export type RelationshipFilter = z.infer<typeof RelationshipFilterInput>;
+
 export const RelationshipTypeInput = z
   .object({
     id: z.string().optional(),
@@ -210,9 +237,8 @@ export type RelationshipTypeFilter = z.infer<
 >;
 
 export const EntityFilterInput = z.object({
-  name: z.string().optional(),
-  email: z.string().email().optional(),
-  type: z.nativeEnum(CoreEntityType).optional(),
+  creator: z.array(z.string()).optional(),
+  type: z.array(z.nativeEnum(CoreEntityType)).optional(),
 });
 
 export type EntityFilterType = z.infer<typeof EntityFilterInput>;
