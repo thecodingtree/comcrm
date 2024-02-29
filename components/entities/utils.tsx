@@ -11,11 +11,11 @@ import {
 export const getEntityLink = ({
   type,
   id,
-  label,
+  children,
 }: {
   type?: string;
   id?: string;
-  label?: string;
+  children?: React.ReactNode;
 }) => {
   if (!type || !id) {
     return null;
@@ -36,7 +36,7 @@ export const getEntityLink = ({
       return null;
   }
 
-  return <Link href={`${typeHref}/${id}`}>{label ? label : 'Go To'}</Link>;
+  return <Link href={`${typeHref}/${id}`}>{children}</Link>;
 };
 
 export const getEntityIcon = ({

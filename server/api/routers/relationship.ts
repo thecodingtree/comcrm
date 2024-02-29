@@ -1,6 +1,7 @@
 import {
-  getRelationshipsForEntity,
+  getRelationships,
   createRelationship,
+  deleteRelationship,
   getRelationshipTypes,
   createRelationshipType,
   updateRelationshipType,
@@ -12,6 +13,7 @@ import { getCoreEntities } from '@/server/coreEntities';
 import {
   EntityFilterInput,
   EntitySearchResult,
+  RelationshipFilterInput,
   RelationshipTypeFilterInput,
   RelationshipTypeInput,
 } from '@/server/sharedTypes';
@@ -50,46 +52,36 @@ export const relationshipRouter = createTRPCRouter({
       return await deleteRelationshipType({ db: ctx.prisma, id: input });
     }),
   getRelationshipsForEntity: protectedProcedure
-    .input(z.object({ entityId: z.string(), limit: z.number().optional() }))
+    .input(
+      z.object({
+        entity: z.string(),
+        filter: RelationshipFilterInput.optional(),
+        limit: z.number().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      return await getRelationshipsForEntity({
+      return await getRelationships({
         db: ctx.prisma,
-        entityId: input.entityId,
+        filter: { ...input.filter, from: { id: [input.entity] } },
         limit: input.limit,
       });
-      //   return {
-      //     id: relationship.id,
-      //     from: {
-      //       id: relationship.from.id,
-      //       name: relationship.from.meta?.name!,
-      //       type: relationship.from.type,
-      //     },
-      //     to: {
-      //       id: relationship.to.id,
-      //       name: relationship.to.meta?.name!,
-      //       type: relationship.to.type,
-      //     },
-      //     type: relationship.type,
-      //     createdAt: relationship.createdAt,
-      //     updatedAt: relationship.updatedAt,
-      //   } satisfies RelationshipType;
-      // });
     }),
   getEntitiesForSearch: protectedProcedure
     .input(
       z
         .object({
+          search: z.string().optional(),
           filter: EntityFilterInput.optional(),
-          type: z.nativeEnum(CoreEntityType).optional(),
         })
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      if (!input?.filter) return [];
+      // Unlike the normal getCoreEntities behavior, we want to return an empty array if the search or filter is not provided
+      if (!input?.filter || !input?.search) return [];
 
       const result = await getCoreEntities({
         db: ctx.prisma,
-        entityType: input?.type,
+        search: input?.search,
         filter: input?.filter,
       });
 
@@ -122,5 +114,10 @@ export const relationshipRouter = createTRPCRouter({
       });
 
       return result;
+    }),
+  deleteRelationship: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await deleteRelationship({ db: ctx.prisma, id: input.id });
     }),
 });

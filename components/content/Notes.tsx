@@ -83,7 +83,7 @@ export function Note({
                 {getEntityLink({
                   type: entity?.type,
                   id: entity?.id,
-                  label: `${entity?.meta?.name} ${entity?.meta?.surName ?? ''}`,
+                  children: `${entity?.meta?.name} ${entity?.meta?.surName ?? ''}`,
                 })}
               </div>
             </div>
