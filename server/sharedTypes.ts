@@ -183,6 +183,33 @@ export const UpdateCompanyInput = z.object({
 
 export type UpdateCompanyInputType = z.infer<typeof UpdateCompanyInput>;
 
+export type RelationshipType = PrismaRelationshipType;
+
+export const RelationshipFilterInput = z.object({
+  from: z
+    .object({
+      id: z.array(z.string()).optional(),
+      type: z.array(z.nativeEnum(CoreEntityType)).optional(),
+    })
+    .optional(),
+  to: z
+    .object({
+      id: z.array(z.string()).optional(),
+      type: z.array(z.nativeEnum(CoreEntityType)).optional(),
+    })
+    .optional(),
+  type: z
+    .object({
+      id: z.array(z.string()).optional(),
+      search: z.string().optional(),
+      direction: z.array(z.nativeEnum(RelationshipDirection)).optional(),
+      category: z.array(z.nativeEnum(RelationshipCategory)).optional(),
+    })
+    .optional(),
+});
+
+export type RelationshipFilter = z.infer<typeof RelationshipFilterInput>;
+
 export const RelationshipTypeInput = z
   .object({
     id: z.string().optional(),

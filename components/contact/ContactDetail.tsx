@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
+import RelationshipsList from '@/components/relationship/RelationshipsList';
 
 import ContactInfo from './ContactInfo';
 import EditAvatar from '../input/EditAvatar';
@@ -59,10 +59,9 @@ export default function ContactDetails() {
 
       <div>
         <div className="">
-          <RelationshipsTable
-            fromEntityId={contactId!}
-            fromEntityType={CoreEntityType.CONTACT}
-            readOnly={false}
+          <RelationshipsList
+            fromId={contactId!}
+            fromType={CoreEntityType.CONTACT}
           />
         </div>
         <div className="">

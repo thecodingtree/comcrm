@@ -1,6 +1,7 @@
 import {
-  getRelationshipsForEntity,
+  getRelationships,
   createRelationship,
+  deleteRelationship,
   getRelationshipTypes,
   createRelationshipType,
   updateRelationshipType,
@@ -12,6 +13,7 @@ import { getCoreEntities } from '@/server/coreEntities';
 import {
   EntityFilterInput,
   EntitySearchResult,
+  RelationshipFilterInput,
   RelationshipTypeFilterInput,
   RelationshipTypeInput,
 } from '@/server/sharedTypes';
@@ -50,11 +52,17 @@ export const relationshipRouter = createTRPCRouter({
       return await deleteRelationshipType({ db: ctx.prisma, id: input });
     }),
   getRelationshipsForEntity: protectedProcedure
-    .input(z.object({ entityId: z.string(), limit: z.number().optional() }))
+    .input(
+      z.object({
+        entity: z.string(),
+        filter: RelationshipFilterInput.optional(),
+        limit: z.number().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      return await getRelationshipsForEntity({
+      return await getRelationships({
         db: ctx.prisma,
-        entityId: input.entityId,
+        filter: { ...input.filter, from: { id: [input.entity] } },
         limit: input.limit,
       });
     }),
@@ -106,5 +114,10 @@ export const relationshipRouter = createTRPCRouter({
       });
 
       return result;
+    }),
+  deleteRelationship: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await deleteRelationship({ db: ctx.prisma, id: input.id });
     }),
 });

@@ -6,7 +6,7 @@ import {
   RelationshipDirection,
 } from '@prisma/client';
 
-import { RelationshipTypeFilter } from './sharedTypes';
+import { RelationshipFilter, RelationshipTypeFilter } from './sharedTypes';
 
 const relationshipInclude = Prisma.validator<Prisma.RelationshipInclude>()({
   from: { include: { meta: true } },
@@ -18,18 +18,62 @@ export type RelationshipResult = Prisma.RelationshipGetPayload<{
   include: typeof relationshipInclude;
 }>;
 
-export function getRelationshipsForEntity({
+const buildRelationshipFilter = (filter: RelationshipFilter) => {
+  const filters = [];
+
+  if (filter?.from) {
+    if (filter.from?.id?.length) {
+      filters.push({ from: { id: { in: filter.from?.id } } });
+    }
+
+    if (filter.from?.type?.length) {
+      filters.push({ from: { type: { in: filter.from?.type } } });
+    }
+  }
+
+  if (filter?.to) {
+    if (filter.to?.id?.length) {
+      filters.push({ to: { id: { in: filter.to?.id } } });
+    }
+
+    if (filter?.to && filter.to?.type?.length) {
+      filters.push({ to: { type: { in: filter.to?.type } } });
+    }
+  }
+
+  if (filter?.type) {
+    if (filter.type?.id?.length) {
+      filters.push({ typeId: { in: filter.type?.id } });
+    }
+
+    if (filter.type?.search) {
+      filters.push({ type: { name: { search: filter.type?.search } } });
+    }
+
+    if (filter.type?.direction?.length) {
+      filters.push({ type: { direction: { in: filter.type?.direction } } });
+    }
+
+    if (filter.type?.category?.length) {
+      filters.push({ type: { category: { in: filter.type?.category } } });
+    }
+  }
+
+  return filters;
+};
+
+export function getRelationships({
   db,
-  entityId,
+  filter,
   limit = 10,
 }: {
   db: PrismaClient;
-  entityId: string;
+  filter: RelationshipFilter;
   limit?: number;
 }): Promise<RelationshipResult[]> {
   return db.relationship.findMany({
     include: relationshipInclude,
-    where: { fromEntityId: entityId! },
+    where: { AND: buildRelationshipFilter(filter) },
     orderBy: { createdAt: 'desc' },
     take: limit,
   });
@@ -41,24 +85,6 @@ const relationshipTypeInclude =
 export type RelationshipTypeResult = Prisma.RelationshipTypeGetPayload<{
   include: typeof relationshipTypeInclude;
 }>;
-
-const twoWayWhereLookUp = (from?: CoreEntityType[], to?: CoreEntityType[]) => ({
-  direction: RelationshipDirection.TWO_WAY,
-  OR: [
-    { from: { in: from }, to: { in: to } },
-    { from: { in: to }, to: { in: from } },
-  ],
-});
-
-const oneWayWhereLookUp = (from?: CoreEntityType[], to?: CoreEntityType[]) => ({
-  direction: RelationshipDirection.ONE_WAY,
-  AND: [
-    { from: { in: from } },
-    {
-      to: { in: to },
-    },
-  ],
-});
 
 export function getRelationshipTypes({
   db,
@@ -178,5 +204,17 @@ export function createRelationship({
       toEntityId,
       typeId,
     },
+  });
+}
+
+export function deleteRelationship({
+  db,
+  id,
+}: {
+  db: PrismaClient;
+  id: string;
+}) {
+  return db.relationship.delete({
+    where: { id },
   });
 }
