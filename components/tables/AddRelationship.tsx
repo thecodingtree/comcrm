@@ -3,6 +3,12 @@ import { Button } from '@/components/ui/button';
 
 import { TableRow, TableCell } from '@/components/ui/table';
 
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+
 import { CoreEntityType, RelationshipType } from '@prisma/client';
 
 import { EntityTypeSelect } from '@/components/select/EntityTypeSelect';
@@ -52,40 +58,43 @@ export function AddRelationship({
   };
 
   return (
-    <TableRow key={'add'}>
-      <TableCell>
-        <EntityTypeSelect
-          excludeType={fromEntityType}
-          placeholder="Select Type"
-          onSelect={(val) => setToEntityType(val)}
-        />
-      </TableCell>
-      <TableCell>
-        <EntityAutocomplete
-          type={toEntityType || undefined}
-          onEntitySelected={(entity) => setToEntity(entity)}
-          onEntityCleared={() => setToEntity(undefined)}
-          disabled={!toEntityType}
-          withAddOption={true}
-        />
-      </TableCell>
-      <TableCell>
-        <RelationshipTypeSelect
-          onSelect={(val) => setRelationshipType(val)}
-          onClear={() => setRelationshipType(undefined)}
-          fromType={fromEntityType}
-          toType={toEntityType!}
-          disabled={!toEntityType && !toEntity}
-        />
-      </TableCell>
-      <TableCell>
+    // Update when slide to right is possible
+    <Collapsible open={true} className="flex flex-row gap-4">
+      <CollapsibleContent className="flex flex-row gap-2">
+        <div>
+          <EntityTypeSelect
+            excludeType={fromEntityType}
+            placeholder="Select Type"
+            onSelect={(val) => setToEntityType(val)}
+          />
+        </div>
+        <div>
+          <EntityAutocomplete
+            type={toEntityType || undefined}
+            onEntitySelected={(entity) => setToEntity(entity)}
+            onEntityCleared={() => setToEntity(undefined)}
+            disabled={!toEntityType}
+            withAddOption={true}
+          />
+        </div>
+        <div>
+          <RelationshipTypeSelect
+            onSelect={(val) => setRelationshipType(val)}
+            onClear={() => setRelationshipType(undefined)}
+            fromType={fromEntityType}
+            toType={toEntityType!}
+            disabled={!toEntityType && !toEntity}
+          />
+        </div>
+      </CollapsibleContent>
+      <CollapsibleTrigger>
         <Button
           onClick={handleAdd}
           disabled={toEntity === undefined || relationshipType === undefined}
         >
           Add Relationship
         </Button>
-      </TableCell>
-    </TableRow>
+      </CollapsibleTrigger>
+    </Collapsible>
   );
 }

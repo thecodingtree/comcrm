@@ -10,7 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import CompanyInfo from './CompanyInfo';
 import EntityUpdates from '../updates/EntityUpdates';
-import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
+import RelationshipsList from '@/components/relationship/RelationshipsList';
 import EntitiyNotesTable from '../entities/EntityNotesTable';
 import { IconCompany } from '../common/icons';
 
@@ -45,10 +45,9 @@ export default function CompanyDetails() {
       </div>
       <div>
         <div className="">
-          <RelationshipsTable
-            fromEntityId={companyId!}
-            fromEntityType={CoreEntityType.COMPANY}
-            readOnly={false}
+          <RelationshipsList
+            fromId={companyId!}
+            fromType={CoreEntityType.COMPANY}
           />
         </div>
         <div className="">
