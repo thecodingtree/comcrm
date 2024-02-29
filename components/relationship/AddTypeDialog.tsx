@@ -7,11 +7,16 @@ import { RelationshipTypeData } from '@/server/sharedTypes';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import RelationshipTypeForm from '@/components/relationship/RelationshipTypeForm';
+import { CoreEntityType } from '@prisma/client';
 
 export default function AddTypeDialog({
+  from,
+  to,
   children,
   onAdded,
 }: {
+  from?: CoreEntityType;
+  to?: CoreEntityType;
   children: React.ReactNode;
   onAdded?: () => void;
 }) {
@@ -35,17 +40,16 @@ export default function AddTypeDialog({
   };
 
   return (
-    <div>
-      <Dialog open={opened} onOpenChange={setOpened}>
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent>
-          <RelationshipTypeForm
-            submitLabel="Add Type"
-            submitting={submitting}
-            onSubmit={handleSubmit}
-          />
-        </DialogContent>
-      </Dialog>
-    </div>
+    <Dialog open={opened} onOpenChange={setOpened}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent>
+        <RelationshipTypeForm
+          type={{ from: from, to: to }}
+          submitLabel="Add Type"
+          submitting={submitting}
+          onSubmit={handleSubmit}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }

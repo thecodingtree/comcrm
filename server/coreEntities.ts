@@ -14,40 +14,90 @@ export type CoreEntityResult = Prisma.CoreEntityGetPayload<{
   include: typeof coreEntityInclude;
 }>;
 
-const buildCoreEntitiesORFilters = (filter?: EntityFilterType) => {
-  const filterORs: Prisma.CoreEntityWhereInput[] = [];
+const buildCEWhere = (
+  search?: string,
+  filter?: EntityFilterType,
+): Prisma.CoreEntityWhereInput | undefined => {
+  let hasSearch = false;
+  let hasFilters = false;
 
-  if (filter?.name) {
-    filterORs.push({
-      meta: { name: { contains: filter.name } },
+  const filterWhere: Prisma.CoreEntityWhereInput = { AND: [] };
+  const searchWhere: Prisma.CoreEntityWhereInput = { OR: [] };
+
+  if (search && search.length > 0) {
+    hasSearch = true;
+
+    // Normalize search query to the form "word1:* <-> word2:* ..."
+    const searchQuery = search
+      .trim()
+      .split(' ')
+      .map((s) => (s.length > 0 ? `${s}:*` : ''))
+      .reduce((acc, s) => (s?.length ? `${acc} <-> ${s}` : acc));
+
+    // Search by name
+    searchWhere.OR?.push({
+      meta: {
+        OR: [
+          { name: { search: searchQuery } },
+          { surName: { search: searchQuery } },
+        ],
+      },
+    });
+
+    // search by address
+    searchWhere.OR?.push({
+      meta: {
+        address: {
+          OR: [
+            { street: { search: searchQuery } },
+            { city: { search: searchQuery } },
+          ],
+        },
+      },
+    });
+
+    // search by attributes
+    searchWhere.OR?.push({
+      attributes: { some: { value: { search: searchQuery } } },
     });
   }
 
-  if (filter?.email) {
-    filterORs.push({
-      meta: { email: { contains: filter.email } },
+  if (filter?.type) {
+    hasFilters = true;
+    (filterWhere.AND as Prisma.CoreEntityWhereInput[])?.push({
+      type: filter?.type ? { in: filter?.type } : undefined,
     });
   }
 
-  return filterORs.length > 0 ? filterORs : undefined;
+  if (filter?.creator) {
+    hasFilters = true;
+    (filterWhere.AND as Prisma.CoreEntityWhereInput[])?.push({
+      creator: { id: { in: filter?.creator } },
+    });
+  }
+
+  // TODO: I don't love this, but it's a quick fix for now
+  return hasSearch && hasFilters
+    ? { AND: [searchWhere, filterWhere] }
+    : hasSearch
+      ? searchWhere
+      : hasFilters
+        ? filterWhere
+        : undefined;
 };
 
 export const getCoreEntities = ({
   db,
-  entityType,
+  search,
   filter,
 }: {
   db: PrismaClient;
-  entityType?: CoreEntityType;
+  search?: string;
   filter?: EntityFilterType;
-  withUserId?: string;
 }): Promise<CoreEntityResult[]> => {
   const results = db.coreEntity.findMany({
     include: coreEntityInclude,
-    where: {
-      type: entityType,
-      OR: buildCoreEntitiesORFilters(filter),
-    },
+    where: buildCEWhere(search, filter),
   });
 
   return results;

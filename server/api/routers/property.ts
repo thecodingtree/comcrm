@@ -26,8 +26,7 @@ export const propertyRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const result = await getCoreEntities({
         db: ctx.prisma,
-        entityType: CoreEntityType.PROPERTY,
-        filter: input?.filter,
+        filter: { type: [CoreEntityType.PROPERTY], ...input?.filter },
       });
 
       const results = result.map((entity: CoreEntityResult) => {

@@ -26,8 +26,7 @@ export const companyRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const result = await getCoreEntities({
         db: ctx.prisma,
-        entityType: CoreEntityType.COMPANY,
-        filter: input?.filter,
+        filter: { type: [CoreEntityType.COMPANY], ...input?.filter },
       });
 
       const results = result.map((entity: CoreEntityResult) => {
