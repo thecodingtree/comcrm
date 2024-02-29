@@ -7,7 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { CoreEntityType } from '@prisma/client';
 
 import PropertyInfo from './PropertyInfo';
-import { RelationshipsTable } from '@/components/tables/RelationshipsTable';
+import RelationshipsList from '@/components/relationship/RelationshipsList';
 import { trpc } from '@/app/_trpc/client';
 import EntityNotesTable from '@/components/entities/EntityNotesTable';
 import EntityUpdates from '../updates/EntityUpdates';
@@ -45,10 +45,9 @@ export default function PropertyDetail() {
       </div>
       <div>
         <div className="">
-          <RelationshipsTable
-            fromEntityId={propertyId!}
-            fromEntityType={CoreEntityType.PROPERTY}
-            readOnly={false}
+          <RelationshipsList
+            fromId={propertyId!}
+            fromType={CoreEntityType.PROPERTY}
           />
         </div>
         <div className="">

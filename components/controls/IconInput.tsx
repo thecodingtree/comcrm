@@ -12,7 +12,12 @@ import { Input, InputProps } from '@/components/ui/input';
 const IconInput = React.forwardRef<HTMLInputElement, InputIconProps>(
   ({ icon, iconClickable = true, className, ...props }, ref) => {
     return (
-      <div className="flex flex-row w-full border rounded-sm bg-white ">
+      <div
+        className={cn(
+          'flex flex-row w-full border rounded-sm bg-white',
+          className,
+        )}
+      >
         <Input
           className={cn(
             'w-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0',

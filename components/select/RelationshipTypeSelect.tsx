@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { CoreEntityType, RelationshipType } from '@prisma/client';
+import { CoreEntityType } from '@prisma/client';
 
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconX } from '@tabler/icons-react';
 
 import { Button } from '@/components/ui/button';
 import { Command, CommandGroup, CommandItem } from '@/components/ui/command';
@@ -13,6 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import AddTypeDialog from '../relationship/AddTypeDialog';
 
 export function RelationshipTypeSelect({
   placeholder,
@@ -20,19 +21,21 @@ export function RelationshipTypeSelect({
   fromType,
   toType,
   onSelect,
+  onClear,
 }: {
   placeholder?: string;
   disabled?: boolean;
   fromType: keyof typeof CoreEntityType;
   toType: keyof typeof CoreEntityType;
   onSelect: (value?: string) => void;
+  onClear?: () => void;
 }) {
   const [value, setValue] = useState<string | undefined>(undefined);
   const [open, setOpen] = useState(false);
 
-  const { data } = trpc.relationship.getRelationshipTypes.useQuery({
+  const { data, refetch } = trpc.relationship.getRelationshipTypes.useQuery({
     filter: {
-      entity: [fromType, toType],
+      entity: fromType && toType ? [fromType, toType] : undefined,
     },
   });
 
@@ -43,10 +46,7 @@ export function RelationshipTypeSelect({
 
   const clearValue = () => {
     setValue(undefined);
-
-    if (onSelect) {
-      onSelect(undefined);
-    }
+    onClear?.();
   };
 
   return (
@@ -65,10 +65,20 @@ export function RelationshipTypeSelect({
                   relationshipTypeItems?.value === value,
               )?.label
             : placeholder || 'Pick value'}
-          <IconChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          {value ? (
+            <IconX
+              onClick={(e) => {
+                e.preventDefault();
+                clearValue();
+              }}
+              className="ml-2 h-4 w-4 shrink-0 opacity-50"
+            />
+          ) : (
+            <IconChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-56 p-0">
+      <PopoverContent className="flex flex-col w-56 p-2 gap-2">
         <Command>
           <CommandGroup>
             {relationshipTypeItems?.map((item) => (
@@ -93,6 +103,9 @@ export function RelationshipTypeSelect({
             ))}
           </CommandGroup>
         </Command>
+        <AddTypeDialog from={fromType} to={toType} onAdded={refetch}>
+          <Button className="w-full">Add Type</Button>
+        </AddTypeDialog>
       </PopoverContent>
     </Popover>
   );

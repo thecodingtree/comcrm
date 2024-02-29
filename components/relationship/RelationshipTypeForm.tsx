@@ -44,7 +44,14 @@ export default function RelationshipTypeForm({
   onSubmit,
   submitting,
 }: {
-  type?: RelationshipTypeData;
+  type?: {
+    category?: RelationshipCategory;
+    direction?: RelationshipDirection;
+    from?: CoreEntityType;
+    id?: string;
+    name?: string;
+    to?: CoreEntityType;
+  } | null;
   submitLabel?: string;
   onSubmit: (values: RelationshipTypeData) => void;
   submitting?: boolean;
