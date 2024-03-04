@@ -188,6 +188,7 @@ model Attributes {
     value String
     entity CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
     entityId String
+    custom Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 }
