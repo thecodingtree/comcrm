@@ -181,10 +181,13 @@ model Attributes {
   value     String
   entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
   entityId  String
+  custom  Boolean    @default(false)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
   @@allow('create, read, update', (entity.team == null && entity.creator == auth()) || (entity.team != null && entity.team.members?[user == auth()]))
+
+  @@allow('delete', (entity.team == null && entity.creator == auth()) || (entity.team != null && entity.team.members?[user == auth()]))
 }
 
 model MetaData {
