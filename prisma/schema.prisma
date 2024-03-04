@@ -182,6 +182,7 @@ model CoreEntity {
 }
 
 /// @@allow('create, read, update', entity.team == null && entity.creator == auth() || (entity.team != null && entity.team.members?[user == auth()]))
+/// @@allow('delete', entity.team == null && entity.creator == auth() || (entity.team != null && entity.team.members?[user == auth()]))
 model Attributes {
     id String @id() @default(cuid()) @map("_id")
     name String

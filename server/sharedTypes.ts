@@ -43,6 +43,7 @@ export type AttributeType = {
   id?: string;
   name: string;
   value: string;
+  custom?: boolean;
   entityId?: string;
   createdAt?: Date;
   updatedAt?: Date;
