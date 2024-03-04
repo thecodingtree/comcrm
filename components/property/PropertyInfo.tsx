@@ -6,6 +6,7 @@ import EditAddress from '../input/EditAddress';
 import EditAttribute from '../input/EditAttribute';
 
 import { PropertyReservedAttributes } from '@/server/sharedTypes';
+import CustomAttributes from '../attributes/CustomAttributes';
 
 export default function PropertyInfo({
   propertyId,
@@ -154,6 +155,10 @@ export default function PropertyInfo({
             }}
           />
         )}
+      </div>
+
+      <div className="flex flex-col gap-2 mt-2">
+        {propertyId && <CustomAttributes entityId={propertyId} />}
       </div>
     </div>
   );
