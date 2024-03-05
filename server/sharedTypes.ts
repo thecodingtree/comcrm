@@ -12,9 +12,9 @@ import {
 
 import { Session } from 'next-auth';
 
-export const CONTACT_RESERVED_PREFIX = 'CONTACT_RESERVED_';
-export const PROPERTY_RESERVED_PREFIX = 'PROPERTY_RESERVED_';
-export const COMPANY_RESERVED_PREFIX = 'COMPANY_RESERVED_';
+export const RESERVED_CONTACT_PREFIX = 'RESERVED_CONTACT_';
+export const RESERVED_PROPERTY_PREFIX = 'RESERVED_PROPERTY_';
+export const RESERVED_COMPANY_PREFIX = 'RESERVED_COMPANY_';
 
 export type SessionUser = Session['user'];
 
@@ -43,6 +43,7 @@ export type AttributeType = {
   id?: string;
   name: string;
   value: string;
+  custom?: boolean;
   entityId?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -250,20 +251,20 @@ export type EntitySearchResult = {
 };
 
 export enum ContactReservedAttributes {
-  ALT_PHONE = `${CONTACT_RESERVED_PREFIX}ALT_PHONE`,
+  ALT_PHONE = `${RESERVED_CONTACT_PREFIX}ALT_PHONE`,
 }
 
 export enum PropertyReservedAttributes {
-  SUITE = `${PROPERTY_RESERVED_PREFIX}SUITE`,
-  SIZE = `${PROPERTY_RESERVED_PREFIX}SIZE`,
-  PRICE = `${PROPERTY_RESERVED_PREFIX}PRICE`,
+  SUITE = `${RESERVED_PROPERTY_PREFIX}SUITE`,
+  SIZE = `${RESERVED_PROPERTY_PREFIX}SIZE`,
+  PRICE = `${RESERVED_PROPERTY_PREFIX}PRICE`,
 }
 
 export enum CompanyReservedAttributes {
-  WEBSITE = `${COMPANY_RESERVED_PREFIX}WEBSITE`,
-  SIZE = `${COMPANY_RESERVED_PREFIX}SIZE`,
-  ALT_PHONE = `${COMPANY_RESERVED_PREFIX}ALT_PHONE`,
-  ALT_EMAIL = `${COMPANY_RESERVED_PREFIX}ALT_EMAIL`,
+  WEBSITE = `${RESERVED_COMPANY_PREFIX}WEBSITE`,
+  SIZE = `${RESERVED_COMPANY_PREFIX}SIZE`,
+  ALT_PHONE = `${RESERVED_COMPANY_PREFIX}ALT_PHONE`,
+  ALT_EMAIL = `${RESERVED_COMPANY_PREFIX}ALT_EMAIL`,
 }
 
 export enum TeamRole {

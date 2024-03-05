@@ -5,7 +5,7 @@ import EditTitle from '@/components/input/EditTitle';
 import EditAddress from '../input/EditAddress';
 import EditAttribute from '../input/EditAttribute';
 import { CompanyReservedAttributes } from '@/server/sharedTypes';
-import { read } from 'fs';
+import CustomAttributes from '@/components/attributes/CustomAttributes';
 
 export default function CompanyInfo({
   companyId,
@@ -169,6 +169,7 @@ export default function CompanyInfo({
           }
         />
       )}
+      <CustomAttributes entityId={companyId!} />
     </div>
   );
 }
