@@ -7,6 +7,8 @@ import {
   getAttributes,
 } from '@/server/attribute';
 
+import { AttributeFilterInput } from '@/server/sharedTypes';
+
 const AttributeCreateUpdateInput = z.object({
   id: z.string().optional(),
   name: z.string(),
@@ -17,10 +19,10 @@ const AttributeCreateUpdateInput = z.object({
 
 export const attributesRouter = createTRPCRouter({
   getAttributes: protectedProcedure
-    .input(z.object({ entityId: z.string() }))
+    .input(z.object({ filter: AttributeFilterInput }))
     .query(async ({ ctx, input }) => {
       const { prisma } = ctx;
-      return getAttributes({ db: prisma, entityId: input.entityId });
+      return getAttributes({ db: prisma, filter: input.filter });
     }),
   updateOrCreateAttribute: protectedProcedure
     .input(AttributeCreateUpdateInput)

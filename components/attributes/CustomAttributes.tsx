@@ -15,7 +15,7 @@ import CustomAttributeSkeleton from '@/components/attributes/CustomAttributeSkel
 
 export default function CustomAttributes({ entityId }: { entityId: string }) {
   const { data, isLoading, refetch } = trpc.attributes.getAttributes.useQuery({
-    entityId,
+    filter: { entityId: [entityId], custom: true },
   });
 
   const [opened, setOpened] = useState(false);
