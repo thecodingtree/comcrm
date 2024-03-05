@@ -69,6 +69,13 @@ export const AttributeInput = z.object({
   value: z.string(),
 });
 
+export const AttributeFilterInput = z.object({
+  entityId: z.array(z.string()).optional(),
+  custom: z.boolean().optional(),
+});
+
+export type AttributeFilterType = z.infer<typeof AttributeFilterInput>;
+
 export type ContactType = {
   id: string;
   type: CoreEntityType;

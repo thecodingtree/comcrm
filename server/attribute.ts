@@ -1,14 +1,15 @@
 import { PrismaClient } from '@prisma/client';
+import { AttributeFilterType } from './sharedTypes';
 
 export function getAttributes({
   db,
-  entityId,
+  filter,
 }: {
   db: PrismaClient;
-  entityId: string;
+  filter: AttributeFilterType;
 }) {
   return db.attributes.findMany({
-    where: { entityId },
+    where: { entityId: { in: filter?.entityId }, custom: filter?.custom },
     orderBy: { createdAt: 'asc' },
   });
 }
