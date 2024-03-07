@@ -27,18 +27,28 @@ const buildCEWhere = (
   if (search && search.length > 0) {
     hasSearch = true;
 
+    const searchTokens = search.trim().split(' ');
+
     // Normalize search query to the form "word1:* <-> word2:* ..."
-    const searchQuery = search
-      .trim()
-      .split(' ')
+    const searchQuery = searchTokens
       .map((s) => (s.length > 0 ? `${s}:*` : ''))
-      .reduce((acc, s) => (s?.length ? `${acc} <-> ${s}` : acc));
+      .reduce((acc, s) => (s?.length ? `${acc} & ${s}` : acc));
 
     // Search by name
     searchWhere.OR?.push({
       meta: {
         OR: [
           { name: { search: searchQuery } },
+          { surName: { search: searchQuery } },
+        ],
+      },
+    });
+
+    searchWhere.OR?.push({
+      type: { in: [CoreEntityType.CONTACT] },
+      meta: {
+        AND: [
+          { name: { search: search.trim().split(' ')[0] } },
           { surName: { search: searchQuery } },
         ],
       },

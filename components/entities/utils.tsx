@@ -8,12 +8,25 @@ import {
   IconProperty,
 } from '@/components/common/icons';
 
+export const getEntityPath = (type: CoreEntityType) => {
+  switch (type) {
+    case CoreEntityType.COMPANY:
+      return '/companies';
+    case CoreEntityType.CONTACT:
+      return '/contacts';
+    case CoreEntityType.PROPERTY:
+      return '/properties';
+    default:
+      return null;
+  }
+};
+
 export const getEntityLink = ({
   type,
   id,
   children,
 }: {
-  type?: string;
+  type?: CoreEntityType;
   id?: string;
   children?: React.ReactNode;
 }) => {
@@ -21,22 +34,7 @@ export const getEntityLink = ({
     return null;
   }
 
-  let typeHref = '';
-  switch (type) {
-    case CoreEntityType.COMPANY:
-      typeHref = '/companies';
-      break;
-    case CoreEntityType.CONTACT:
-      typeHref = '/contacts';
-      break;
-    case CoreEntityType.PROPERTY:
-      typeHref = '/properties';
-      break;
-    default:
-      return null;
-  }
-
-  return <Link href={`${typeHref}/${id}`}>{children}</Link>;
+  return <Link href={`${getEntityPath(type)}/${id}`}>{children}</Link>;
 };
 
 export const getEntityIcon = ({
