@@ -10,7 +10,8 @@ services:
   app:
     type: node:18
     build:
-      - npm install
+      - npm install -g bun
+      - bun install
     ssl: true
     scanner: false
 
@@ -24,12 +25,12 @@ services:
       database: main
 
 tooling:
-  startapp:
+  startdev:
     service: app
-    cmd: npm run dev
-  npm:
+    cmd: bun run dev
+  bun:
     service: app
-    cmd: npm
+    cmd: bun
   npx:
     service: app
     dir: /app
