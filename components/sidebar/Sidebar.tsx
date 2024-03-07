@@ -52,7 +52,7 @@ export default function Sidebar() {
   });
 
   return (
-    <aside className="h-screen bg-slate-50">
+    <aside className="h-screen bg-slate-50 shadow-sm">
       <nav className="">
         <div className="flex flex-col overflow-hidden justify-between items-start p-4 text-sm font-medium w-64 min-h-screen">
           <div className="w-full">{links}</div>
