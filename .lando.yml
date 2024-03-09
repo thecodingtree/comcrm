@@ -31,10 +31,10 @@ tooling:
   bun:
     service: app
     cmd: bun
-  npx:
+  bunx:
     service: app
     dir: /app
-    cmd: npx
+    cmd: bunx
   prisma:
     service: app
     cmd: npx prisma
