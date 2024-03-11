@@ -42,9 +42,7 @@ export default function RootLayout({ children }: { children: any }) {
           fontSans.variable,
         )}
       >
-        <TRPCProvider headers={headers()}>
-          <MainLayout>{children}</MainLayout>
-        </TRPCProvider>
+        <TRPCProvider headers={headers()}>{children}</TRPCProvider>
         <Analytics />
         <Toaster position="bottom-center" closeButton />
       </body>
