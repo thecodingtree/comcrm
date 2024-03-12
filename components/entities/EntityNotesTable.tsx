@@ -11,7 +11,8 @@ import {
   TableCell,
 } from '@/components/ui/table';
 
-import { AddNote, getNoteDateLabel } from '@/components/content/Notes';
+import { AddNote } from '@/components/content/Notes';
+import { getNoteDateLabel } from '@/components/content/utils';
 
 import { NoteType } from '@/server/sharedTypes';
 
