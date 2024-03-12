@@ -52,7 +52,7 @@ export const contactCreator = async ({
     },
   } as Prisma.CoreEntityCreateInput;
 
-  const result = await createCoreEntity({ db, data: contactCreateInput });
+  const result = await createCoreEntity({ db, user, data: contactCreateInput });
 
   return contactDataMapper(result, user);
 };
