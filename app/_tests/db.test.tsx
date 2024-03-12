@@ -6,7 +6,7 @@ import mockPrisma from '@/libs/__mocks__/prisma';
 
 import { contactCreator } from '@/server/api/creators';
 
-import { DeepMockProxy, mockDeep, mockReset } from 'vitest-mock-extended';
+import { mockDeep } from 'vitest-mock-extended';
 
 // 1- mock prisma module
 vi.mock('@/libs/__mocks__/prisma');
@@ -36,14 +36,16 @@ describe('DB Example Tests', () => {
     testMock.coreEntity.create.mockResolvedValue({
       id: '1',
       type: 'PROPERTY',
-      ownerId: '1',
+      creatorId: '1',
       teamId: null,
+      private: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     const result = await contactCreator({
       db: testMock,
+      user: { id: '1', email: 'test@example' },
       data: { name: 'test', surName: 'testerson', email: 'test@example' },
     });
 

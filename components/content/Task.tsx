@@ -1,14 +1,5 @@
 'use client';
 
-import {
-  isToday,
-  isTomorrow,
-  isThisWeek,
-  isBefore,
-  differenceInWeeks,
-  format,
-} from 'date-fns';
-
 import { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -21,39 +12,8 @@ import {
   CardDescription,
   CardHeader,
 } from '@/components/ui/card';
-import { getTaskIcon, getTaskDateLabel } from '@/components/tasks/utils';
-
-const getDaysUntilDate = (date: Date): number => {
-  return Math.floor(
-    (new Date(date).getTime() - new Date().getTime()) / 86400000,
-  );
-};
-
-export const getTaskDueLabel = (date: Date): string => {
-  const now = new Date();
-
-  if (isBefore(date, now)) {
-    return 'Overdue';
-  }
-
-  if (isToday(date)) {
-    return 'Today';
-  }
-
-  if (isTomorrow(date)) {
-    return 'Tomorrow';
-  }
-
-  if (differenceInWeeks(date, now) === 0) {
-    return `${format(date, 'EEEE')}`;
-  }
-
-  if (differenceInWeeks(date, now) === 1) {
-    return 'Next week';
-  }
-
-  return `${differenceInWeeks(date, now)} weeks from now`;
-};
+import { getTaskIcon } from '@/components/tasks/utils';
+import { getTaskDueLabel } from '@/components/content/utils';
 
 export default function Task({
   type,
