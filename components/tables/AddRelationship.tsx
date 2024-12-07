@@ -87,13 +87,11 @@ export function AddRelationship({
           />
         </div>
       </CollapsibleContent>
-      <CollapsibleTrigger>
-        <Button
-          onClick={handleAdd}
-          disabled={toEntity === undefined || relationshipType === undefined}
-        >
-          Add Relationship
-        </Button>
+      <CollapsibleTrigger
+        onClick={handleAdd}
+        disabled={toEntity === undefined || relationshipType === undefined}
+      >
+        Add Relationship
       </CollapsibleTrigger>
     </Collapsible>
   );

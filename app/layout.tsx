@@ -26,7 +26,9 @@ export const fontSans = FontSans({
   variable: '--font-sans',
 });
 
-export default function RootLayout({ children }: { children: any }) {
+export default async function RootLayout({ children }: { children: any }) {
+  const headersList = await headers();
+
   return (
     <html lang="en">
       <head>
@@ -42,7 +44,7 @@ export default function RootLayout({ children }: { children: any }) {
           fontSans.variable,
         )}
       >
-        <TRPCProvider headers={headers()}>{children}</TRPCProvider>
+        <TRPCProvider headers={headersList}>{children}</TRPCProvider>
         <Analytics />
         <Toaster position="bottom-center" closeButton />
       </body>
