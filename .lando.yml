@@ -37,4 +37,4 @@ tooling:
     cmd: bunx
   prisma:
     service: app
-    cmd: npx prisma
+    cmd: bunx prisma
