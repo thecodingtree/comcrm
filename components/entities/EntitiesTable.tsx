@@ -19,7 +19,7 @@ import {
   IconChevronUp,
 } from '@tabler/icons-react';
 
-import { ContactType, PropertyType, CompanyType } from '@/server/sharedTypes';
+import { type ContactType, type PropertyType, type CompanyType } from '@/server/sharedTypes';
 
 type RowData = CompanyType | ContactType | PropertyType;
 

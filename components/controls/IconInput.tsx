@@ -7,7 +7,7 @@ export interface InputIconProps extends InputProps {
   icon: React.ReactNode;
 }
 
-import { Input, InputProps } from '@/components/ui/input';
+import { Input, type InputProps } from '@/components/ui/input';
 
 const IconInput = React.forwardRef<HTMLInputElement, InputIconProps>(
   ({ icon, iconClickable = true, className, ...props }, ref) => {

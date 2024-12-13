@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import AddTaskForm from '@/components/tasks/AddTaskForm';
 import FilterSelect from '../controls/FilterSelect';
-import { TaskData, TaskType } from '@/server/sharedTypes';
+import { type TaskData, TaskType } from '@/server/sharedTypes';
 
 import { getTaskIcon } from './utils';
 

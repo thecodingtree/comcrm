@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { RelationshipTypeData } from '@/server/sharedTypes';
+import { type RelationshipTypeData } from '@/server/sharedTypes';
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import RelationshipTypeForm from '@/components/relationship/RelationshipTypeForm';
-import { CoreEntityType } from '@prisma/client';
+import { type CoreEntityType } from '@prisma/client';
 
 export default function AddTypeDialog({
   from,

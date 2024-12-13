@@ -1,22 +1,21 @@
-import { SendVerificationRequestParams } from 'next-auth/providers/email';
-import { resend } from '@/resend';
+//import { resend } from '@/resend';
 
-import SendVerificationEmail from '@/react-email-starter/emails/send-verfication';
-
-export const sendVerificationRequest = async (
-  params: SendVerificationRequestParams,
-) => {
+export const sendVerificationRequest = async (params: {
+  identifier: string;
+  url: string;
+}) => {
   try {
     console.log('Sending Email!', params);
-    const response = await resend.emails.send({
-      from: process.env.DEFAULT_EMAIL_FROM!,
-      to: params.identifier,
-      subject: 'Sign in to ComCRM',
-      react: (
-        <SendVerificationEmail url={params?.url} email={params.identifier} />
-      ),
-    });
-    console.log({ response });
+    // const response = await resend.emails.send({
+    //   from: process.env.DEFAULT_EMAIL_FROM!,
+    //   to: params.identifier,
+    //   subject: 'Sign in to ComCRM',
+    //   text: `Click the link below to sign in to ComCRM: ${params.url}`,
+    //   // react: (
+    //   //   <SendVerificationEmail url={params?.url} email={params.identifier} />
+    //   // ),
+    // });
+    // console.log({ response });
   } catch (error) {
     console.log({ error });
   }

@@ -1,6 +1,6 @@
-import { NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { permanentRedirect } from 'next/navigation';
 
-export async function GET(request: NextRequest) {
+export async function GET(_: NextRequest) {
   permanentRedirect('/dashboard');
 }

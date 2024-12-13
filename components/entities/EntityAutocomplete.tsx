@@ -11,7 +11,7 @@ import EntityAddDialog from '@/components/entities/EntityAddDialog';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { EntitySearchResult } from '@/server/sharedTypes';
+import { type EntitySearchResult } from '@/server/sharedTypes';
 
 import { useDebouncedState } from '@/libs/hooks';
 
@@ -28,7 +28,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 
-import { CoreEntityType } from '@prisma/client';
+import { type CoreEntityType } from '@prisma/client';
 
 const EntityList = ({
   entities,

@@ -14,7 +14,7 @@ import {
 import { AddNote } from '@/components/content/Notes';
 import { getNoteDateLabel } from '@/components/content/utils';
 
-import { NoteType } from '@/server/sharedTypes';
+import { type NoteType } from '@/server/sharedTypes';
 
 export default function EntitiyNotesTable({ entity }: { entity: string }) {
   const { data, refetch } = trpc.notes.getNotes.useQuery({

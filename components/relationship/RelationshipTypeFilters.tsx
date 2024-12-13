@@ -1,4 +1,4 @@
-import { RelationshipTypeFilter, TasksFilter } from '@/server/sharedTypes';
+import { type RelationshipTypeFilter, TasksFilter } from '@/server/sharedTypes';
 
 import FilterSelect from '../controls/FilterSelect';
 

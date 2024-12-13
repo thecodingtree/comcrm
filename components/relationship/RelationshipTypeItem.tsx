@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 
-import { RelationshipTypeResult } from '@/server/relationship';
+import { type RelationshipTypeResult } from '@/server/relationship';
 
 import {
   getRelationshipCategoryIcon,

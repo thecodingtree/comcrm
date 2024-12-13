@@ -1,6 +1,6 @@
 'use client';
 
-import { CompanyType } from '@/server/sharedTypes';
+import { type CompanyType } from '@/server/sharedTypes';
 
 import EntityAddDialog from '@/components/entities/EntityAddDialog';
 

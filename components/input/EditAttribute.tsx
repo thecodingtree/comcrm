@@ -1,4 +1,4 @@
-import { AttributeType } from '@/server/sharedTypes';
+import { type AttributeType } from '@/server/sharedTypes';
 
 import EditText from '@/components/input/EditText';
 

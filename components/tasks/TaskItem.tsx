@@ -14,7 +14,7 @@ import {
 
 import { IconExpand, IconCollapse, IconTime } from '@/components/common/icons';
 
-import { TaskResult } from '@/server/task';
+import { type TaskResult } from '@/server/task';
 
 import { getTaskIcon, getTaskDateLabel, getPrioirtyBadge } from './utils';
 

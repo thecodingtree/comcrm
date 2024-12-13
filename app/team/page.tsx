@@ -7,13 +7,19 @@ import CreateTeamDialog from '@/components/team/CreateTeamDialog';
 
 import { getTeamUser } from '@/server/team';
 import { getEnhancedDB } from '@/server/db';
-import { getAuthedServerSession } from '@/server/utils';
+
+import { auth } from '@/auth';
 
 export default async function Team() {
-  const session = await getAuthedServerSession();
+  const session = await auth();
+
+  if (!session) {
+    return null;
+  }
+
   const teamUser = await getTeamUser({
-    db: await getEnhancedDB(session!),
-    user: session!.user?.id!,
+    db: await getEnhancedDB(session),
+    user: session?.user?.id,
   });
 
   const canAdminTeam = teamUser?.role !== TeamRole.MEMBER;

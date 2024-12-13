@@ -2,7 +2,7 @@
 
 import EntityAddDialog from '@/components/entities/EntityAddDialog';
 
-import { PropertyType } from '@/server/sharedTypes';
+import { type PropertyType } from '@/server/sharedTypes';
 import { CoreEntityType } from '@prisma/client';
 
 export default function PropertyAdd({

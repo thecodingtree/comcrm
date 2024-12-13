@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { getEntityIcon, getEntityLink } from '@/components/entities/utils';
 import { getNoteDateLabel } from './utils';
-import { NoteResult } from '@/server/note';
+import { type NoteResult } from '@/server/note';
 
 export function Note({
   date,

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { PrismaClient } from '@prisma/client';
+import { type PrismaClient } from '@prisma/client';
 import { getZenstackPrisma } from '@/zenstack/utils';
 
 import mockPrisma from '@/libs/__mocks__/prisma';

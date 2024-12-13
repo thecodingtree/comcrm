@@ -1,4 +1,4 @@
-import { RelationshipFilter } from '@/server/sharedTypes';
+import { type RelationshipFilter } from '@/server/sharedTypes';
 
 import FilterSelect from '../controls/FilterSelect';
 

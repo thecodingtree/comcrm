@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getAuthedServerSession } from '@/server/utils';
+import { auth } from '@/auth';
 
 import Image from 'next/image';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -12,7 +12,7 @@ export default async function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getAuthedServerSession();
+  const session = await auth();
 
   if (session) {
     redirect('/');

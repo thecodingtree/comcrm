@@ -1,7 +1,7 @@
-import { ContactFormValues } from './form/ContactForm';
+import { type ContactFormValues } from './form/ContactForm';
 import {
   ContactReservedAttributes,
-  CreateContactInputType,
+  type CreateContactInputType,
 } from '@/server/sharedTypes';
 
 export function buildContactMutatePayload({

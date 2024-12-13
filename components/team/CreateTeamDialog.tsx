@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
-import CreateTeamForm, { CreateTeamFormValues } from './CreateTeamForm';
+import CreateTeamForm, { type CreateTeamFormValues } from './CreateTeamForm';
 
 export default function CreateTeamDialog() {
   const [opened, setOpened] = useState(false);

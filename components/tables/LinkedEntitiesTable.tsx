@@ -2,9 +2,9 @@
 
 import { TableRow, TableCell } from '@/components/ui/table';
 
-import { ContactType, PropertyType, CompanyType } from '@/server/sharedTypes';
+import { type ContactType, type PropertyType, type CompanyType } from '@/server/sharedTypes';
 
-import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
+import { EntitiesTable, type ETColumn } from '../entities/EntitiesTable';
 
 export default function LinkedEntitiesTable({
   linkedEntities,

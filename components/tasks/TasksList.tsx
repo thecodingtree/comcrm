@@ -1,7 +1,7 @@
 'use client';
 
 import TaskItem from './TaskItem';
-import { TaskResult } from '@/server/task';
+import { type TaskResult } from '@/server/task';
 
 export default function TasksList({
   tasks,

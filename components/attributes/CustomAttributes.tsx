@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { AttributeType } from '@/server/sharedTypes';
+import { type AttributeType } from '@/server/sharedTypes';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 

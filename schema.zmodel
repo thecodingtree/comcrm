@@ -108,7 +108,9 @@ model TeamUser {
   @@allow('read', team.members?[user == auth()] )
 
   // Only users with an invite or team admins/owners can add users
-  @@allow('create', team.invites?[email == auth().email] || team.members?[user == auth() && role != "MEMBER"] || future().team.members?[user == auth() && role != "MEMBER"])
+  // TODO: figure out future() error
+  //@@allow('create', team.invites?[email == auth().email] || team.members?[user == auth() && role != "MEMBER"] || future().team.members?[user == auth() && role != "MEMBER"])
+  @@allow('create', team.invites?[email == auth().email] || team.members?[user == auth() && role != "MEMBER"])
 
   // Only team admins/owners can delete team members
   @@allow('delete', team.members?[user == auth() && role != "MEMBER"] || auth() == user)

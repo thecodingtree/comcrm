@@ -4,289 +4,261 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 datasource db {
-    provider = "postgresql"
-    url = env("POSTGRES_PRISMA_URL")
-    directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 generator client {
-    provider = "prisma-client-js"
-    previewFeatures = ["fullTextSearch","fullTextIndex"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 enum TeamRole {
-    OWNER
-    ADMIN
-    MEMBER
+  OWNER
+  ADMIN
+  MEMBER
 }
 
 enum CoreEntityType {
-    PROPERTY
-    CONTACT
-    COMPANY
+  PROPERTY
+  CONTACT
+  COMPANY
 }
 
 enum OwnerType {
-    USER
-    TEAM
+  USER
+  TEAM
 }
 
 enum RelationshipCategory {
-    OWNERSHIP
-    EMPLOYMENT
-    AGENCY
-    PARTNERSHIP
+  OWNERSHIP
+  EMPLOYMENT
+  AGENCY
+  PARTNERSHIP
 }
 
 enum RelationshipDirection {
-    ONE_WAY
-    TWO_WAY
+  ONE_WAY
+  TWO_WAY
 }
 
 enum TaskPriority {
-    LOW
-    MEDIUM
-    HIGH
+  LOW
+  MEDIUM
+  HIGH
 }
 
 enum TaskType {
-    TODO
-    CALL
-    EMAIL
-    EVENT
-    FOLLOW_UP
-    OTHER
+  TODO
+  CALL
+  EMAIL
+  EVENT
+  FOLLOW_UP
+  OTHER
 }
 
 model Account {
-    id String @id() @default(cuid())
-    userId String
-    type String
-    provider String
-    providerAccountId String
-    refresh_token String? @db.Text()
-    access_token String? @db.Text()
-    expires_at Int?
-    token_type String?
-    scope String?
-    id_token String? @db.Text()
-    session_state String?
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id() @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text()
+  access_token      String? @db.Text()
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text()
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id String @id() @default(cuid())
-    sessionToken String @unique()
-    userId String
-    expires DateTime
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id() @default(cuid())
+  sessionToken String   @unique()
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-/// @@allow('create,read', true)
-/// @@allow('update,delete', auth() == this)
 model User {
-    id String @id() @default(cuid()) @map("_id")
-    email String @unique()
-    emailVerified DateTime?
-    name String?
-    image String?
-    entities CoreEntity[]
-    accounts Account[]
-    sessions Session[]
-    team TeamUser?
-    notes Note[]
-    creatorTasks Task[] @relation(name: "creator")
-    assigneeTasks Task[] @relation(name: "assignee")
-    relationshipTypes RelationshipType[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id                String             @id() @default(cuid()) @map("_id")
+  email             String             @unique()
+  emailVerified     DateTime?
+  name              String?
+  image             String?
+  entities          CoreEntity[]
+  accounts          Account[]
+  sessions          Session[]
+  team              TeamUser?
+  notes             Note[]
+  creatorTasks      Task[]             @relation(name: "creator")
+  assigneeTasks     Task[]             @relation(name: "assignee")
+  relationshipTypes RelationshipType[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt()
 }
 
 model VerificationToken {
-    identifier String
-    token String @unique()
-    expires DateTime
+  identifier String
+  token      String   @unique()
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
-/// @@allow('read', auth() != null)
-/// @@allow('create', auth() != null)
 model Team {
-    id String @id() @default(cuid())
-    name String
-    slug String @unique()
-    /// @allow('read', members?[user == auth()])
-    entities CoreEntity[]
-    /// @allow('read', members?[user == auth()])
-    members TeamUser[]
-    invites TeamInvite[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id        String       @id() @default(cuid())
+  name      String
+  slug      String       @unique()
+  entities  CoreEntity[]
+  members   TeamUser[]
+  invites   TeamInvite[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt()
 }
 
-/// @@allow('read', team.members?[user == auth()])
-/// @@allow('create', team.invites?[email == auth().email] || team.members?[user == auth() && role != 'MEMBER'] || future().team.members?[user == auth() && role != 'MEMBER'])
-/// @@allow('delete', team.members?[user == auth() && role != 'MEMBER'] || auth() == user)
 model TeamUser {
-    id Int @id() @default(autoincrement())
-    team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-    teamId String
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String @unique()
-    role TeamRole
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id        Int      @id() @default(autoincrement())
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @unique()
+  role      TeamRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 
-    @@unique([teamId, userId])
+  @@unique([teamId, userId])
 }
 
-/// @@allow('read', auth().email == email || team.members?[user == auth() && role != 'MEMBER'])
-/// @@allow('create', team.members?[user == auth() && role != 'MEMBER'])
-/// @@allow('delete', auth().email == email || team.members?[user == auth() && role != 'MEMBER'])
 model TeamInvite {
-    id Int @id() @default(autoincrement())
-    email String
-    team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-    teamId String
-    role TeamRole
-    token String @unique() @default(uuid())
-    expires DateTime @default(dbgenerated("NOW() + interval '1 week'"))
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id        Int      @id() @default(autoincrement())
+  email     String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId    String
+  role      TeamRole
+  token     String   @unique() @default(uuid())
+  expires   DateTime @default(dbgenerated("NOW() + interval '1 week'"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 
-    @@unique([email, teamId])
+  @@unique([email, teamId])
 }
 
-/// @@allow('read, update', team == null && creator == auth() || (team != null && team.members?[user == auth()]))
-/// @@allow('create', auth() != null)
-/// @@allow('delete', team == null && creator == auth() || (team != null && team.members?[user == auth() && role != 'MEMBER']))
 model CoreEntity {
-    id String @id() @default(cuid()) @map("_id")
-    type CoreEntityType
-    creator User? @relation(fields: [creatorId], references: [id])
-    creatorId String?
-    relationshipsFrom Relationship[] @relation("RelationshipFrom")
-    relationshipsTo Relationship[] @relation("RelationshipTo")
-    team Team? @relation(fields: [teamId], references: [id])
-    teamId String?
-    attributes Attributes[]
-    meta MetaData?
-    notes Note[]
-    tasks Task[]
-    private Boolean @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id                String         @id() @default(cuid()) @map("_id")
+  type              CoreEntityType
+  creator           User?          @relation(fields: [creatorId], references: [id])
+  creatorId         String?
+  relationshipsFrom Relationship[] @relation("RelationshipFrom")
+  relationshipsTo   Relationship[] @relation("RelationshipTo")
+  team              Team?          @relation(fields: [teamId], references: [id])
+  teamId            String?
+  attributes        Attributes[]
+  meta              MetaData?
+  notes             Note[]
+  tasks             Task[]
+  private           Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt()
 }
 
-/// @@allow('create, read, update', entity.team == null && entity.creator == auth() || (entity.team != null && entity.team.members?[user == auth()]))
-/// @@allow('delete', entity.team == null && entity.creator == auth() || (entity.team != null && entity.team.members?[user == auth()]))
 model Attributes {
-    id String @id() @default(cuid()) @map("_id")
-    name String
-    value String
-    entity CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
-    entityId String
-    custom Boolean @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id        String     @id() @default(cuid()) @map("_id")
+  name      String
+  value     String
+  entity    CoreEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId  String
+  custom    Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt()
 }
 
-/// @@allow('create, read, update', entity.team == null && entity.creator == auth() || (entity.team != null && entity.team.members?[user == auth()]))
 model MetaData {
-    id Int @id() @default(autoincrement()) @map("_id")
-    name String
-    surName String?
-    image String?
-    email String?
-    phone String?
-    address Address?
-    addressId String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    entity CoreEntity? @relation(fields: [entityId], references: [id], onDelete: Cascade)
-    entityId String? @unique()
+  id        Int         @id() @default(autoincrement()) @map("_id")
+  name      String
+  surName   String?
+  image     String?
+  email     String?
+  phone     String?
+  address   Address?
+  addressId String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt()
+  entity    CoreEntity? @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId  String?     @unique()
 }
 
-/// @@allow('create, read, update', meta.entity.team == null && meta.entity.creator == auth() || (meta.entity.team != null && meta.entity.team.members?[user == auth()]))
 model Address {
-    id Int @id() @default(autoincrement()) @map("_id")
-    street String?
-    city String?
-    state String?
-    zip String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    meta MetaData? @relation(fields: [metaId], references: [id], onDelete: Cascade)
-    metaId Int? @unique()
+  id        Int       @id() @default(autoincrement()) @map("_id")
+  street    String?
+  city      String?
+  state     String?
+  zip       String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  meta      MetaData? @relation(fields: [metaId], references: [id], onDelete: Cascade)
+  metaId    Int?      @unique()
 }
 
-/// @@allow('create,read', creator == auth() || entity.team.members?[user == auth()])
-/// @@allow('delete,update', auth() == creator)
 model Note {
-    id String @id() @default(cuid()) @map("_id")
-    creator User @relation(fields: [creatorId], references: [id])
-    creatorId String
-    content String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    entity CoreEntity @relation(fields: [entityId], references: [id])
-    entityId String
+  id        String     @id() @default(cuid()) @map("_id")
+  creator   User       @relation(fields: [creatorId], references: [id])
+  creatorId String
+  content   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt()
+  entity    CoreEntity @relation(fields: [entityId], references: [id])
+  entityId  String
 }
 
-/// @@allow('read', true)
-/// @@allow('create, update, delete', from.team == null && from.creator == auth() || (from.team != null && from.team.members?[user == auth()]))
 model Relationship {
-    id String @id() @default(cuid()) @map("_id")
-    type RelationshipType @relation(fields: [typeId], references: [id], onDelete: Cascade)
-    typeId String
-    from CoreEntity @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
-    fromEntityId String
-    to CoreEntity @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
-    toEntityId String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id           String           @id() @default(cuid()) @map("_id")
+  type         RelationshipType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  typeId       String
+  from         CoreEntity       @relation("RelationshipFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
+  fromEntityId String
+  to           CoreEntity       @relation("RelationshipTo", fields: [toEntityId], references: [id], onDelete: Cascade)
+  toEntityId   String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt()
 
-    @@unique([fromEntityId, toEntityId, typeId])
+  @@unique([fromEntityId, toEntityId, typeId])
 }
 
-/// @@allow('create', auth() != null)
-/// @@allow('read', creator == auth() || creator.team.team.members?[user == auth()])
-/// @@allow('update,delete', creator == auth())
 model RelationshipType {
-    id String @id() @default(cuid()) @map("_id")
-    creator User @relation(fields: [creatorId], references: [id])
-    creatorId String
-    name String
-    to CoreEntityType?
-    from CoreEntityType?
-    direction RelationshipDirection @default(TWO_WAY)
-    category RelationshipCategory
-    relationship Relationship[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id           String                @id() @default(cuid()) @map("_id")
+  creator      User                  @relation(fields: [creatorId], references: [id])
+  creatorId    String
+  name         String
+  to           CoreEntityType?
+  from         CoreEntityType?
+  direction    RelationshipDirection @default(TWO_WAY)
+  category     RelationshipCategory
+  relationship Relationship[]
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt()
 }
 
-/// @@allow('read', creator == auth() || assignee == auth() || (related.team == null && related.creator == auth()) || (related.team != null && related.team.members?[user == auth()]))
-/// @@allow('create,update,delete', creator == auth() || assignee == auth())
 model Task {
-    id String @id() @default(cuid()) @map("_id")
-    type TaskType @default(TODO)
-    creator User @relation(name: "creator", fields: [creatorId], references: [id], onDelete: Cascade)
-    creatorId String
-    assignee User? @relation(name: "assignee", fields: [assigneeId], references: [id], onDelete: SetNull)
-    assigneeId String?
-    related CoreEntity? @relation(fields: [entityId], references: [id], onDelete: SetNull)
-    entityId String?
-    description String
-    content String?
-    startDate DateTime?
-    endDate DateTime @default(now())
-    priority TaskPriority @default(LOW)
-    completed Boolean @default(false)
-    private Boolean @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  id          String       @id() @default(cuid()) @map("_id")
+  type        TaskType     @default(TODO)
+  creator     User         @relation(name: "creator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId   String
+  assignee    User?        @relation(name: "assignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  assigneeId  String?
+  related     CoreEntity?  @relation(fields: [entityId], references: [id], onDelete: SetNull)
+  entityId    String?
+  description String
+  content     String?
+  startDate   DateTime?
+  endDate     DateTime     @default(now())
+  priority    TaskPriority @default(LOW)
+  completed   Boolean      @default(false)
+  private     Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt()
 }

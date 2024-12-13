@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { CoreEntityType } from '@prisma/client';
+import { type CoreEntityType } from '@prisma/client';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { RelationshipFilter } from '@/server/sharedTypes';
+import { type RelationshipFilter } from '@/server/sharedTypes';
 
 import { AddRelationship } from '../tables/AddRelationship';
 import RelationshipItem from './RelationshipItem';

@@ -1,6 +1,6 @@
 import {
   RelationshipCategory,
-  CoreEntityType,
+  type CoreEntityType,
   RelationshipDirection,
 } from '@prisma/client';
 import {

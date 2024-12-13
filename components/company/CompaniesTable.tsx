@@ -4,9 +4,9 @@ import { TableRow, TableCell } from '@/components/ui/table';
 
 import Link from 'next/link';
 
-import { CompanyReservedAttributes, CompanyType } from '@/server/sharedTypes';
+import { CompanyReservedAttributes, type CompanyType } from '@/server/sharedTypes';
 
-import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
+import { EntitiesTable, type ETColumn } from '../entities/EntitiesTable';
 
 interface CompaniesTableProps {
   companies?: CompanyType[];

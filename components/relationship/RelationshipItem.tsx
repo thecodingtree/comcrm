@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 import { DeleteButton } from '@/components/controls/Buttons';
 
-import { RelationshipResult } from '@/server/relationship';
+import { type RelationshipResult } from '@/server/relationship';
 
 import { getEntityIcon, getEntityLink } from '@/components/entities/utils';
 import { getRelationshipCategoryIcon } from './icons';

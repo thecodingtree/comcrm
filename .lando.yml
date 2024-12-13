@@ -14,6 +14,10 @@ services:
       - bun install
     ssl: true
     scanner: false
+    ports:
+      - 3000:3000
+      - 9229:9229
+      - 9230:9230
 
   database:
     type: postgres
@@ -28,6 +32,12 @@ tooling:
   startdev:
     service: app
     cmd: bun run dev
+  npm:
+    service: app
+    cmd: npm
+  npmx:
+    service: app
+    cmd: npmx
   bun:
     service: app
     cmd: bun

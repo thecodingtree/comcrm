@@ -1,7 +1,7 @@
-import { PropertyFormValues } from './form/PropertyForm';
+import { type PropertyFormValues } from './form/PropertyForm';
 import {
   PropertyReservedAttributes,
-  CreatePropertyInputType,
+  type CreatePropertyInputType,
 } from '@/server/sharedTypes';
 
 export function buildPropertyMutatePayload({

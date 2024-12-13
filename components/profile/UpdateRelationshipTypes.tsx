@@ -12,8 +12,8 @@ import { IconAdd } from '../common/icons';
 import RelationshipTypeList from '../relationship/RelationshipTypeList';
 import RelationshipTypeListSkeleton from '../relationship/RelationshipTypeListSkeleton';
 import {
-  RelationshipTypeData,
-  RelationshipTypeFilter,
+  type RelationshipTypeData,
+  type RelationshipTypeFilter,
 } from '@/server/sharedTypes';
 import { toast } from 'sonner';
 import RelationshipTypeFilters from '../relationship/RelationshipTypeFilters';

@@ -1,7 +1,7 @@
 import { Note } from '@/components/content/Notes';
 
 import { trpc } from '@/app/_trpc/client';
-import { NoteType } from '@/server/sharedTypes';
+import { type NoteType } from '@/server/sharedTypes';
 
 import useUser from '@/hooks/useUser';
 
@@ -41,7 +41,7 @@ export default function NotesBrief({ entityId }: { entityId?: string | null }) {
         <AddNote
           onAddNote={(content) =>
             createNote.mutate(
-              { entityId: entityId!, content },
+              { entityId: entityId, content },
               { onSettled: () => getNotes?.refetch() },
             )
           }

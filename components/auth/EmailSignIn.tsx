@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn } from '@/auth';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,7 @@ const schema = z.object({
 
 export type EmailSignInValues = z.infer<typeof schema>;
 
-export default function EmailSignIn({ csrf }: { csrf: string | undefined }) {
+export default function EmailSignIn() {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {

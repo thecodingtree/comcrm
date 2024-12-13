@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { trpc } from '@/app/_trpc/client';
 
-import { CoreEntityType } from '@prisma/client';
+import { type CoreEntityType } from '@prisma/client';
 
 import { IconChevronDown, IconX } from '@tabler/icons-react';
 

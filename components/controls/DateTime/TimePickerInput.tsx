@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/libs/utils';
 import React from 'react';
 import {
-  TimePickerType,
+  type TimePickerType,
   getArrowByType,
   getDateByType,
   setDateByType,

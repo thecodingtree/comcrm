@@ -1,6 +1,5 @@
 import React from 'react';
 import { headers } from 'next/headers';
-import { Inter as FontSans } from 'next/font/google';
 import { toast } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -14,17 +13,14 @@ import '@uploadthing/react/styles.css';
 
 import '@/app/globals.css';
 
+import { fontSans } from './font';
+
 export const metadata = {
   title: 'COMCRM - The Modern CRM for Real Estate Agents',
   description: 'COMCRM - The Modern CRM for Real Estate Agents',
 };
 
 import { cn } from '@/libs/utils';
-
-export const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 export default async function RootLayout({ children }: { children: any }) {
   const headersList = await headers();

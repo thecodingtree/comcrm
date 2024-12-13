@@ -1,7 +1,7 @@
-import { CompanyFormValues } from './form/CompanyForm';
+import { type CompanyFormValues } from './form/CompanyForm';
 import {
   CompanyReservedAttributes,
-  CreateCompanyInputType,
+  type CreateCompanyInputType,
 } from '@/server/sharedTypes';
 
 export const buildCompanyMutatePayload = ({
@@ -9,7 +9,7 @@ export const buildCompanyMutatePayload = ({
 }: {
   values: CompanyFormValues;
 }) => {
-  let attributes = [];
+  const attributes = [];
 
   if (values.website) {
     attributes.push({

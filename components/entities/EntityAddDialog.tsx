@@ -6,15 +6,15 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
 
-import { CompanyFormValues } from '@/components/company/form/CompanyForm';
+import { type CompanyFormValues } from '@/components/company/form/CompanyForm';
 import CompanyForm from '@/components/company/form/CompanyForm';
 import { buildCompanyMutatePayload } from '@/components/company/utils';
 
-import { ContactFormValues } from '@/components/contact/form/ContactForm';
+import { type ContactFormValues } from '@/components/contact/form/ContactForm';
 import ContactForm from '@/components/contact/form/ContactForm';
 import { buildContactMutatePayload } from '@/components/contact/utils';
 
-import { PropertyFormValues } from '@/components/property/form/PropertyForm';
+import { type PropertyFormValues } from '@/components/property/form/PropertyForm';
 import PropertyForm from '@/components/property/form/PropertyForm';
 import { buildPropertyMutatePayload } from '@/components/property/utils';
 
@@ -57,7 +57,7 @@ export default function EntityAddDialog({
           onSubmit={(values: CompanyFormValues) =>
             createCompany.mutate(buildCompanyMutatePayload({ values }))
           }
-          submitting={createCompany.isLoading}
+          submitting={createCompany.isPending}
         />
       );
     } else if (entityType === CoreEntityType.CONTACT) {
@@ -67,7 +67,7 @@ export default function EntityAddDialog({
           onSubmit={(values: ContactFormValues) =>
             createContact.mutate(buildContactMutatePayload({ values }))
           }
-          submitting={createContact.isLoading}
+          submitting={createContact.isPending}
         />
       );
     } else if (entityType === CoreEntityType.PROPERTY) {
@@ -77,10 +77,12 @@ export default function EntityAddDialog({
           onSubmit={(values: PropertyFormValues) =>
             createProperty.mutate(buildPropertyMutatePayload({ values }))
           }
-          submitting={createProperty.isLoading}
+          submitting={createProperty.isPending}
         />
       );
-    } else null;
+    } else {
+      return null;
+    }
   };
 
   return (

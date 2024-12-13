@@ -17,9 +17,9 @@ import {
 
 import { Button } from '@/components/ui/button';
 
-import { RelationshipTypeResult } from '@/server/relationship';
+import { type RelationshipTypeResult } from '@/server/relationship';
 import RelationshipTypeItem from './RelationshipTypeItem';
-import { RelationshipTypeData } from '@/server/sharedTypes';
+import { type RelationshipTypeData } from '@/server/sharedTypes';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 

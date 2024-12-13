@@ -1,7 +1,5 @@
 import { resend } from '@/resend';
 
-import { TeamInviteMember } from '@/react-email-starter/emails/team-invite-member';
-
 import { TeamInvite } from '@/server/sharedTypes';
 
 export const sendTeamInvite = async (
@@ -16,14 +14,15 @@ export const sendTeamInvite = async (
       from: process.env.DEFAULT_EMAIL_FROM!,
       to: invite.email,
       subject: 'You have been invited to join a team on ComCRM!',
-      react: (
-        <TeamInviteMember
-          email={invite.email}
-          teamName={invite.team.name}
-          inviteLink={inviteLink}
-          invitedByEmail={inviteFromEmail}
-        />
-      ),
+      text: `You have been invited to join the team: ${invite.team.name}. Click the link below to join the team: ${inviteLink}`,
+      // react: (
+      //   <TeamInviteMember
+      //     email={invite.email}
+      //     teamName={invite.team.name}
+      //     inviteLink={inviteLink}
+      //     invitedByEmail={inviteFromEmail}
+      //   />
+      // ),
     });
     console.log({ response });
   } catch (error) {

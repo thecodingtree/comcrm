@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 import { IconAdd } from '@/components/common/icons';
 
-import { TasksFilter } from '@/server/sharedTypes';
+import { type TasksFilter } from '@/server/sharedTypes';
 
 import TasksList from '../tasks/TasksList';
 import TaskFilters from '../tasks/TaskFilters';

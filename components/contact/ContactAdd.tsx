@@ -2,7 +2,7 @@
 
 import EntityAddDialog from '@/components/entities/EntityAddDialog';
 
-import { ContactType } from '@/server/sharedTypes';
+import { type ContactType } from '@/server/sharedTypes';
 import { CoreEntityType } from '@prisma/client';
 
 export default function ContactAdd({

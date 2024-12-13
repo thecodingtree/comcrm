@@ -32,7 +32,7 @@ import {
   RelationshipDirection,
 } from '@prisma/client';
 import {
-  RelationshipTypeData,
+  type RelationshipTypeData,
   RelationshipTypeInput,
 } from '@/server/sharedTypes';
 import { getEntityIcon } from '@/components/entities/utils';

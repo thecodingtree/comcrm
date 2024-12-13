@@ -1,4 +1,4 @@
-import { TasksFilter } from '@/server/sharedTypes';
+import { type TasksFilter } from '@/server/sharedTypes';
 
 import FilterSelect from '../controls/FilterSelect';
 

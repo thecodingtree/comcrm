@@ -9,7 +9,7 @@ import {
   ConfirmButton,
 } from '@/components/controls/Buttons';
 
-import { AddressType } from '@/server/sharedTypes';
+import { type AddressType } from '@/server/sharedTypes';
 
 interface EditAddressProps {
   label?: string | null;

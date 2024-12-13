@@ -13,11 +13,10 @@ import type { Session } from 'next-auth';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/options';
+import { auth } from '@/auth';
 import { getZenstackPrisma } from '@/zenstack/utils';
 
-import prisma from '@/prisma/client';
+import { prisma } from '@/prisma/client';
 
 /**
  * 1. CONTEXT
@@ -57,7 +56,11 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
  */
 export const createTRPCContext = async (req: NextRequest) => {
   // Get the session from the server using the unstable_getServerSession wrapper function
-  const session = await getServerSession(authOptions);
+  //const session = await getServerSession(authOptions);
+
+  const session = await auth();
+
+  console.log('session', session);
 
   return createInnerTRPCContext({
     session,

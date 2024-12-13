@@ -8,7 +8,7 @@ import { Note } from '@/components/content/Notes';
 
 import { CoreEntityType } from '@prisma/client';
 import { getEntityIcon } from '@/components/entities/utils';
-import { NotesFilterType } from '@/server/sharedTypes';
+import { type NotesFilterType } from '@/server/sharedTypes';
 
 import FilterSelect from '@/components/controls/FilterSelect';
 

@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
 
-import InviteForm, { InviteFormValues } from '@/components/team/InviteForm';
+import InviteForm, { type InviteFormValues } from '@/components/team/InviteForm';
 
 export default function InviteDialog({
   teamId,

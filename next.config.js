@@ -4,6 +4,9 @@ const nextConfig = {
     domains: ['avatars.githubusercontent.com', 'lh3.googleusercontent.com'],
   },
   serverExternalPackages: ['@zenstackhq/runtime'],
+  // experimental: {
+  //   serverComponentsExternalPackages: ['@zenstackhq/runtime'],
+  // },
 };
 
 module.exports = nextConfig;

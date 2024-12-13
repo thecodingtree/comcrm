@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form';
 
 import { Input } from '@/components/ui/input';
-import { AttributeType } from '@/server/sharedTypes';
+import { type AttributeType } from '@/server/sharedTypes';
 
 const AttributeInput = z.object({
   id: z.string().optional(),

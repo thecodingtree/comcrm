@@ -3,9 +3,9 @@
 import { TableRow, TableCell } from '@/components/ui/table';
 import Link from 'next/link';
 
-import { PropertyReservedAttributes, PropertyType } from '@/server/sharedTypes';
+import { PropertyReservedAttributes, type PropertyType } from '@/server/sharedTypes';
 
-import { EntitiesTable, ETColumn } from '@/components/entities/EntitiesTable';
+import { EntitiesTable, type ETColumn } from '@/components/entities/EntitiesTable';
 
 export default function PropertiesTable({
   properties,

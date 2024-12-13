@@ -9,13 +9,13 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 
-import { CoreEntityType, RelationshipType } from '@prisma/client';
+import { type CoreEntityType, RelationshipType } from '@prisma/client';
 
 import { EntityTypeSelect } from '@/components/select/EntityTypeSelect';
 import { EntityAutocomplete } from '@/components/entities/EntityAutocomplete';
 import { RelationshipTypeSelect } from '@/components/select/RelationshipTypeSelect';
 import { trpc } from '@/app/_trpc/client';
-import { EntitySearchResult } from '@/server/sharedTypes';
+import { type EntitySearchResult } from '@/server/sharedTypes';
 
 export function AddRelationship({
   fromEntityId,

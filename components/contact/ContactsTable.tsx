@@ -4,9 +4,9 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import { TableRow, TableCell } from '@/components/ui/table';
 import Link from 'next/link';
-import { ContactType } from '@/server/sharedTypes';
+import { type ContactType } from '@/server/sharedTypes';
 
-import { EntitiesTable, ETColumn } from '../entities/EntitiesTable';
+import { EntitiesTable, type ETColumn } from '../entities/EntitiesTable';
 
 interface ContactsTableProps {
   contacts?: ContactType[];
